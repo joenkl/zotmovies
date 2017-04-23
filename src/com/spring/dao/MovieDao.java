@@ -9,4 +9,6 @@ public interface MovieDao {
 	
 	public List<Movie> getMovieList();
 	
+	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith);
+	
 }

@@ -16,7 +16,7 @@ public class HomeController {
 	@Autowired
 	private MovieDao movieDao; 
 	
-	@RequestMapping(value={"/","/login"})
+	@RequestMapping(value={"", "/","/login"})
 	public String login()
 	{
 		return "login"; 
@@ -30,9 +30,13 @@ public class HomeController {
 		return model; 
 	}
 
+	@RequestMapping("/titles")
+	public String titles() {
+		return ("titles");
+	}
+	
 	@RequestMapping("/testdb")
 	public String testPage() {
 		return ("test-db");
 	}
-
 }
