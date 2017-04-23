@@ -13,7 +13,7 @@
 			<div class="col-lg-12">
 				<div class="login-container">
 					<h3>Login to your account</h3>
-					<form id="login-form" action="" method="post" role="form">
+					<form action="processLoginForm" method="POST" id="login-form" role="form">
 						<input type="text" name="email" placeholder="Email" required>
 						<input type="password" name="password" placeholder="Password"
 							required> </br> <input type="submit" name="login-submit"
