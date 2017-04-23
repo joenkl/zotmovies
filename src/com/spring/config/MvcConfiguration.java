@@ -47,4 +47,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		return new GenreDaoImpl(dataSource);
 	}
 	
+	@Bean
+	public CustomerDao geCustomerDao() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		return new CustomerDaoImpl(dataSource);
+	}
+	
 }

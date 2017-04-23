@@ -8,6 +8,12 @@ public class Customer {
 	String address;
 	String email;
 	String password;
+	
+	public Customer()
+	{
+		id = -1;
+	}
+	
 	public Customer(int id, String fist_name, String last_name, String cc_id, String address, String email,
 			String password) {
 		super();
