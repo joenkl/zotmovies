@@ -13,7 +13,7 @@
 			<div class="col-lg-12">
 				<div class="login-container">
 					<h3>Login to your account</h3>
-					<form action="processLoginForm" method="POST" id="login-form" role="form">
+					<form id="login-form" action="processLoginForm" method="post" role="form">
 						<input type="text" name="email" placeholder="Email" required>
 						<input type="password" name="password" placeholder="Password"
 							required> </br> <input type="submit" name="login-submit"
@@ -37,6 +37,5 @@
 		src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 
 </body>
-
 
 </html>
