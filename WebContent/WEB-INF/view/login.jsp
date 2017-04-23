@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
 <%@ include file="header.jsp"%>
 
 <body>
@@ -13,6 +11,8 @@
 			<div class="col-lg-12">
 				<div class="login-container">
 					<h3>Login to your account</h3>
+					
+					<p align="center" style="color:red;"> ${message} </p>
 					<form id="login-form" action="processLoginForm" method="post" role="form">
 						<input type="text" name="email" placeholder="Email" required>
 						<input type="password" name="password" placeholder="Password"
