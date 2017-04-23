@@ -23,7 +23,11 @@ public class BrowsingController {
 	@RequestMapping("/browsing/title-start-with={condition}")
 		public ModelAndView titleBrowsing(@PathVariable("condition") String browserTerm) {
 			List<Movie> listMovies = movieDao.getMovieListWhereTitlesStartWith(browserTerm);
+<<<<<<< HEAD
 			ModelAndView model = new ModelAndView("search-result");
+=======
+			ModelAndView model = new ModelAndView("index");
+>>>>>>> c8faefbdb09912298e1b348cb9ea9ed0dd863d43
 			model.addObject("listMovies", listMovies);
 			return model; 
 		}

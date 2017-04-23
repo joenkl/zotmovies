@@ -24,6 +24,7 @@
                 <ul class="genres-list">
                     <li><a href="#">#</a></li>
                     <li><a href="/fabflix/browsing/title-start-with=A">A</a></li>
+<<<<<<< HEAD
                     <li><a href="#">B</a></li>
                     <li><a href="#">C</a></li>
                     <li><a href="#">D</a></li>
@@ -36,6 +37,20 @@
                     <li><a href="#">K</a></li>
                     <li><a href="#">L</a></li>
                     <li><a href="#">M</a></li>
+=======
+                    <li><a href="/fabflix/browsing/title-start-with=B">B</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=C">C</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=D">D</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=E">E</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=F">F</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=G">G</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=H">H</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=I">I</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=J">J</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=K">K</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=L">L</a></li>
+                    <li><a href="/fabflix/browsing/title-start-with=M">M</a></li>
+>>>>>>> c8faefbdb09912298e1b348cb9ea9ed0dd863d43
                 </ul>
             </div>
             <div class="col-md-3">
