@@ -3,7 +3,6 @@ package com.spring.dao;
 
 import java.util.List;
 
-
 import com.spring.model.Movie;;
 
 public interface MovieDao {
@@ -14,6 +13,7 @@ public interface MovieDao {
 	
 	public List<Movie> getMovieListWithSearch(String title, int year,
 			String director, String first_name, String last_name);
+	
 	
 }
 

@@ -54,4 +54,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		return new CustomerDaoImpl(dataSource);
 	}
 	
+	@Bean
+	public StarDao geStarDao() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		return new StarDaoImpl(dataSource);
+	}
+	
 }

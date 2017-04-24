@@ -2,7 +2,9 @@ package com.spring.controller;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,12 @@ public class MovieController {
 	@Autowired
 	private MovieDao movieDao; 
 	
+	@Autowired
+	private GenreDao genreDao;
+	
+	@Autowired
+	private StarDao starDao; 
+	
 	@RequestMapping(value="/searchForm")
 	public String showSearchForm()
 	{
@@ -31,7 +39,6 @@ public class MovieController {
 	}
 	
 	@RequestMapping(value="/search")
-	
 	public ModelAndView searchForMovies(
 			@RequestParam(value="title", required=false) String title, 
 			@RequestParam(value="first_name", required=false) String first_name, 
@@ -42,12 +49,10 @@ public class MovieController {
 			RedirectAttributes redir)
 	{
 		
-		System.out.println(title);
 	
 		if(title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() 
 				&& year.isEmpty() && director.isEmpty() )
 		{
-			System.out.println("tittle is " + title);
 			//return all movie list 
 			return new ModelAndView("index");
 		}
@@ -57,17 +62,31 @@ public class MovieController {
 			if(year.isEmpty())
 				year = "-1";
 			
-			ModelAndView model = new ModelAndView("index");
-			model.addObject("listMovies", 
-					movieDao.getMovieListWithSearch(title, Integer.parseInt(year), director, first_name, last_name));
+			ModelAndView model = new ModelAndView("movie-table-result");
+			List<Movie> listMovies = 
+					movieDao.getMovieListWithSearch(title, Integer.parseInt(year), director, first_name, last_name);
 			
+			  Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>(); 
+			  Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>(); 
+			  for(Movie movie : listMovies)
+			  {
+
+				  listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
+				  listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
+			  }
+			
+			  model.addObject("listMovies", listMovies);
+			  model.addObject("listGenres",listGenres);		
+			  model.addObject("listStars",listStars);
 			return model;
-		}
-		
-		
-		
+		}	
 		
 	}
 	
+	@RequestMapping("/test-table")
+	public String show()
+	{
+		return "movie-table-result";
+	}
 	
 }

@@ -1,5 +1,11 @@
 package com.spring.model;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.spring.dao.MovieDao;
+
 public class Movie {
 	int id;
 	String title;
@@ -7,6 +13,9 @@ public class Movie {
 	String director;
 	String banner_url;
 	String trailer_url;
+	
+	@Autowired
+	MovieDao movieDao;
 	
 	public Movie()
 	{
@@ -66,6 +75,7 @@ public class Movie {
 	public void setTrailer_url(String trailer_url) {
 		this.trailer_url = trailer_url;
 	}
+	
 	
 
 }
