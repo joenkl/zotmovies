@@ -1,28 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<%@ include file="header.jsp"%>
-
-<body>
-
-    <!-- Page Content -->
-    <div class="container">
-
-        <!-- Page Header -->
-        <div class="row">
+ <div class="container">
+         <div class="row text-center">
             <div class="col-lg-12">
-                <h1 class="page-header">Movies Titles:
-                    <!-- <small>Secondary Text</small> -->
-                </h1>
-            </div>
-        </div>
-        <!-- /.row -->
-
-        <!-- Projects Row -->
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="genres-list">
-                    <li><a href="./browse-titles=[0-9]">#</a></li>
+                <ul class="menu-list">
+                   <li><a href="./browse-titles=[0-9]">#</a></li>
                     <li><a href="./browse-titles=A">A</a></li>
                     <li><a href="./browse-titles=B">B</a></li>
                     <li><a href="./browse-titles=C">C</a></li>
@@ -36,10 +16,6 @@
                     <li><a href="./browse-titles=K">K</a></li>
                     <li><a href="./browse-titles=L">L</a></li>
                     <li><a href="./browse-titles=M">M</a></li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <ul class="genres-list">
                     <li><a href="./browse-titles=N">N</a></li>
                     <li><a href="./browse-titles=O">O</a></li>
                     <li><a href="./browse-titles=P">P</a></li>
@@ -55,24 +31,4 @@
                     <li><a href="./browse-titles=Z">Z</a></li>
                 </ul>
             </div>
-        </div>
-        <!-- /.row -->
-
-       
-        <hr>
-
-        <!-- Footer -->
-       <%@ include file="footer.jsp" %>
-
-    </div>
-    <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-</body>
-
-</html>
+</div>

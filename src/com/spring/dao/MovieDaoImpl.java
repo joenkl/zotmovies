@@ -66,6 +66,35 @@ public class MovieDaoImpl implements MovieDao {
 	        return listMovies;
 	}
 	
+	
+	
+	@Override
+	public List<Movie> getMovieListWithGenre(String genre){
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "SELECT * FROM movies, genres_in_movies, genres "
+				+ "WHERE genres.name = '" + genre
+				+ "' AND genres.id = genres_in_movies.genre_id AND genres_in_movies.movie_id = movies.id";
+		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+			 
+	            @Override
+	            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+	            	Movie movie = new Movie(resultSet.getInt(1),
+							resultSet.getString(2),
+							resultSet.getInt(3),
+							resultSet.getString(4),
+							resultSet.getString(5),
+							resultSet.getString(6)
+							);
+					return movie;
+	            }
+	             
+	        });
+		 
+	        return listMovies;
+	}
+	
+	
 	@Override
 	public List<Movie> getMovieListWithSearch(String title, int year,
 			String director, String first_name, String last_name)

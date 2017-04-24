@@ -30,7 +30,7 @@ public class CustomerController {
 		
 		if(isCustomer)
 		{
-			//todo: change session 
+			//TODO: change session 
 			HttpSession session = request.getSession(true);
 			Integer login = (Integer) (session.getAttribute("login"));
 			if(login == null)
@@ -45,7 +45,7 @@ public class CustomerController {
 		else
 		{
 			
-			//todo: change session 
+			//TODO: change session 
 			HttpSession session = request.getSession(true);
 			Integer login = (Integer) (session.getAttribute("login"));
 			if(login == null)

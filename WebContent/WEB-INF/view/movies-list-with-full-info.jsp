@@ -1,3 +1,4 @@
+
 <c:forEach var="movie" items="${listMovies}" varStatus="status">
 	<div class="row" style="padding: 10pt">
 		<div class="col-lg-12 movie-post" style="border:1px #d3d3d3 solid; padding:5px">
