@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.dao.CustomerDao;
+import com.spring.model.Customer;
 import com.spring.model.Movie;
 
 @Controller 
@@ -37,6 +38,9 @@ public class CustomerController {
 			{
 				login = new Integer(1);
 				session.setAttribute("login", login);
+				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
+				session.setAttribute("customerID", customer.getId());
+				session.setAttribute("customerFN", customer.getFist_name());
 			}
 			
 			return new ModelAndView("redirect:/index"); 
@@ -52,6 +56,9 @@ public class CustomerController {
 			{
 				login = new Integer(0);
 				session.setAttribute("login", login);
+				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
+				session.setAttribute("customerID", customer.getId());
+				session.setAttribute("customerFN", customer.getFist_name());
 			}
 			
 			ModelAndView model = new ModelAndView();

@@ -46,7 +46,15 @@
 					<li><a href="./genres">Genres</a></li>
 					<li><a href="./titles">Titles</a></li>
 					<li><a href="#">Checkout Cart</a></li>
-					<li><a href="./login">Login</a></li>
+					<c:choose>
+						<c:when test="${empty login}">
+							<li><a href="./login">Login</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href="#">Hello ${customerFN}</a></li>
+							<li><a href="#">Logout</a></li>
+						</c:otherwise>
+					</c:choose>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->

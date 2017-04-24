@@ -44,5 +44,21 @@ public class CustomerDaoImpl implements CustomerDao {
 	{
 		return null; 
 	}
+	
+	public Customer getCustomerInfo(String email, String password)
+	{
+		try
+		{
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			String sql = "SELECT * FROM Customers WHERE email = '" + email + "' and password = '" + password + "'";
+			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new CustomerRowMapper());
+			
+			return customer; 
+		}
+		catch (EmptyResultDataAccessException e)
+		{
+			return null;
+		}
+	}
 
 }
