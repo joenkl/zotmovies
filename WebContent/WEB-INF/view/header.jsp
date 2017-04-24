@@ -52,7 +52,7 @@
 						</c:when>
 						<c:otherwise>
 							<li><a href="#">Hello ${customerFN}</a></li>
-							<li><a href="#">Logout</a></li>
+							<li><a href="./logout">Logout</a></li>
 						</c:otherwise>
 					</c:choose>
 				</ul>
