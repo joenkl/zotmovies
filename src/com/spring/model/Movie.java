@@ -8,10 +8,15 @@ public class Movie {
 	String banner_url;
 	String trailer_url;
 	
+	public Movie()
+	{
+		id = -1;
+		year = -1; 
+	}
+	
 	
 	
 	public Movie(int id, String title, int year, String director, String banner_url, String trailer_url) {
-		super();
 		this.id = id;
 		this.title = title;
 		this.year = year;

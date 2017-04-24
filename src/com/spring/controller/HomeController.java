@@ -19,7 +19,9 @@ public class HomeController {
 	
 	@RequestMapping(value={"", "/","/login"})
 	public String login()
-	{
+	{	
+		//hitting home page => sestting session:
+		
 		return "login"; 
 	}
 
