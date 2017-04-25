@@ -1,26 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Fabflix - Group 01 -CS122B - Spring 2017</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/3-col-portfolio.css" rel="stylesheet">
-    
-    <!-- Navigation -->
-
-</head>
-
+<%@ include file="header.jsp"%>
 <body>
     <!-- Page Content -->
     <div class="container">
@@ -37,40 +19,32 @@
 
         <!-- Projects Row -->
         <h3> Your Cart: </h3>
-        <div class="row" style="border-bottom: solid #d3d3d3 0.3px; border-bottom-width: 50%; text-align: center">
-            <div class="col-md-4" style="text-align:center; padding:1%;">
-                <a href="#">Spider Man</a>
-            </div>
-            <div class="col-md-7" style="margin: 5px">
-               <label>Quantity: </label>
-               <input class ="control-label" id="checkout-quantity" type="text" style="width:20px" value="1">
-               <button class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-            </div>
-        </div>
+        <table class="table table-bordered table-inverse">
+        	
+			  <thead>
+			    <tr>
+			      <th>Movie ID:</th>
+			      <th>Title: </th>
+			      <th>Quantity</th>
+			    </tr>
+			  </thead>
+			  
+			  <tbody>
+			  <c:forEach items='<%= session.getAttribute("cart") %>' var="c">
+			    <tr>
+			      <td>${c.movieId}</td>
+			      <td>${c.movieTitle}</td>
+			      <td><input class ="control-label" id="checkout-quantity" type="text" style="width:30px" value="${c.quantity}"> 
+			      		<button class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
+	      			</td>
+			    </tr>
+		     </c:forEach>
+		    </tbody>
+    	</table>
+        
+        
 
-        <div class="row" style="border-bottom: solid #d3d3d3 0.3px; border-bottom-width: 50%; text-align: center">
-            <div class="col-md-4" style="text-align:center; padding:1%;">
-                <a href="#">Star Wars: The Force Awakens</a>
-            </div>
-            <div class="col-md-7" style="margin: 5px">
-               <label>Quantity: </label>
-               <input class ="control-label" id="checkout-quantity" type="text" style="width:20px" value="1">
-               <button class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-            </div>
-        </div>
-
-
-        <div class="row" style="border-bottom: solid #d3d3d3 0.3px; border-bottom-width: 50%; text-align: center">
-            <div class="col-md-4" style="text-align:center; padding:1%;">
-                <a href="#">The Lord of the Rings: The Return of the King</a>
-            </div>
-            <div class="col-md-7" style="margin: 5px">
-               <label>Quantity: </label>
-               <input class ="control-label" id="checkout-quantity" type="text" style="width:20px" value="1">
-               <button class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-            </div>
-        </div>
-
+		
         <!-- /.row -->
          <div class="row">
             
@@ -133,12 +107,6 @@
 
     </div>
     <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
 
 </body>
 

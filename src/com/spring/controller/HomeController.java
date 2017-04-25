@@ -38,6 +38,11 @@ public class HomeController {
 		return ("titles");
 	}
 	
+	@RequestMapping("/checkout")
+	public String checkout() {
+		return ("checkout");
+	}
+	
 	@RequestMapping("/testdb")
 	public String testPage() {
 		return ("test-db");

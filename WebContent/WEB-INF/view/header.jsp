@@ -1,6 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-
 <head>
 
 	<meta charset="utf-8">
@@ -12,9 +10,7 @@
 	<title>Fabflix - Group 01 -CS122B - Spring 2017</title>
 	
 	<!-- Bootstrap Core CSS -->
-	<link
-		href="${pageContext.request.contextPath}/resources/css/bootstrap.css"
-		rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.css" rel="stylesheet">
 	
 	<!-- Custom CSS -->
 	<link href="${pageContext.request.contextPath}/resources/css/3-col-portfolio.css"rel="stylesheet">
@@ -25,7 +21,14 @@
 	<!-- menu-list -->
 	<link href="${pageContext.request.contextPath}/resources/css/menu-list.css"rel="stylesheet">
 	
+	<!-- jQuery -->
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 	
+	<!-- Add to cart -->
+
 		
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -45,7 +48,7 @@
 					<li><a href="./search">Search</a></li>
 					<li><a href="./genres">Genres</a></li>
 					<li><a href="./titles">Titles</a></li>
-					<li><a href="#">Checkout Cart</a></li>
+					<li><a href="./checkout">Checkout Cart</a></li>
 					<c:choose>
 						<c:when test="${empty login}">
 							<li><a href="./login">Login</a></li>

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.dao.MovieDao;
+import com.spring.model.Movie;
 import com.spring.model.ShoppingCart;
 
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import org.springframework.ui.ModelMap;
 @RequestMapping(value="/shopping-cart")
 public class ShoppingCartController {
 	
+	private MovieDao movieDao; 
 	@RequestMapping(value="/sp-form")
 	public ModelAndView indexSP()
 	{
@@ -39,13 +42,12 @@ public class ShoppingCartController {
 	
 	@RequestMapping(value="/addcart", method=RequestMethod.POST)
 	@Scope("session")
-	public String addcart (@RequestParam(value="movieId", required=false) String movieId, 
-			@RequestParam(value="name", required=false) String name, 
-			@RequestParam(value="quantity", required=false) String quantity 
+	public String addcart (@RequestParam(value="movieId", required=true) String movieId, 
+			@RequestParam(value="name", required=false) String name 
 			, HttpServletRequest request)
 	{
 		//check for correct parameter later.. maybe not necessary 
-		ShoppingCart newItem = new ShoppingCart(Integer.parseInt(movieId), Integer.parseInt(quantity), name);
+		ShoppingCart newItem = new ShoppingCart(Integer.parseInt(movieId), 1, name);
 		
 		HttpSession session = request.getSession(true);
 		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
@@ -83,6 +85,4 @@ public class ShoppingCartController {
 			
 		return "viewcart";
 	}
-	
-	
 }
