@@ -21,8 +21,8 @@
 
                     <small style="float: right">Sort by: 
                         <select>
-                            <option value="AZ">A to Z</option>
-                            <option value="ZA">Z to A</option>
+                            <option value="a-z">A to Z</option>
+                            <option value="z-a">Z to A</option>
                         </select>
                     </small>
                 </h1>
