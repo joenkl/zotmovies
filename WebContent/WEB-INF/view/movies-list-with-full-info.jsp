@@ -4,13 +4,13 @@
 		<div class="col-lg-12 movie-post" style="border:1px #d3d3d3 solid; padding:5px">
 
 	        <div class="col-md-4 movie-img">
-	            <center><a href="./movie-info.html">
+	            <center><a href="./movie-id=${movie.id}">
 	                <img class="img-responsive" width = "50%" height = "50%" src="${movie.banner_url}" alt="${movie.title}" >
 	            </a></center>
 	        </div>
 	        
 	        <div class="col-md-8 movie-info">
-	            <h3>${movie.title}</h3>
+	            <h3><a href="./movie-id=${movie.id}">${movie.title}</a></h3>
 	            <h4>Year: ${movie.year}</h4>
 	            <ul class="movie-info">
 	                <li>ID: ${movie.id}</li>
@@ -22,7 +22,7 @@
 	                </li>
 	                <li>Genres:
 	                	<c:forEach var="gen" items="${listGenres.get(movie.id)}">
-	                		<a href="#">${gen} </a>
+	                		<a href="/genre=${gen}">${gen} </a>
 	                	</c:forEach>
 	                </li>
 	            </ul>

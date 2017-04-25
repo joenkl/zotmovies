@@ -36,12 +36,12 @@
                     <li>Director: <a href="#">${movie.director}</a></li>
                     <li>Stars: 
 	                	<c:forEach var="star" items="${listStars.get(movie.id)}">
-	                		<a href="#">${star}</a>
+	                		<a href="/#">${star}</a>
 	                	</c:forEach>
 	                </li>
 	                <li>Genres:
 	                	<c:forEach var="gen" items="${listGenres.get(movie.id)}">
-	                		<a href="#">${gen} </a>
+	                		<a href="./genre=${gen}">${gen} </a>
 	                	</c:forEach>
 	                </li>
 
