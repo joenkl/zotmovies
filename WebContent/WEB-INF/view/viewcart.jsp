@@ -12,7 +12,7 @@
 	<h3>Your Cart</h3>
 		<c:forEach items='<%= request.getSession().getAttribute("cart") %>' var="c">
 			<tr>
-				<td>${c.id}</td>
+				<td><c:out value="${c.getID()}"/></td>
 				<td>${c.movieTitle}</td>
 				<td>${c.quantity}</td>
 				<td>Remove</td>

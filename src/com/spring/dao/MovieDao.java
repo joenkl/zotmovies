@@ -13,6 +13,10 @@ public interface MovieDao {
 	
 	public List<Movie> getMovieListWithGenre(String genre);
 	
+	public List<Movie> getMovieListWithStar(int starID);
+	
+	public Movie getMovieListWithID(int id);
+	
 	public List<Movie> getMovieListWithSearch(String title, int year,
 			String director, String first_name, String last_name);
 	

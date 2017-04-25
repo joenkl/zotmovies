@@ -16,10 +16,14 @@
 	                <li>ID: ${movie.id}</li>
 	                <li>Director: <a href="#">${movie.director}</a></li>
 	                <li>Stars: 
-	                    <a href="#"> Kristin Kreuk, </a>
+	                	<c:forEach var="star" items="${listStars.get(movie.id)}">
+	                		<a href="#">${star}</a>
+	                	</c:forEach>
 	                </li>
-	                <li>Genres: 
-	                    <a href="#"> Classic, </a>
+	                <li>Genres:
+	                	<c:forEach var="gen" items="${listGenres.get(movie.id)}">
+	                		<a href="#">${gen} </a>
+	                	</c:forEach>
 	                </li>
 	            </ul>
 	            <a class="btn btn-primary" href="${movie.trailer_url}">Watch Trailer <span class="glyphicon glyphicon-chevron-right"></span></a>

@@ -4,11 +4,11 @@
 				<div class="row" name="${status.index}"> </c:if>
 
 					<div class="col-md-4 movie-post">
-						<a href="./movie-info.html"> <img class="img-responsive"
+						<a href="./movie-id=${movie.id}"> <img class="img-responsive"
 							src="${movie.banner_url}" alt="banner_url">
 						</a>
 						<h3>
-							<a href="./movie-info.html">${movie.title} - ${movie.year}</a>
+							<a href="./movie-id=${movie.id}">${movie.title} - ${movie.year}</a>
 						</h3>
 					</div>
 					

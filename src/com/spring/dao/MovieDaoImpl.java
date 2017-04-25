@@ -94,6 +94,55 @@ public class MovieDaoImpl implements MovieDao {
 	        return listMovies;
 	}
 	
+	@Override
+	public List<Movie> getMovieListWithStar(int starID){
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "SELECT * FROM movies M JOIN stars_in_movies SM ON M.id = SM.movie_id WHERE SM.star_id = ?";
+		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+			 
+	            @Override
+	            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+	            	Movie movie = new Movie(resultSet.getInt(1),
+							resultSet.getString(2),
+							resultSet.getInt(3),
+							resultSet.getString(4),
+							resultSet.getString(5),
+							resultSet.getString(6)
+							);
+					return movie;
+	            }
+	             
+	        }, starID);
+		 
+	        return listMovies;
+	}
+	
+	@Override
+	public Movie getMovieListWithID(int id){
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "SELECT * FROM movies WHERE movies.id = ?";
+		Movie movie = jdbcTemplate.queryForObject(sql, new RowMapper<Movie>() {
+			 
+            @Override
+            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+            	Movie movie = new Movie(resultSet.getInt(1),
+						resultSet.getString(2),
+						resultSet.getInt(3),
+						resultSet.getString(4),
+						resultSet.getString(5),
+						resultSet.getString(6)
+						);
+				return movie;
+            }
+             
+        }, id);
+		
+		
+		return movie;
+	}
+	
 	
 	@Override
 	public List<Movie> getMovieListWithSearch(String title, int year,
