@@ -8,9 +8,9 @@
 </head>
 <body>
 	<form modelAttribute = "cart" action ="addcart" method="POST">
-		ID: <input path="ID"/><br/>
-		NAME: <input path="movieTitle"/><br/>
-		QUANTITY: <input path="quantity"/><br/>
+		ID: <input path="ID" name="movieId"/><br/>
+		NAME: <input path="movieTitle" name="name"/><br/>
+		QUANTITY: <input path="quantity" name="quantity"/><br/>
 		
 		<input type="submit" value="Add to Cart"/>
 	</form>

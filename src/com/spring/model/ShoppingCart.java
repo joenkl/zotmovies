@@ -2,17 +2,29 @@ package com.spring.model;
 
 public class ShoppingCart {
 	
-	int id;
+	int movieId;
 	int quantity;
 	String movieTitle;
 	
-	public int getID(){
-		return id;
-	}
-	public void setID(int newID){
-		this.id = newID;
+	public ShoppingCart()
+	{
+		movieId = -1;
+		quantity = -1;
 	}
 	
+	public ShoppingCart(int movieId, int quantity, String movieTitle) {
+		super();
+		this.movieId = movieId;
+		this.quantity = quantity;
+		this.movieTitle = movieTitle;
+	}
+	
+	public int getMovieId() {
+		return movieId;
+	}
+	public void setMovieId(int movieId) {
+		this.movieId = movieId;
+	}
 	public int getQuantity(){
 		return quantity;
 	}

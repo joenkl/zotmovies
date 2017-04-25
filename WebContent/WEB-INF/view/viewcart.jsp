@@ -10,9 +10,9 @@
 <body>
 	<table border ="1" cellpadding="10px" width="100%">
 	<h3>Your Cart</h3>
-		<c:forEach items='<%= request.getSession().getAttribute("cart") %>' var="c">
+		<c:forEach items='<%= session.getAttribute("cart") %>' var="c">
 			<tr>
-				<td><c:out value="${c.getID()}"/></td>
+				<td><c:out value="${c.getMovieId()}"/></td>
 				<td>${c.movieTitle}</td>
 				<td>${c.quantity}</td>
 				<td>Remove</td>
