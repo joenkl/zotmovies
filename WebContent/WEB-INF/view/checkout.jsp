@@ -2,16 +2,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <script>
-		var updateCart = function(movieid){
+		var updateCart = function(movieid, itemNum){
 			
-			var newq = document.getElementById("quantity").value;
+			var newq = document.getElementById(itemNum).value;
 			$.ajax({
 				url: "./shopping-cart/updatecart?movieId=" + movieid +"&quantity=" + newq,
 				method: "POST",
                 success: function (response) {
                 	$("#successUpdate").html(response);
-                	$("#successUpdate").addClass("table table-bordered table-inverse");
-                }
+                },
+			
+                error: function(){
+                	$("#failUpdate").html("Cannot update quantity with movieID: "+ movieid);
+                }               
 			});
 		}
 </script>
@@ -32,30 +35,35 @@
         <!-- /.row -->
 
         <!-- Projects Row -->
-        <h3> Your Cart: </h3>
-        <table class="table table-bordered table-inverse">
-			  <thead>
-			    <tr>
-			    	<th>Quantity: </th>
-			      	<th>Movie ID:</th>
-			      	<th>Title: </th>
-			      	<th></th>
-			    </tr>
-			  </thead>
-			  
-			  <tbody>
-			  <c:forEach items='<%= session.getAttribute("cart") %>' var="c">
-			    <tr>
-			    	<th>${c.quantity}</th>
-			      	<td>${c.movieId}</td>
-			      	<td>${c.movieTitle}</td>
-			      	<td><input class ="control-label" name ="quantity" id="quantity" type="text" style="width:30px" value=""> 
-			      		<button id ="#successUpdate" onclick="updateCart(${c.movieId})" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-	      			</td>
-			    </tr>
-		     </c:forEach>
-		    </tbody>
-    	</table>
+        <div id=successUpdate>
+        	<h3> Your Cart: </h3>
+        	<div id="failUpdate" style="color:#FF0000; padding-bottom:10px"></div>
+	        <table class="table table-bordered table-inverse">
+				  <thead>
+				    <tr>
+				    	<th>Quantity: </th>
+				      	<th>Movie ID:</th>
+				      	<th>Title: </th>
+				      	<th></th>
+				    </tr>
+				  </thead>
+				  
+				  <tbody>
+				  <c:forEach items='<%= session.getAttribute("cart") %>' var="c" varStatus="status">
+				    <tr>
+				    	<th>${c.quantity}</th>
+				      	<td>${c.movieId}</td>
+				      	<td>${c.movieTitle}</td>
+				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px" value=""> 
+				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
+		      				<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
+		      			</td>
+				    </tr>
+			     </c:forEach>
+			    </tbody>
+	    	</table>
+        </div>
+        
         
         
 

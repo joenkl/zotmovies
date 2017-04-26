@@ -65,7 +65,7 @@
 					Trailer <span class="glyphicon glyphicon-chevron-right"></span>
 				</a>
 				<hr>
-				<div id="successAdd" class="alert alert-success offset4 span4"></div>
+				<div id="successAdd"></div>
 			</div>
 		</div>
 		<!-- /.row -->
