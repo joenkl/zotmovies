@@ -1,6 +1,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
+<script>
+		var updateCart = function(movieid){
+			
+			var newq = document.getElementById("quantity").value;
+			$.ajax({
+				url: "./shopping-cart/updatecart?movieId=" + movieid +"&quantity=" + newq,
+				method: "POST",
+                success: function (response) {
+                	$("#successUpdate").html(response);
+                	$("#successUpdate").addClass("table table-bordered table-inverse");
+                }
+			});
+		}
+</script>
 
 <%@ include file="header.jsp"%>
 <body>
@@ -20,22 +34,23 @@
         <!-- Projects Row -->
         <h3> Your Cart: </h3>
         <table class="table table-bordered table-inverse">
-        	
 			  <thead>
 			    <tr>
-			      <th>Movie ID:</th>
-			      <th>Title: </th>
-			      <th>Quantity</th>
+			    	<th>Quantity: </th>
+			      	<th>Movie ID:</th>
+			      	<th>Title: </th>
+			      	<th></th>
 			    </tr>
 			  </thead>
 			  
 			  <tbody>
 			  <c:forEach items='<%= session.getAttribute("cart") %>' var="c">
 			    <tr>
-			      <td>${c.movieId}</td>
-			      <td>${c.movieTitle}</td>
-			      <td><input class ="control-label" id="checkout-quantity" type="text" style="width:30px" value="${c.quantity}"> 
-			      		<button class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
+			    	<th>${c.quantity}</th>
+			      	<td>${c.movieId}</td>
+			      	<td>${c.movieTitle}</td>
+			      	<td><input class ="control-label" name ="quantity" id="quantity" type="text" style="width:30px" value=""> 
+			      		<button id ="#successUpdate" onclick="updateCart(${c.movieId})" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
 	      			</td>
 			    </tr>
 		     </c:forEach>
@@ -74,19 +89,19 @@
                     </div>
 
                     <div class='col-xs-4 form-group expiration required'>
-                        <label class='control-label'> </label>
+                        <label class='control-label'>Month</label>
                         <input class='form-control card-expi-month' placeholder='MM' size='2' type='text'>
                     </div>
 
                     <div class='col-xs-4 form-group expiration required'>
-                        <label class='control-label'> </label>
+                        <label class='control-label'>Year</label>
                         <input class='form-control card-exp-year' placeholder='YYYY' size='4' type='text'>
                     </div>
                 </div>
 
                 <div class='form-row'>
                     <div class='col-xs-12 form-group'>
-                        <button class='form-control btn btn-primary place-order-button' type='submit'>Place Order »</button>
+                        <button class='form-control btn btn-primary place-order-button' type='submit'>Place Order �</button>
                     </div>
                 </div>           
             </div>                   

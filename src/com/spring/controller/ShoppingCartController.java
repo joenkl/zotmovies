@@ -85,4 +85,51 @@ public class ShoppingCartController {
 			
 		return "viewcart";
 	}
+	
+	@RequestMapping(value="/updatecart", method=RequestMethod.POST)
+	@Scope("session")
+	public String updateQuantity (@RequestParam(value="movieId", required=true) String movieId, 
+			@RequestParam(value="quantity", required=true) String quantity , HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(true);
+		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
+		
+		int id = Integer.parseInt(movieId);
+		int newQ = Integer.parseInt(quantity);
+		
+		for(ShoppingCart cartItem : shoppingCartList){
+			if (id == cartItem.getMovieId())
+			{
+				if(newQ == 0)
+				{
+					shoppingCartList.remove(cartItem);
+				}
+				else
+				{
+					cartItem.setQuantity(newQ);
+				}
+				break;
+			}
+		}
+		return "viewcart";
+	}
+	
+	@RequestMapping(value="/deleteItem", method=RequestMethod.POST)
+	@Scope("session")
+	public String removeItem (@RequestParam(value="movieId", required=true) String movieId, HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(true);
+		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
+		
+		int id = Integer.parseInt(movieId);
+
+		for(ShoppingCart cartItem : shoppingCartList){
+			if (id == cartItem.getMovieId())
+			{
+				shoppingCartList.remove(cartItem);
+				break;
+			}
+		}
+		return "viewcart";
+	}
 }

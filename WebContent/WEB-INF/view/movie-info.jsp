@@ -3,10 +3,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="header.jsp"%>
 <script>
-		var addToCart = function(movieid){
+		var addToCart = function(movieid, title){
 			$.ajax({
-				url: "./shopping-cart/addcart?movieId=" + movieid,
-				method: "POST"
+				url: "./shopping-cart/addcart?movieId=" + movieid +"&name=" + title,
+				method: "POST",
+                success: function (response) {
+                	$("#successAdd").html(response);
+                	$("#successAdd").addClass("alert alert-success offset4 span4");
+                }
 			});
 		}
 </script>
@@ -34,7 +38,7 @@
 						<img class="img-responsive" src="${movie.banner_url}" alt="">
 					</center>
 				</a>
-				<button onclick="addToCart(${movie.id})" style="margin: 10px" class="btn btn btn-success">
+				<button onclick="addToCart(${movie.id}, '${movie.title}')" style="margin: 10px" class="btn btn btn-success">
 					Add to Cart <span class="glyphicon glyphicon-shopping-cart"></span>
 				</button>
 			</div>
@@ -60,6 +64,8 @@
 				<a class="btn btn-primary" href="${movie.trailer_url}">Watch
 					Trailer <span class="glyphicon glyphicon-chevron-right"></span>
 				</a>
+				<hr>
+				<div id="successAdd" class="alert alert-success offset4 span4"></div>
 			</div>
 		</div>
 		<!-- /.row -->
