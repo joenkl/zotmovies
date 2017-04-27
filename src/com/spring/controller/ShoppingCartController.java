@@ -2,6 +2,7 @@ package com.spring.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,7 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.dao.CreditCardDao;
 import com.spring.dao.MovieDao;
+import com.spring.dao.SaleDao;
 import com.spring.model.Movie;
+import com.spring.model.Sale;
 import com.spring.model.ShoppingCart;
 
 import org.springframework.stereotype.Controller;
@@ -29,18 +32,6 @@ import org.springframework.ui.ModelMap;
 @RequestMapping(value="/shopping-cart")
 public class ShoppingCartController {
 	 
-	@RequestMapping(value="/sp-form")
-	public ModelAndView indexSP()
-	{
-		//cart.put("cart", new ShoppingCart());
-		ModelAndView model = new ModelAndView("cart");
-		ShoppingCart cart = new ShoppingCart();
-		
-		model.addObject("cart", cart);
-		return model; 
-		
-	}
-	
 	@RequestMapping(value="/addcart", method=RequestMethod.POST)
 	@Scope("session")
 	public String addcart (@RequestParam(value="movieId", required=true) String movieId, 
@@ -141,7 +132,7 @@ public class ShoppingCartController {
 	}
 	
 	@Autowired
-	CreditCardDao creditcardDao; 
+	private CreditCardDao creditcardDao; 
 	
 	@RequestMapping(value="/credit-card-process", method=RequestMethod.POST)
 	public ModelAndView creditCardProcess(HttpServletRequest request, RedirectAttributes redir){
@@ -189,10 +180,48 @@ public class ShoppingCartController {
 			}
 			else {
 				ModelAndView model = new ModelAndView();    
-				model.setViewName("redirect:/credit-card-process");
+				model.setViewName("redirect:/shopping-cart/payment-info");
 				return model; 
 			}
 		}
 		
+	}
+	
+	
+	@Autowired
+	private SaleDao saleDao; 
+	@RequestMapping(value="/order-confirmation")
+	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir){
+		
+		HttpSession session = request.getSession(true);
+		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
+		int cusID = (int) session.getAttribute("customerID");
+		String cusName = (String) session.getAttribute("customerFN");
+		
+		List<Map<String, List<Sale>>> completedOrder = null;
+		Map<String, List<Sale>> tempS = null;
+		
+		for(ShoppingCart cartItem : shoppingCartList){
+			int itemQ = cartItem.getQuantity();
+			for(int i = 0; i < itemQ; i++)
+			{
+				//add item into database
+				saleDao.addOrder(cartItem.getMovieId(), cusID);
+			}
+			
+			//get latest sale with the quantity
+			List<Sale> saleList = saleDao.getLatestOrder(itemQ); 
+			//put in a list (movieId, movieTitle, <list>orderID)
+			tempS.put(cartItem.getMovieTitle(), saleList);
+			completedOrder.add(tempS);
+			tempS.clear();
+		}
+		
+		//empty shoppingCartList
+		shoppingCartList.clear();
+		
+		ModelAndView model = new ModelAndView("order-confirmation");    
+		model.addObject(completedOrder);
+		return model; 
 	}
 }

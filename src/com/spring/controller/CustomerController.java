@@ -41,7 +41,8 @@ public class CustomerController {
 				session.setAttribute("login", login);
 				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
 				session.setAttribute("customerID", customer.getId());
-				session.setAttribute("customerFN", customer.getFist_name());
+				String fullname = customer.getFist_name() + " " + customer.getLast_name();
+				session.setAttribute("customerFN", fullname);
 			}
 			
 			return new ModelAndView("redirect:/index"); 
@@ -59,7 +60,8 @@ public class CustomerController {
 				session.setAttribute("login", login);
 				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
 				session.setAttribute("customerID", customer.getId());
-				session.setAttribute("customerFN", customer.getFist_name());
+				String fullname = customer.getFist_name() + " " + customer.getLast_name();
+				session.setAttribute("customerFN", fullname);
 			}
 			
 			ModelAndView model = new ModelAndView();
