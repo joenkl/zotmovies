@@ -47,12 +47,9 @@ public class MovieController {
 			@RequestParam(value = "last_name", required = false) String last_name,
 			@RequestParam(value = "year", required = false) String year,
 			@RequestParam(value = "director", required = false) String director,
-			@RequestParam(value = "column", required = false) String sortColumn,
+			@RequestParam(value = "column", required = false) String column,
 			@RequestParam(value = "sort", required = false) String sort,
-			RedirectAttributes redir) {
-		
-		System.out.println(sortColumn);
-		System.out.println(sort);
+			@RequestParam(value = "page", required = false) String page, RedirectAttributes redir) {
 
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
@@ -62,34 +59,74 @@ public class MovieController {
 		else {
 			if (year.isEmpty())
 				year = "-1";
-		
-			//TODO: take care of sorting (if sorting is not in the right format) ?
-			if(sort == null)
+
+			// TODO: take care of sorting (if sorting is not in the right
+			// format) ?
+			if (sort == null) {
+				sort = "a-z"; // default sorting
+			} else // make sure sort in {a-z, z-a, 1-9, 9-1} only
 			{
-				sort = "a-z"; //default sorting
+				if(sort.isEmpty())
+					sort = "a-z";
+
+				sort = sort.toLowerCase();
+
+				if (!sort.equals("a-z") && !sort.equals("z-a") && !sort.equals("1-9") && !sort.equals("9-1")) {
+					System.out.println("invalid sort problems.");
+					return new ModelAndView("404-page");
+				}
 			}
-			else //make sure sort in {a-z, z-a, 1-9, 9-1} only 
-				sort = sort.toLowerCase(); 
-			
-			//sort by title by default
-			if(sortColumn == null)
-			{
-				sortColumn = "Title";
+
+			// sort by title by default
+			if (column == null) {
+				column = "title";
 			}
-			
-			else
-			{
-				sortColumn = sortColumn.toLowerCase();
+
+			else {
+				
+				if(column.isEmpty())
+					column = "title";
+				
+				// else: make sure its either year or title only
+				column = column.toLowerCase();
+				if (!column.equals("title") && !column.equals("year")) {
+					System.out.println("invalid column problems.");
+					return new ModelAndView("404-page");
+				}
 			}
-			
-			//else: make sure its either year or title only
-			
+
+			// pagination:
+			if (page == null) {
+				page = "1";
+			}
+
+			// else: make sure it's a number
+			else {
+				
+				if (page.isEmpty())
+					page = "1";
+				
+				if (!tryParseInt(page)) {
+					System.out.println("try parse int problems.");
+					return new ModelAndView("404-page");
+				}
+				
+				else if(Integer.parseInt(page) <= 0) 
+				{
+					System.out.println("invalid page problems.");
+					return new ModelAndView("404-page");
+				}
+
+			}
+
 			ModelAndView model = new ModelAndView("movie-table-result");
 			List<Movie> listMovies = movieDao.getMovieListWithSearch(title, Integer.parseInt(year), director,
-					first_name, last_name, sortColumn , sort);
+					first_name, last_name, column, sort, Integer.parseInt(page));
 
 			Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
 			Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
+
+			// create hash table for listGenres and listStars
 			for (Movie movie : listMovies) {
 
 				listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
@@ -100,7 +137,14 @@ public class MovieController {
 			model.addObject("listGenres", listGenres);
 			model.addObject("listStars", listStars);
 			model.addObject("sort", sort);
-			//model.addObject("column", sortColumn);
+			model.addObject("activePage", page);
+
+			if ((listMovies).size() < 10)
+				model.addObject("lastPage", true);
+
+			else
+				model.addObject("lastPage", false);
+
 			return model;
 		}
 
@@ -111,10 +155,10 @@ public class MovieController {
 		return "movie-table-result";
 	}
 
-	@RequestMapping("/sortMovieTitle")
-	public ModelAndView sortMovieTitle(@RequestParam("sort") String desiredSort) {
-		System.out.println(desiredSort);
-		return null;
+	@RequestMapping("/test-pagination")
+	public String show_pagination() {
+		return "pagination";
+
 	}
 
 	@RequestMapping("/sortMovieYear")
@@ -123,9 +167,14 @@ public class MovieController {
 		return null;
 	}
 
-	// @RequestMapping("/sortMovieYear")
-	// {
-	//
-	// }
-	//
+	private Boolean tryParseInt(String number) {
+		try {
+			Integer.parseInt(number);
+			return true;
+
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }

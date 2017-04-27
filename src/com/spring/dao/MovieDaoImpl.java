@@ -55,11 +55,22 @@ public class MovieDaoImpl implements MovieDao {
 
 		return listMovies;
 	}
+	
+	@Override
+	public int getTotalNumOfMovies()
+	{
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "SELECT count(*) FROM movies";
+		int total = jdbcTemplate.queryForObject(sql, Integer.class);
+
+		return total;
+		
+	}
 
 	@Override
 	// by default the function will return the search result order by title asc
 	public List<Movie> getMovieListWithSearch(String title, int year, String director, String first_name,
-			String last_name, String orderByColumn, String ascOrDesc) {
+			String last_name, String orderByColumn, String ascOrDesc, int page) {
 		String sql = "SELECT * FROM movies M ";
 
 		if (!first_name.isEmpty() || !last_name.isEmpty()) {
@@ -112,7 +123,7 @@ public class MovieDaoImpl implements MovieDao {
 		
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
-		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc;
+		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT 10 OFFSET " + page;
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
