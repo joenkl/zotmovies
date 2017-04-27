@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.dao.CreditCardDao;
 import com.spring.dao.MovieDao;
 import com.spring.model.Movie;
 import com.spring.model.ShoppingCart;
@@ -27,7 +29,10 @@ import org.springframework.ui.ModelMap;
 @RequestMapping(value="/shopping-cart")
 public class ShoppingCartController {
 	
-	private MovieDao movieDao; 
+	
+	@Autowired
+	private CreditCardDao creditcartDao; 
+	
 	@RequestMapping(value="/sp-form")
 	public ModelAndView indexSP()
 	{
@@ -131,5 +136,34 @@ public class ShoppingCartController {
 			}
 		}
 		return "viewcart";
+	}
+	
+	
+	@RequestMapping(value="/payment-info")
+	public String paymenInfo() {
+		return ("creditcard-process");
+	}
+	
+	@RequestMapping(value="/credit-card-process", method=RequestMethod.POST)
+	public ModelAndView creditCardProcess(HttpServletRequest request, RedirectAttributes redir){
+		
+		String expDate =  request.getParameter("yyyy") + "-" + 
+							request.getParameter("mm") + "-" + 
+							request.getParameter("dd");
+		Boolean isCorrectCard = creditcartDao.isCorrectCard(request.getParameter("cardnumber"), 
+				request.getParameter("fName"), request.getParameter("lName"), expDate);
+		
+		if (isCorrectCard){
+			ModelAndView model = new ModelAndView();
+			model.setViewName("redirect:/checkout");
+			redir.addFlashAttribute("message", "Your card info is correct");
+			return model; 
+		}
+		else{
+			ModelAndView model = new ModelAndView();
+			model.setViewName("redirect:/checkout");
+			redir.addFlashAttribute("message", "Your card information does not match our record");
+			return model; 
+		}
 	}
 }
