@@ -7,7 +7,7 @@ import com.spring.model.Movie;;
 
 public interface MovieDao {
 
-	public List<Movie> getMovieList();
+	public List<Movie> getMovieList(int page);
 
 	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith);
 	

@@ -21,7 +21,7 @@
 		<!-- /.row -->
 
 		<hr>
-
+		
 		<!-- Footer -->	
 		<%@ include file="footer.jsp" %>
 	</div>

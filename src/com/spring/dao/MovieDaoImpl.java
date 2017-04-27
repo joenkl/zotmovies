@@ -21,9 +21,9 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieList() {
+	public List<Movie> getMovieList(int page) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies";
+		String sql = "SELECT * FROM movies LIMIT 12 OFFSET " + page;
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override

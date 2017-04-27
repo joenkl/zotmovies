@@ -20,29 +20,29 @@
 
 <c:choose>
 	<c:when test="${sort == 'a-z'}">
-		<c:set var="classForTitle" value="fa fa-sort-alpha-asc" />
-		<c:set var="classForYear" value="fa fa-unsorted" />
+		<c:set var="classForTitle" value="glyphicon glyphicon-sort-by-alphabet" />
+		<c:set var="classForYear" value="glyphicon glyphicon-sort" />
 		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=z-a&page=${page}" />
 		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == 'z-a'}">
-		<c:set var="classForTitle" value="fa fa-sort-alpha-desc" />
-		<c:set var="classForYear" value="fa fa-unsorted" />
+		<c:set var="classForTitle" value="glyphicon glyphicon-sort-by-alphabet-alt" />
+		<c:set var="classForYear" value="glyphicon glyphicon-sort" />
 		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
 		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == '1-9'}">
-		<c:set var="classForYear" value="fa fa-sort-numeric-asc" />
-		<c:set var="classForTitle" value="fa fa-unsorted" />
+		<c:set var="classForYear" value="glyphicon glyphicon-sort-by-order" />
+		<c:set var="classForTitle" value="glyphicon glyphicon-sort" />
 		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
 		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=9-1&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == '9-1'}">
-		<c:set var="classForYear" value="fa fa-sort-numeric-desc" />
-		<c:set var="classForTitle" value="fa fa-unsorted" />
+		<c:set var="classForYear" value="glyphicon glyphicon-sort-by-order-alt" />
+		<c:set var="classForTitle" value="glyphicon glyphicon-sort" />
 		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
 		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>

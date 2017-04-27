@@ -17,4 +17,5 @@
 					</c:if>
 </c:forEach>
 
-<%@ include file="pagination.jsp"%>
+<!-- Pagination -->
+		<%@ include file="pagination.jsp"%>
