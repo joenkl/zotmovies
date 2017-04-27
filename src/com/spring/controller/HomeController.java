@@ -4,7 +4,6 @@ package com.spring.controller;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
- 
 import java.util.Random;
 
 import com.spring.dao.*;
@@ -30,8 +29,6 @@ public class HomeController {
 	}
 
 	@RequestMapping("/index")
-	public ModelAndView home() throws IOException {
-		List<Movie> listMovies = movieDao.getMovieList();
 	public ModelAndView home(
 			@RequestParam(value = "page", required = false) String page
 			) throws IOException {

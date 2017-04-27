@@ -14,11 +14,8 @@ import com.spring.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-<<<<<<< HEAD
-=======
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
->>>>>>> sorting-pagination
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -157,47 +154,6 @@ public class MovieController {
 	public String show() {
 		return "movie-table-result";
 	}
-<<<<<<< HEAD
-	
-	@RequestMapping("/movie-id={condition}")
-	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
-		Movie movie = movieDao.getMovieListWithID(id);
-		ModelAndView model = new ModelAndView("movie-info");
-		
-		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>(); 
-		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>(); 
-		  
-		listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
-		listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
-		
-		model.addObject("movie", movie);
-		model.addObject("listGenres",listGenres);		
-		model.addObject("listStars",listStars);
-		return model; 
-	}
-	
-	@RequestMapping("/star-id={condition}")
-	public ModelAndView browseMovieByStarID(@PathVariable("condition") int id) {
-		
-		List<Movie> listMovies = movieDao.getMovieListWithStar(id);
-		ModelAndView model = new ModelAndView("search-result");
-		
-		  Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>(); 
-		  Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>(); 
-		  for(Movie movie : listMovies)
-		  {
-
-			  listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
-			  listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
-		  }
-		
-		  model.addObject("listMovies", listMovies);
-		  model.addObject("listGenres",listGenres);		
-		  model.addObject("listStars",listStars);
-		return model;
-	}
-	
-=======
 
 	@RequestMapping("/test-pagination")
 	public String show_pagination() {
@@ -221,5 +177,4 @@ public class MovieController {
 		}
 	}
 
->>>>>>> sorting-pagination
 }
