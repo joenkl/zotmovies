@@ -20,11 +20,25 @@
         <!-- Projects Row -->
         <div class="row">
             <h4> Your order has been succusfull placed: </h4>
-                <ul style="list-style: none">
-                    <li>Order id: 1001 - Spider Man </li>
-                    <li>Order id: 1002 - Episode III - Revenge of the Sith </li>
-                    <li>Order id: 1003 -Smallville Season 3 </li>
-                </ul>
+                <table class="table table-bordered table-inverse">
+				  <thead>
+				    <tr>
+				    	<th>Movie: </th>
+				      	<th>Order ID:</th>
+				      	<th></th>
+				      	<th></th>
+				    </tr>
+				  </thead>
+				  
+				  <tbody>
+				    <tr>
+				    	<th>${msg}</th>
+				      	<td></td>
+				      	<td></td>
+				      	<td></td>
+				    </tr>
+			    </tbody>
+	    	</table>
         </div>
         <!-- /.row -->
        <%@ include file="footer.jsp"%>
