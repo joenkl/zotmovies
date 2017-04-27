@@ -9,21 +9,32 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="login-container">
+					
 					<h3>Payment Information</h3>
 					<p align="center" style="color:red;"> ${message} </p>
 					<form id="creditcard-form" action="./credit-card-process" method="post" role="form">
-						<input type="text" name="cardnumber" placeholder="Credit Card Number" required>
 						
 						<div class='form-row'>
-		                    <div class='col-xs-4 form-group expiration required'>
+		                    <div class='col-xs-12 form-group card required'>
+		                        <label class='control-label'>Card Number</label>
+		                        <input type="text" name="cardnumber" class='form-control card-number' size='20' required>
+		                    </div>
+		                </div>
+						
+						<div class='form-row'>
+		                    <div class='col-xs-12 form-group expiration required'>
 		                        <label class='control-label'>First Name</label>
 		                        <input type="text" name="fName" required>
 		                    </div>
-		                     <div class='col-xs-4 form-group expiration required'>
+	                    </div>
+	                    
+	                    <div class='form-row'>
+		                     <div class='col-xs-12 form-group expiration required'>
 		                        <label class='control-label'>Last Name</label>
 		                        <input type="text" name="lName" required>
 		                    </div>
 	                    </div>
+	                    
 						<div class='form-row'>
 		                    <div class='col-xs-4 form-group expiration required'>
 		                        <label class='control-label'>Expiration</label>
@@ -40,7 +51,7 @@
 		                        <input class='form-control card-exp-year' name="yyyy" placeholder='YYYY' size='4' type='text'>
                     		</div>
                			 </div>
-						<input type="submit" name="cc-submit" class="form-control btn btn-primary place-order-button" value="ccsubmit">
+						<input type="submit" name="cc-submit" class="form-control btn btn-primary place-order-button" value="Submit">
 					</form>
 				</div>
 			</div>

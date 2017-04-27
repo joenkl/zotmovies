@@ -28,11 +28,7 @@ import org.springframework.ui.ModelMap;
 @Controller
 @RequestMapping(value="/shopping-cart")
 public class ShoppingCartController {
-	
-	
-	@Autowired
-	private CreditCardDao creditcartDao; 
-	
+	 
 	@RequestMapping(value="/sp-form")
 	public ModelAndView indexSP()
 	{
@@ -144,13 +140,17 @@ public class ShoppingCartController {
 		return ("creditcard-process");
 	}
 	
+	@Autowired
+	CreditCardDao creditcardDao; 
+	
 	@RequestMapping(value="/credit-card-process", method=RequestMethod.POST)
 	public ModelAndView creditCardProcess(HttpServletRequest request, RedirectAttributes redir){
 		
 		String expDate =  request.getParameter("yyyy") + "-" + 
 							request.getParameter("mm") + "-" + 
 							request.getParameter("dd");
-		Boolean isCorrectCard = creditcartDao.isCorrectCard(request.getParameter("cardnumber"), 
+		
+		Boolean isCorrectCard = creditcardDao.isCorrectCard(request.getParameter("cardnumber"), 
 				request.getParameter("fName"), request.getParameter("lName"), expDate);
 		
 		if (isCorrectCard){
@@ -160,7 +160,7 @@ public class ShoppingCartController {
 			return model; 
 		}
 		else{
-			ModelAndView model = new ModelAndView();
+			ModelAndView model = new ModelAndView();    
 			model.setViewName("redirect:/checkout");
 			redir.addFlashAttribute("message", "Your card information does not match our record");
 			return model; 

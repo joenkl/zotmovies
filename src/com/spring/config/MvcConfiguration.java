@@ -61,4 +61,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		return new StarDaoImpl(dataSource);
 	}
 	
+	@Bean
+	public CreditCardDao getCreditCardDao() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		return new CreditCardDaoImpl(dataSource);
+	}
+	
 }
