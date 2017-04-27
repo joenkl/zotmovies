@@ -7,7 +7,6 @@
 
     <!-- Page Content -->
     <div class="container">
-
         <!-- Page Header -->
         <div class="row">
             <div class="col-lg-12">

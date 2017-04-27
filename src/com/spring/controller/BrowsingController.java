@@ -20,14 +20,19 @@ public class BrowsingController {
 	private MovieDao movieDao; 
 	
 	
-	@RequestMapping("/browsing/title-start-with={condition}")
+	@RequestMapping("/browse-titles={condition}")
 		public ModelAndView titleBrowsing(@PathVariable("condition") String browserTerm) {
 			List<Movie> listMovies = movieDao.getMovieListWhereTitlesStartWith(browserTerm);
-
-			ModelAndView model = new ModelAndView("search-result");
-
-
+			ModelAndView model = new ModelAndView("index");
 			model.addObject("listMovies", listMovies);
 			return model; 
 		}
+	
+	@RequestMapping("/genre={condition}")
+	public ModelAndView genreBrowsing(@PathVariable("condition") String genre) {
+		List<Movie> listMovies = movieDao.getMovieListWithGenre(genre);
+		ModelAndView model = new ModelAndView("index");
+		model.addObject("listMovies", listMovies);
+		return model; 
+	}
 }

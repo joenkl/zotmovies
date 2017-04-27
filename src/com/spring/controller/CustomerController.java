@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.dao.CreditCardDao;
 import com.spring.dao.CustomerDao;
+import com.spring.model.Customer;
 import com.spring.model.Movie;
 
 @Controller 
@@ -30,13 +32,16 @@ public class CustomerController {
 		
 		if(isCustomer)
 		{
-			//todo: change session 
+			//TODO: change session 
 			HttpSession session = request.getSession(true);
 			Integer login = (Integer) (session.getAttribute("login"));
 			if(login == null)
 			{
 				login = new Integer(1);
 				session.setAttribute("login", login);
+				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
+				session.setAttribute("customerID", customer.getId());
+				session.setAttribute("customerFN", customer.getFist_name());
 			}
 			
 			return new ModelAndView("redirect:/index"); 
@@ -45,13 +50,16 @@ public class CustomerController {
 		else
 		{
 			
-			//todo: change session 
+			//TODO: change session 
 			HttpSession session = request.getSession(true);
 			Integer login = (Integer) (session.getAttribute("login"));
 			if(login == null)
 			{
 				login = new Integer(0);
 				session.setAttribute("login", login);
+				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
+				session.setAttribute("customerID", customer.getId());
+				session.setAttribute("customerFN", customer.getFist_name());
 			}
 			
 			ModelAndView model = new ModelAndView();
@@ -61,5 +69,8 @@ public class CustomerController {
 		}
 		
 	}
+	
+	
+	
 
 }

@@ -22,40 +22,40 @@
          <div class="row" >
             <h4>Search Movies by: </h4>
             <div class="col-md-5">
-                 <form action="./search" class="movie-advanced-search" id = "advanceSearch" style="margin:0;padding:0;display:inline">
+                 <form class="movie-advanced-search" id = "advanceSearch" style="margin:0;padding:0;display:inline">
                     
                     <div class='form-row'>
                         <div class='col-xs-12 form-group'>
                             <label class='control-label'>Title</label>
-                            <input class='form-control' type='text' name='title' value=''>
+                            <input class='form-control' type='text'>
                         </div>
                     </div>
 
                     <div class='form-row'>
                         <div class='col-xs-12 form-group'>
                             <label class='control-label'>Star's First Name</label>
-                            <input class='form-control' type='text' name='first_name'>
+                            <input class='form-control' type='text'>
                         </div>
                     </div>
 
                     <div class='form-row'>
                         <div class='col-xs-12 form-group'>
                             <label class='control-label'>Star's Last Name</label>
-                            <input class='form-control' type='text' name='last_name'>
+                            <input class='form-control' type='text'>
                         </div>
                     </div>
                     
                      <div class='form-row'>
                         <div class='col-xs-4 form-group'>
                             <label class='control-label'>Year</label>
-                            <input class='form-control' type='text' size="4" name='year'>
+                            <input class='form-control' type='text' size="4">
                         </div>
                     </div>
 
                     <div class='form-row'>
                         <div class='col-xs-12 form-group'>
                             <label class='control-label'>Director: </label>
-                            <input class='form-control' type='text' name='director'>
+                            <input class='form-control' type='text'>
                         </div>
                     </div>
                     
