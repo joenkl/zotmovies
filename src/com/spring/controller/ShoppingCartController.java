@@ -166,4 +166,33 @@ public class ShoppingCartController {
 			return model; 
 		}
 	}
+	
+	@RequestMapping(value="/payment-process")
+	public ModelAndView paymentProcess(HttpServletRequest request, RedirectAttributes redir){
+		
+		HttpSession session = request.getSession(true);
+		Integer login = (Integer) (session.getAttribute("login"));
+		if (login == null)
+		{
+			ModelAndView model = new ModelAndView();
+			model.setViewName("redirect:/login");
+			redir.addFlashAttribute("message", "Please login before checkout");
+			return model; 
+		}
+		else{
+			List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
+			if (shoppingCartList==null || shoppingCartList.isEmpty()){
+				ModelAndView model = new ModelAndView();    
+				model.setViewName("redirect:/checkout");
+				redir.addFlashAttribute("message", "Your Cart is empty");
+				return model; 
+			}
+			else {
+				ModelAndView model = new ModelAndView();    
+				model.setViewName("redirect:/credit-card-process");
+				return model; 
+			}
+		}
+		
+	}
 }

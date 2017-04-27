@@ -3,7 +3,6 @@
 <html lang="en">
 <script>
 		var updateCart = function(movieid, itemNum){
-			
 			var newq = document.getElementById(itemNum).value;
 			$.ajax({
 				url: "./shopping-cart/updatecart?movieId=" + movieid +"&quantity=" + newq,
@@ -13,7 +12,21 @@
                 },
 			
                 error: function(){
-                	$("#failUpdate").html("Cannot update quantity with movieID: "+ movieid);
+                	$("#failUpdate").html("Cannot update quantity with movie: "+ movieid);
+                }               
+			});
+		}
+		
+		var deleteItem = function(movieid){
+			$.ajax({
+				url: "./shopping-cart/deleteItem?movieId=" + movieid,
+				method: "POST",
+                success: function (response) {
+                	$("#successUpdate").html(response);
+                },
+			
+                error: function(){
+                	$("#failUpdate").html("Cannot delete movieID: "+ movieid);
                 }               
 			});
 		}
@@ -27,10 +40,11 @@
         <!-- Page Header -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Checkout
+                <h1 class="page-header">Checkout 
                     <!-- <small>Secondary Text</small> -->
                 </h1>
-                <a style="width: 20%; float:right" class="form-control btn btn-primary place-order-button" href="./shopping-cart/payment-info">Process to Checkout »</a>
+                <p align="center" style="color:red;"> ${message} </p>
+                <a style="width: 20%; float:right" class="form-control btn btn-primary place-order-button" href="./shopping-cart/payment-process">Process to Checkout »</a>
             </div>
         </div>
         <!-- /.row -->
@@ -55,9 +69,9 @@
 				    	<th>${c.quantity}</th>
 				      	<td>${c.movieId}</td>
 				      	<td>${c.movieTitle}</td>
-				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px" value=""> 
+				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px"> 
 				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-		      				<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
+		      				<button style="float: right" onclick="deleteItem(${c.movieId}, 'item${status.index}')" class='btn btn-danger btn-sm' id ="update-quantity-checkout" type='submit'>Delete</button>
 		      			</td>
 				    </tr>
 			     </c:forEach>
