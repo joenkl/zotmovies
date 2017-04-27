@@ -16,3 +16,6 @@
 			</div> <!-- Close ROW -->
 					</c:if>
 </c:forEach>
+
+<!-- Pagination -->
+		<%@ include file="pagination.jsp"%>
