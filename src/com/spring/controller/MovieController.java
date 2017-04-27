@@ -149,23 +149,24 @@ public class MovieController {
 		}
 
 	}
-
-	@RequestMapping("/test-table")
-	public String show() {
-		return "movie-table-result";
+	
+	@RequestMapping("/movie-id={condition}")
+	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
+		Movie movie = movieDao.getMovieListWithID(id);
+		ModelAndView model = new ModelAndView("movie-info");
+		
+		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>(); 
+		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>(); 
+		  
+		listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
+		listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
+		
+		model.addObject("movie", movie);
+		model.addObject("listGenres",listGenres);		
+		model.addObject("listStars",listStars);
+		return model; 
 	}
 
-	@RequestMapping("/test-pagination")
-	public String show_pagination() {
-		return "pagination";
-
-	}
-
-	@RequestMapping("/sortMovieYear")
-	public ModelAndView sortMovieYear(@RequestParam("sort") String desiredSort) {
-		System.out.println(desiredSort);
-		return null;
-	}
 
 	private Boolean tryParseInt(String number) {
 		try {

@@ -35,4 +35,6 @@ public class BrowsingController {
 		model.addObject("listMovies", listMovies);
 		return model; 
 	}
+	
+	
 }

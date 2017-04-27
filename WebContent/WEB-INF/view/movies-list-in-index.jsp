@@ -18,4 +18,4 @@
 </c:forEach>
 
 <!-- Pagination -->
-		<%@ include file="pagination.jsp"%>
+<%@ include file="pagination.jsp"%>
