@@ -1,5 +1,4 @@
 <%@ include file="header.jsp"%>
-<fmt:requestEncoding value="UTF-8" />
 <body>
 	<!-- Page Content -->
 	<div class="container">

@@ -105,14 +105,14 @@
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
 					<tr>
 						<td>${movie.id}</td>
-						<td>${movie.title}</td>
+						<td><a href="./movie-id=${movie.id}">${movie.title}</a></td>
 						<td>${movie.year}</td>
 						<td>${movie.director}</td>
 						<td>
 							<ul>
-								<c:forEach var="genre" items="${listGenres} ">
-									<a href="./browseGenre?genre=${genre.name}"> ${genre.name}
-									</a>
+								<c:forEach var="genre" items="${listGenres.get(movie.id)}">
+									<li><a href="./browseGenre?genre=${genre.name}"> ${genre.name}
+									</a></li>
 								</c:forEach>
 							</ul>
 						</td>

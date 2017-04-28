@@ -265,6 +265,7 @@ public class MovieController {
 		model.addObject("activePage", page);
 		model.addObject("sort", sort);
 		model.addObject("column", column);
+		
 
 		return model;
 	}

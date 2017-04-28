@@ -32,7 +32,7 @@
 					<li>First name: ${star.first_name}</li>
 					<li>Last name: ${star.last_name}</li>
 					<li>Date of Birth: ${star.sDOB}</li>
-					<li>List of Movies: </li>
+					<li>List of Movies: COMING SOON</li>
 
 				</ul>
 

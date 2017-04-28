@@ -38,7 +38,8 @@
 						<img class="img-responsive" src="${movie.banner_url}" alt="">
 					</center>
 				</a>
-				<button onclick="addToCart(${movie.id}, '${movie.title}')" style="margin: 10px" class="btn btn btn-success">
+				<button onclick="addToCart(${movie.id}, '${movie.title}')"
+					style="margin: 10px" class="btn btn btn-success">
 					Add to Cart <span class="glyphicon glyphicon-shopping-cart"></span>
 				</button>
 			</div>
@@ -48,14 +49,15 @@
 				<ul class="movie-info">
 					<li>ID: ${movie.id}</li>
 					<li>Director: <a href="#">${movie.director}</a></li>
-					<li>Stars: <c:forEach var="star"
-							items="${listStars.get(movie.id)}">
-							<a href="#">${star}</a>
+					<li>Stars: <c:forEach var="star" items="${listStars}">
+							<a
+								href="./getStarInfo?id=${star.id}&fn=${star.first_name}
+									&ln=${star.last_name}&dob=${star.dob}&photo_url=${star.photo_url}">
+								${star.first_name} ${star.last_name}</a>
 						</c:forEach>
 					</li>
-					<li>Genres: <c:forEach var="gen"
-							items="${listGenres.get(movie.id)}">
-							<a href="./genre=${gen}">${gen} </a>
+					<li>Genres:<c:forEach var="genre" items="${listGenres}">
+							<a href="./browseGenre?genre=${genre.name}"> ${genre.name} </a>
 						</c:forEach>
 					</li>
 
