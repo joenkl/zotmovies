@@ -12,14 +12,6 @@
 <c:set var="next" value="${thisUrl}&page=${activePage+1}" />
 <c:set var="previous" value="${thisUrl}&page=${activePage-1}" />
 
-<c:catch var="exception"> <c:set var="tryCatch" value="${currentPage}" /></c:catch>
-<c:if test="${empty exception && not empty tryCatch}">
-	<c:set var="next" value="./${currentPage}?page=${activePage+1}" />
-	<c:set var="previous" value="./${currentPage}?page=${activePage-1}" />
-</c:if>
-
-
-
 
 
 

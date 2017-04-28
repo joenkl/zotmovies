@@ -1,5 +1,5 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="header.jsp"%>
+<fmt:requestEncoding value="UTF-8" />
 <body>
 	<!-- Page Content -->
 	<div class="container">
@@ -22,8 +22,8 @@
 					<div class="col-md-3">
 						<ul class="genres-list">
 				</c:if>
-
-				<li><a href="./genre=${genre.name}">${genre.name}</a></li>
+				
+				<li><a href="./browseGenre?genre=${genre.name}"/>${genre.name}</a></li>
 
 				<c:if test="${status.index + 1 == 15}">
 					</ul>
@@ -38,7 +38,7 @@
 	<hr>
 
 	<!-- Footer -->
-	
+
 	<%@ include file="footer.jsp"%>
 	</div>
 	<!-- /.container -->

@@ -1,6 +1,8 @@
 package com.spring.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +55,7 @@ public class MovieController {
 
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
+
 			return new ModelAndView("index");
 		}
 
@@ -60,113 +63,115 @@ public class MovieController {
 			if (year.isEmpty())
 				year = "-1";
 
-			// TODO: take care of sorting (if sorting is not in the right
-			// format) ?
-			if (sort == null) {
-				sort = "a-z"; // default sorting
-			} else // make sure sort in {a-z, z-a, 1-9, 9-1} only
-			{
-				if(sort.isEmpty())
-					sort = "a-z";
+			// prepare sort:
+			sort = prepareSort(sort);
+			if (sort.equals("invalid"))
+				return new ModelAndView("404-page");
 
-				sort = sort.toLowerCase();
+			// prepare column
+			column = prepareColumn(column);
+			if (column.equals("invalid"))
+				return new ModelAndView("404-page");
 
-				if (!sort.equals("a-z") && !sort.equals("z-a") && !sort.equals("1-9") && !sort.equals("9-1")) {
-					System.out.println("invalid sort problems.");
-					return new ModelAndView("404-page");
-				}
-			}
+			// prepare page:
+			page = preparePage(page);
+			if (page.equals("invalid"))
+				return new ModelAndView("404-page");
 
-			// sort by title by default
-			if (column == null) {
-				column = "title";
-			}
-
-			else {
-				
-				if(column.isEmpty())
-					column = "title";
-				
-				// else: make sure its either year or title only
-				column = column.toLowerCase();
-				if (!column.equals("title") && !column.equals("year")) {
-					System.out.println("invalid column problems.");
-					return new ModelAndView("404-page");
-				}
-			}
-
-			// pagination:
-			if (page == null) {
-				page = "1";
-			}
-
-			// else: make sure it's a number
-			else {
-				
-				if (page.isEmpty())
-					page = "1";
-				
-				if (!tryParseInt(page)) {
-					System.out.println("try parse int problems.");
-					return new ModelAndView("404-page");
-				}
-				
-				else if(Integer.parseInt(page) <= 0) 
-				{
-					System.out.println("invalid page problems.");
-					return new ModelAndView("404-page");
-				}
-
-			}
-
-			ModelAndView model = new ModelAndView("movie-table-result");
 			List<Movie> listMovies = movieDao.getMovieListWithSearch(title, Integer.parseInt(year), director,
 					first_name, last_name, column, sort, Integer.parseInt(page));
 
-			Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
-			Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
-
-			// create hash table for listGenres and listStars
-			for (Movie movie : listMovies) {
-
-				listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
-				listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
-			}
-
-			model.addObject("listMovies", listMovies);
-			model.addObject("listGenres", listGenres);
-			model.addObject("listStars", listStars);
-			model.addObject("sort", sort);
-			model.addObject("activePage", page);
-
-			if ((listMovies).size() < 10)
-				model.addObject("lastPage", true);
-
-			else
-				model.addObject("lastPage", false);
+			ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
 
 			return model;
 		}
 
 	}
-	
+
 	@RequestMapping("/movie-id={condition}")
 	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("movie-info");
-		
-		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>(); 
-		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>(); 
-		  
+
+		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
+
 		listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
 		listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
-		
+
 		model.addObject("movie", movie);
-		model.addObject("listGenres",listGenres);		
-		model.addObject("listStars",listStars);
-		return model; 
+		model.addObject("listGenres", listGenres);
+		model.addObject("listStars", listStars);
+
+		return model;
 	}
 
+	@RequestMapping("/browseTitle")
+	public ModelAndView titleBrowsing(@RequestParam(value = "startWith") String browserTerm,
+			@RequestParam(value = "column", required = false) String column,
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "page", required = false) String page) {
+
+		// prepare sort:
+		sort = prepareSort(sort);
+		if (sort.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare column
+		column = prepareColumn(column);
+		if (column.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare page:
+		page = preparePage(page);
+		if (page.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		if (page.equals("invalid")) {
+			return new ModelAndView("404-page");
+		}
+
+		List<Movie> listMovies = movieDao.getMovieListWhereTitlesStartWith(browserTerm, column, sort, Integer.parseInt(page));
+
+		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
+
+		String currentPage = "browseTitle?startWith=" + browserTerm;
+		model.addObject("currentPage", currentPage);
+
+		return model;
+	}
+
+	@RequestMapping("/browseGenre")
+	public ModelAndView genreBrowsing(@RequestParam(value = "genre") String genre,
+			@RequestParam(value = "column", required = false) String column,
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "page", required = false) String page) {
+
+		// prepare sort:
+		sort = prepareSort(sort);
+		if (sort.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare column
+		column = prepareColumn(column);
+		if (column.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare page:
+		page = preparePage(page);
+		if (page.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		List<Movie> listMovies = movieDao.getMovieListWithGenre(genre, column, sort, Integer.parseInt(page));
+
+		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
+
+		String currentPage = "browseGenre?genre=" + genre;
+		model.addObject("currentPage", currentPage);
+
+		return model;
+
+	}
 
 	private Boolean tryParseInt(String number) {
 		try {
@@ -176,6 +181,96 @@ public class MovieController {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	private String preparePage(String page) {
+		if (page == null) {
+			page = "1";
+		}
+
+		else {
+			if (page.isEmpty())
+				page = "1";
+
+			else if (!tryParseInt(page))
+				page = "invalid";
+
+			else if (Integer.parseInt(page) <= 0) {
+				page = "invalid";
+			}
+
+		}
+
+		return page;
+
+	}
+
+	private String prepareColumn(String column) {
+		if (column == null) {
+			column = "title";
+		}
+
+		else {
+
+			if (column.isEmpty())
+				column = "title";
+
+			// else: make sure its either year or title only
+			column = column.toLowerCase();
+			if (!column.equals("title") && !column.equals("year")) {
+				column = "invalid";
+			}
+		}
+
+		return column;
+	}
+
+	private String prepareSort(String sort) {
+		if (sort == null) {
+			sort = "a-z"; // default sorting
+		} else // make sure sort in {a-z, z-a, 1-9, 9-1} only
+		{
+			if (sort.isEmpty())
+				sort = "a-z";
+
+			sort = sort.toLowerCase();
+
+			if (!sort.equals("a-z") && !sort.equals("z-a") && !sort.equals("1-9") && !sort.equals("9-1")) {
+				sort = "invalid";
+			}
+		}
+
+		return sort;
+
+	}
+
+	private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies) {
+		ModelAndView model = new ModelAndView("movie-table-result");
+
+		if ((listMovies).size() < 10)
+			model.addObject("lastPage", true);
+
+		else
+			model.addObject("lastPage", false);
+
+		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
+
+		// create hash table for listGenres and listStars
+		for (Movie movie : listMovies) {
+
+			listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
+			listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
+		}
+
+		model.addObject("listMovies", listMovies);
+		model.addObject("listGenres", listGenres);
+		model.addObject("listStars", listStars);
+		model.addObject("activePage", page);
+		model.addObject("sort", sort);
+		model.addObject("column", column);
+
+		return model;
 	}
 
 }

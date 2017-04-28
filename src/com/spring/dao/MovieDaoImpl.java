@@ -23,7 +23,7 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	public List<Movie> getMovieList(int page) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies LIMIT 12 OFFSET " + page;
+		String sql = "SELECT * FROM movies LIMIT 12 OFFSET " + ((page - 1)*12);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -39,9 +39,13 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith) {
+	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc, int page) {
+		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
+		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'";
+		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'" 
+					+ "ORDER BY " + orderByColumn + " " + ascOrDesc
+					+ " LIMIT 10 OFFSET " + ((page - 1)*10);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -55,16 +59,15 @@ public class MovieDaoImpl implements MovieDao {
 
 		return listMovies;
 	}
-	
+
 	@Override
-	public int getTotalNumOfMovies()
-	{
+	public int getTotalNumOfMovies() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT count(*) FROM movies";
 		int total = jdbcTemplate.queryForObject(sql, Integer.class);
 
 		return total;
-		
+
 	}
 
 	@Override
@@ -120,10 +123,10 @@ public class MovieDaoImpl implements MovieDao {
 		if (!director.isEmpty()) {
 			sql += " director LIKE \"%" + director + "%\" ";
 		}
-		
+
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
-		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT 10 OFFSET " + page;
+		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT 10 OFFSET " + ((page - 1)*10);
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
@@ -140,15 +143,18 @@ public class MovieDaoImpl implements MovieDao {
 		return listMovies;
 
 	}
-	
-	
+
 	@Override
-	public List<Movie> getMovieListWithGenre(String genre){
+	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page){
+		
+		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies, genres_in_movies, genres "
-				+ "WHERE genres.name = '" + genre
-				+ "' AND genres.id = genres_in_movies.genre_id AND genres_in_movies.movie_id = movies.id";
+		String sql = "select * from movies M "
+				+ "join genres_in_movies GM on M.id = GM.movie_id "
+				+ "where GM.genre_id in (select id from genres where name='" + genre + "')"
+				+ " ORDER BY " + orderByColumn + " " + ascOrDesc
+				+ " LIMIT 10 OFFSET " + ((page - 1)*10);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 			 
 	            @Override
@@ -167,56 +173,43 @@ public class MovieDaoImpl implements MovieDao {
 		 
 	        return listMovies;
 	}
-	
+
 	@Override
-	public List<Movie> getMovieListWithStar(int starID){
-		
+	public List<Movie> getMovieListWithStar(int starID) {
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT * FROM movies M JOIN stars_in_movies SM ON M.id = SM.movie_id WHERE SM.star_id = ?";
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
-			 
-	            @Override
-	            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-	            	Movie movie = new Movie(resultSet.getInt(1),
-							resultSet.getString(2),
-							resultSet.getInt(3),
-							resultSet.getString(4),
-							resultSet.getString(5),
-							resultSet.getString(6)
-							);
-					return movie;
-	            }
-	             
-	        }, starID);
-		 
-	        return listMovies;
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+				return movie;
+			}
+
+		}, starID);
+
+		return listMovies;
 	}
-	
+
 	@Override
-	public Movie getMovieListWithID(int id){
-		
+	public Movie getMovieListWithID(int id) {
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT * FROM movies WHERE movies.id = ?";
 		Movie movie = jdbcTemplate.queryForObject(sql, new RowMapper<Movie>() {
-			 
-            @Override
-            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-            	Movie movie = new Movie(resultSet.getInt(1),
-						resultSet.getString(2),
-						resultSet.getInt(3),
-						resultSet.getString(4),
-						resultSet.getString(5),
-						resultSet.getString(6)
-						);
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
 				return movie;
-            }
-             
-        }, id);
-		
-		
+			}
+
+		}, id);
+
 		return movie;
 	}
 	
-	
-
 }

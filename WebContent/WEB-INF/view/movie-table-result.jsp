@@ -17,6 +17,19 @@
 
 <c:set var="thisUrl"
 	value="search?title=${title}&first_name=${first_name}&last_name=${last_name}&year=${year}&director=${director}" />
+	
+<!-- if it's a browseGenre page -->
+<c:catch var="exception"> <c:set var="tryCatch" value="${param.genre}" /></c:catch>
+<c:if test="${empty exception && not empty tryCatch}">
+	<c:set var="thisUrl" value="./${currentPage}" />
+</c:if>
+
+<!-- if it's a browseTitle page -->
+<c:catch var="exception"> <c:set var="tryCatch" value="${param.startWith}" /></c:catch>
+<c:if test="${empty exception && not empty tryCatch}">
+	<c:set var="thisUrl" value="./${currentPage}" />
+</c:if>
+
 
 <c:choose>
 	<c:when test="${sort == 'a-z'}">
