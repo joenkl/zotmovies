@@ -1,6 +1,13 @@
 package com.spring.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -180,7 +187,7 @@ public class ShoppingCartController {
 			}
 			else {
 				ModelAndView model = new ModelAndView();    
-				model.setViewName("redirect:/shopping-cart/payment-info");
+				model.setViewName("redirect:/shopping-cart/order-confirmation");
 				return model; 
 			}
 		}
@@ -191,7 +198,7 @@ public class ShoppingCartController {
 	@Autowired
 	private SaleDao saleDao; 
 	@RequestMapping(value="/order-confirmation")
-	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir){
+	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir) throws ParseException{
 		
 		HttpSession session = request.getSession(true);
 		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
@@ -201,27 +208,32 @@ public class ShoppingCartController {
 		List<Map<String, List<Sale>>> completedOrder = null;
 		Map<String, List<Sale>> tempS = null;
 		
+		String sql ="";
+		
+		Date today = Calendar.getInstance().getTime();  
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String sDate = df.format(today); 
+		
+		Date javaDay = df.parse(sDate);
+		java.sql.Date sqlDate = new java.sql.Date(javaDay.getTime());
+		
 		for(ShoppingCart cartItem : shoppingCartList){
 			int itemQ = cartItem.getQuantity();
+			String title = cartItem.getMovieTitle();
 			for(int i = 0; i < itemQ; i++)
 			{
-				//add item into database
-				saleDao.addOrder(cartItem.getMovieId(), cusID);
+				sql += "insert into sales (sales.customer_id, sales.movie_id, sales.sale_date)"
+						+ "value (" + cusID +", " + cartItem.getMovieId() + ", " + "'" + sqlDate + "'" + ");";
 			}
 			
-			//get latest sale with the quantity
-			List<Sale> saleList = saleDao.getLatestOrder(itemQ); 
-			//put in a list (movieId, movieTitle, <list>orderID)
-			tempS.put(cartItem.getMovieTitle(), saleList);
-			completedOrder.add(tempS);
-			tempS.clear();
+			saleDao.addOrder(sql);
 		}
 		
 		//empty shoppingCartList
 		shoppingCartList.clear();
-		
+		String msg = "Successfully placed your order";
 		ModelAndView model = new ModelAndView("order-confirmation");    
-		model.addObject(completedOrder);
+		model.addObject(msg);
 		return model; 
 	}
 }

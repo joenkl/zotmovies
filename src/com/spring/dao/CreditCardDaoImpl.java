@@ -3,6 +3,7 @@ import com.spring.model.CreditCard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -27,7 +28,8 @@ public class CreditCardDaoImpl implements CreditCardDao {
 			String sql = "select * from creditcards "
 					+ "where id = ? and first_name = ? and last_name = ? and expiration = ?";
 			
-			CreditCard cc = (CreditCard) jdbcTemplate.query(sql, new RowMapper<CreditCard>() {
+			List<CreditCard> cc = (List<CreditCard>) jdbcTemplate.query(sql, new RowMapper<CreditCard>() {
+				
 				@Override
 				public CreditCard mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
 					CreditCard creditcard = 

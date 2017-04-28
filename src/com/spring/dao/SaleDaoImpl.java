@@ -22,18 +22,15 @@ public class SaleDaoImpl implements SaleDao {
 	}
 
 	@Override
-	public void addOrder(int movieID, int cusID) {
+	public void addOrder(String sql) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "insert into sales (sales.customer_id, sales.movie_id, sales.sale_date)"
-				+ "value (? ?)";
-		LocalDate localDate = LocalDate.now();
-		jdbcTemplate.update(sql, movieID, cusID, localDate);
+		jdbcTemplate.update(sql);
 	}
 	
 	@Override
 	public List<Sale> getLatestOrder(int numOfOrder) {		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "Select * from sales order by sales.id  limt ? desc";
+		String sql = "Select * from sales order by sales.id desc limit ?";
 		
 		List<Sale> listSale = jdbcTemplate.query(sql, new RowMapper<Sale> (){
 			
