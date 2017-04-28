@@ -17,15 +17,19 @@
 
 <c:set var="thisUrl"
 	value="search?title=${title}&first_name=${first_name}&last_name=${last_name}&year=${year}&director=${director}" />
-	
+
 <!-- if it's a browseGenre page -->
-<c:catch var="exception"> <c:set var="tryCatch" value="${param.genre}" /></c:catch>
+<c:catch var="exception">
+	<c:set var="tryCatch" value="${param.genre}" />
+</c:catch>
 <c:if test="${empty exception && not empty tryCatch}">
 	<c:set var="thisUrl" value="./${currentPage}" />
 </c:if>
 
 <!-- if it's a browseTitle page -->
-<c:catch var="exception"> <c:set var="tryCatch" value="${param.startWith}" /></c:catch>
+<c:catch var="exception">
+	<c:set var="tryCatch" value="${param.startWith}" />
+</c:catch>
 <c:if test="${empty exception && not empty tryCatch}">
 	<c:set var="thisUrl" value="./${currentPage}" />
 </c:if>
@@ -33,31 +37,42 @@
 
 <c:choose>
 	<c:when test="${sort == 'a-z'}">
-		<c:set var="classForTitle" value="glyphicon glyphicon-sort-by-alphabet" />
+		<c:set var="classForTitle"
+			value="glyphicon glyphicon-sort-by-alphabet" />
 		<c:set var="classForYear" value="glyphicon glyphicon-sort" />
-		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=z-a&page=${page}" />
-		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
+		<c:set var="nextTitleOrder"
+			value="${thisUrl}&column=title&sort=z-a&page=${page}" />
+		<c:set var="nextYearOrder"
+			value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == 'z-a'}">
-		<c:set var="classForTitle" value="glyphicon glyphicon-sort-by-alphabet-alt" />
+		<c:set var="classForTitle"
+			value="glyphicon glyphicon-sort-by-alphabet-alt" />
 		<c:set var="classForYear" value="glyphicon glyphicon-sort" />
-		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
-		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
+		<c:set var="nextTitleOrder"
+			value="${thisUrl}&column=title&sort=a-z&page=${page}" />
+		<c:set var="nextYearOrder"
+			value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == '1-9'}">
 		<c:set var="classForYear" value="glyphicon glyphicon-sort-by-order" />
 		<c:set var="classForTitle" value="glyphicon glyphicon-sort" />
-		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
-		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=9-1&page=${page}" />
+		<c:set var="nextTitleOrder"
+			value="${thisUrl}&column=title&sort=a-z&page=${page}" />
+		<c:set var="nextYearOrder"
+			value="${thisUrl}&column=year&sort=9-1&page=${page}" />
 	</c:when>
 
 	<c:when test="${sort == '9-1'}">
-		<c:set var="classForYear" value="glyphicon glyphicon-sort-by-order-alt" />
+		<c:set var="classForYear"
+			value="glyphicon glyphicon-sort-by-order-alt" />
 		<c:set var="classForTitle" value="glyphicon glyphicon-sort" />
-		<c:set var="nextTitleOrder" value="${thisUrl}&column=title&sort=a-z&page=${page}" />
-		<c:set var="nextYearOrder" value="${thisUrl}&column=year&sort=1-9&page=${page}" />
+		<c:set var="nextTitleOrder"
+			value="${thisUrl}&column=title&sort=a-z&page=${page}" />
+		<c:set var="nextYearOrder"
+			value="${thisUrl}&column=year&sort=1-9&page=${page}" />
 	</c:when>
 
 </c:choose>
@@ -95,15 +110,19 @@
 						<td>${movie.director}</td>
 						<td>
 							<ul>
-								<c:forEach var="star" items="${listGenres.get(movie.id)}">
-									<li>${star}</li>
+								<c:forEach var="genre" items="${listGenres} ">
+									<a href="./browseGenre?genre=${genre.name}"> ${genre.name}
+									</a>
 								</c:forEach>
 							</ul>
 						</td>
 						<td>
 							<ul>
 								<c:forEach var="star" items="${listStars.get(movie.id)}">
-									<li>${star}</li>
+									<li><a
+										href="./getStarInfo?id=${star.id}&fn=${star.first_name}
+									&ln=${star.last_name}&dob=${star.dob}&photo_url=${star.photo_url}">
+											${star.first_name} ${star.last_name}</a></li>
 								</c:forEach>
 							</ul>
 						</td>

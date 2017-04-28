@@ -93,15 +93,11 @@ public class MovieController {
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("movie-info");
 
-		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
-		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
-
-		listGenres.put(movie.getId(), genreDao.getGenreListByMovieId(movie.getId()));
-		listStars.put(movie.getId(), starDao.getStarsByMovieId(movie.getId()));
-
 		model.addObject("movie", movie);
+		
+		List<Genre> listGenres = genreDao.getGenreListByMovieId(movie.getId());
 		model.addObject("listGenres", listGenres);
-		model.addObject("listStars", listStars);
+		model.addObject("listStars", starDao.getStarsByMovieId(movie.getId()));
 
 		return model;
 	}
@@ -253,8 +249,8 @@ public class MovieController {
 		else
 			model.addObject("lastPage", false);
 
-		Map<Integer, List<String>> listGenres = new HashMap<Integer, List<String>>();
-		Map<Integer, List<String>> listStars = new HashMap<Integer, List<String>>();
+		Map<Integer, List<Genre>> listGenres = new HashMap<Integer, List<Genre>>();
+		Map<Integer, List<Star>> listStars = new HashMap<Integer, List<Star>>();
 
 		// create hash table for listGenres and listStars
 		for (Movie movie : listMovies) {

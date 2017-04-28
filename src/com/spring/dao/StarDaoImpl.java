@@ -20,24 +20,25 @@ public class StarDaoImpl implements StarDao {
 		this.dataSource = dataSource;
 	}
 	
-	public List<String> getStarsByMovieId(int movieId)
+	public List<Star> getStarsByMovieId(int movieId)
 	{
 		
-		String sql = "SELECT first_name, last_name "
+		String sql = "SELECT * "
 				+ "FROM stars  WHERE id in (SELECT star_id FROM stars_in_movies WHERE movie_id = ?)";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		
-		List<String> listStarName = jdbcTemplate.query(sql, new Object[] {movieId}, new RowMapper<String>() {
+		List<Star> listStars = jdbcTemplate.query(sql, new Object[] {movieId}, new RowMapper<Star>() {
 
 			@Override
-			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-				String starName = (resultSet.getString(1)) + " " + resultSet.getString(2);
-				return starName;
+			public Star mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Star star = new Star(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+						resultSet.getDate(4), resultSet.getString(5));
+				return star;
 			}
 
 		});
 
-		return listStarName; 
+		return listStars; 
 	}
 	
 	

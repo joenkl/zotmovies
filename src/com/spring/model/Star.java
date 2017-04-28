@@ -8,6 +8,7 @@ public class Star {
 	String last_name;
 	Date dob; 
 	String photo_url;
+	String sDOB; 
 	
 	public Star(int id, String first_name, String last_name, Date dob, String photo_url) {
 		super();
@@ -15,6 +16,15 @@ public class Star {
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.dob = dob;
+		this.photo_url = photo_url;
+	}
+	
+	public Star(int id, String first_name, String last_name, String dob, String photo_url) {
+		super();
+		this.id = id;
+		this.first_name = first_name;
+		this.last_name = last_name;
+		this.sDOB = dob;
 		this.photo_url = photo_url;
 	}
 	@Override
@@ -51,6 +61,13 @@ public class Star {
 	}
 	public void setPhoto_url(String photo_url) {
 		this.photo_url = photo_url;
+	}
+	
+	public String getsDOB() {
+		return sDOB;
+	}
+	public void setJavaDOB(String sDOB) {
+		this.sDOB = sDOB;
 	}
 	
 }

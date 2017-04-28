@@ -37,21 +37,21 @@ public class GenreDaoImpl implements GenreDao {
 	}
 
 	@Override
-	public List<String> getGenreListByMovieId(int movieID) {
-		String sql = "SELECT name FROM genres WHERE id in (SELECT genre_id FROM genres_in_movies WHERE movie_id = ?)";
+	public List<Genre> getGenreListByMovieId(int movieID) {
+		String sql = "SELECT * FROM genres WHERE id in (SELECT genre_id FROM genres_in_movies WHERE movie_id = ?)";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		
-		List<String> listGenreName = jdbcTemplate.query(sql, new Object[] {movieID}, new RowMapper<String>() {
+		List<Genre> listGenre = jdbcTemplate.query(sql, new Object[] {movieID}, new RowMapper<Genre>() {
 
 			@Override
-			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-				String genreName = new String(resultSet.getString(1));
-				return genreName;
+			public Genre mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Genre genre = new Genre(resultSet.getInt(1), resultSet.getString(2));
+				return genre;
 			}
 
 		});
 
-		return listGenreName;
+		return listGenre;
 		
 	}
 
