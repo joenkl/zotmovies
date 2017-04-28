@@ -25,8 +25,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.dao.CreditCardDao;
+import com.spring.dao.CustomerDao;
 import com.spring.dao.MovieDao;
 import com.spring.dao.SaleDao;
+import com.spring.model.Customer;
 import com.spring.model.Movie;
 import com.spring.model.Sale;
 import com.spring.model.ShoppingCart;
@@ -153,13 +155,12 @@ public class ShoppingCartController {
 		
 		if (isCorrectCard){
 			ModelAndView model = new ModelAndView();
-			model.setViewName("redirect:/checkout");
-			redir.addFlashAttribute("message", "Your card info is correct");
+			model.setViewName("redirect:/shopping-cart/order-confirmation");
 			return model; 
 		}
 		else{
 			ModelAndView model = new ModelAndView();    
-			model.setViewName("redirect:/checkout");
+			model.setViewName("redirect:/shopping-cart/payment-info");
 			redir.addFlashAttribute("message", "Your card information does not match our record");
 			return model; 
 		}
@@ -187,7 +188,7 @@ public class ShoppingCartController {
 			}
 			else {
 				ModelAndView model = new ModelAndView();    
-				model.setViewName("redirect:/shopping-cart/order-confirmation");
+				model.setViewName("redirect:/shopping-cart/payment-info");
 				return model; 
 			}
 		}
@@ -197,6 +198,10 @@ public class ShoppingCartController {
 	
 	@Autowired
 	private SaleDao saleDao; 
+	
+	@Autowired
+	private CustomerDao cusDao;
+	
 	@SuppressWarnings("null")
 	@RequestMapping(value="/order-confirmation")
 	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir) throws ParseException{
@@ -221,6 +226,9 @@ public class ShoppingCartController {
 		
 		
 		saleDao.addOrder(cusID, movieIDList);
+		
+		Customer customer = cusDao.getCustomer(cusID);
+		
 		
 		//empty shoppingCartList
 		shoppingCartList.clear();

@@ -28,8 +28,8 @@ public class CreditCardDaoImpl implements CreditCardDao {
 			String sql = "select * from creditcards "
 					+ "where id = ? and first_name = ? and last_name = ? and expiration = ?";
 			
-			List<CreditCard> cc = (List<CreditCard>) jdbcTemplate.query(sql, new RowMapper<CreditCard>() {
-				
+			
+			CreditCard cc = (CreditCard) jdbcTemplate.queryForObject(sql, new RowMapper<CreditCard>() {
 				@Override
 				public CreditCard mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
 					CreditCard creditcard = 
