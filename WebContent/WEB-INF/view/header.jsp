@@ -29,7 +29,8 @@
 	<!-- Bootstrap Core JavaScript -->
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 	
-	<!-- Add to cart -->
+	
+	<script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 
 		
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

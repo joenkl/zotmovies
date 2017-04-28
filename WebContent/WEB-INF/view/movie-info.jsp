@@ -2,19 +2,6 @@
 <html lang="en">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="header.jsp"%>
-<script>
-		var addToCart = function(movieid, title){
-			$.ajax({
-				url: "./shopping-cart/addcart?movieId=" + movieid +"&name=" + title,
-				method: "POST",
-                success: function (response) {
-                	$("#successAdd").html(response);
-                	$("#successAdd").addClass("alert alert-success offset4 span4");
-                }
-			});
-		}
-</script>
-
 <body>
 	<!-- Page Content -->
 	<div class="container">

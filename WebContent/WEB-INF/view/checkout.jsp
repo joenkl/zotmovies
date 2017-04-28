@@ -1,36 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
-<script>
-		var updateCart = function(movieid, itemNum){
-			var newq = document.getElementById(itemNum).value;
-			$.ajax({
-				url: "./shopping-cart/updatecart?movieId=" + movieid +"&quantity=" + newq,
-				method: "POST",
-                success: function (response) {
-                	$("#successUpdate").html(response);
-                },
-			
-                error: function(){
-                	$("#failUpdate").html("Cannot update quantity with movie: "+ movieid);
-                }               
-			});
-		}
-		
-		var deleteItem = function(movieid){
-			$.ajax({
-				url: "./shopping-cart/deleteItem?movieId=" + movieid,
-				method: "POST",
-                success: function (response) {
-                	$("#successUpdate").html(response);
-                },
-			
-                error: function(){
-                	$("#failUpdate").html("Cannot delete movieID: "+ movieid);
-                }               
-			});
-		}
-</script>
 
 <%@ include file="header.jsp"%>
 <body>
@@ -80,15 +50,8 @@
         </div>
       
         
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Fabflix - UCI - CS122B Spring 2017- Group 01: Thuc Huyen, Joseph L. Nguyen, Lan Tran</p>
-                </div>
-            </div>
-            <!-- /.row -->
-        </footer>
+       
+	<%@ include file="footer.jsp"%>
 
     </div>
     <!-- /.container -->

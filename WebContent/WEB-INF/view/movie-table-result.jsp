@@ -82,6 +82,7 @@
 		<table class="table table-hover table-bordered">
 			<thead>
 				<tr>
+					<th></th>
 					<th>id</th>
 					<th>title <a href="${nextTitleOrder}" style="float: right">
 							<i class="
@@ -103,7 +104,13 @@
 
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
-					<tr>
+					<td>
+						<button onclick="addToCart(${movie.id}, '${movie.title}')"
+										 class="btn btn btn-success">
+										<span class="glyphicon glyphicon-shopping-cart"></span>
+						</button>
+						<br><a id="successMsg"></a>
+						</td>
 						<td>${movie.id}</td>
 						<td><a href="./movie-id=${movie.id}">${movie.title}</a></td>
 						<td>${movie.year}</td>
