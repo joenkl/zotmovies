@@ -24,7 +24,7 @@ public class SaleDaoImpl implements SaleDao {
 	@Override
 	public void addOrder(String sql) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update(sql);
+		jdbcTemplate.batchUpdate(sql);
 	}
 	
 	@Override

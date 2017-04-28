@@ -19,24 +19,33 @@
 
         <!-- Projects Row -->
         <div class="row">
-            <h4> Your order has been succusfull placed: </h4>
+            <h4> Your order has been placed: </h4>
+            <h2>Customer: ${cusName}</h2>
                 <table class="table table-bordered table-inverse">
 				  <thead>
 				    <tr>
-				    	<th>Movie: </th>
-				      	<th>Order ID:</th>
-				      	<th></th>
-				      	<th></th>
+				    	<th>Quantity: </th>
+				      	<th>Movie ID:</th>
+				      	<th>Title: </th>
+				      	<th>Order ID</th>
 				    </tr>
 				  </thead>
-				  
+			
 				  <tbody>
+				  <c:forEach items="${shoppingCartList}" var="c">
 				    <tr>
-				    	<th>${msg}</th>
-				      	<td></td>
-				      	<td></td>
-				      	<td></td>
+				    	<th>${c.quantity}</th>
+				      	<td>${c.movieId}</td>
+				      	<td>${c.movieTitle}</td>
+				      	<td>
+				      		<c:forEach items="${saleList}" var="s">
+				      			<c:if test="${c.movieId == s.movie_id}">
+									<p>${s.id}</p><br>				      			
+				      			</c:if>
+				      		</c:forEach>
+				      	</td>
 				    </tr>
+			     </c:forEach>
 			    </tbody>
 	    	</table>
         </div>

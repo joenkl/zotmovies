@@ -51,14 +51,16 @@ public class ShoppingCartController {
 		HttpSession session = request.getSession(true);
 		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
 		
+		
 		if(shoppingCartList == null)
 		{
 			//System.out.println("empty");
 			shoppingCartList = new ArrayList<>();
 			session.setAttribute("cart", shoppingCartList);
 			
+			float totalCost = 0;
 			shoppingCartList.add(newItem);
-			
+			session.setAttribute("totalCost", totalCost+10);
 			//System.out.println(shoppingCartList);
 		}
 		else
@@ -80,6 +82,7 @@ public class ShoppingCartController {
 			}
 			
 			session.setAttribute("cart", shoppingCartList);
+			session.setAttribute("totalCost", ((float) session.getAttribute("totalCost")) + 10);
 		}
 			
 		return "viewcart";
@@ -99,12 +102,25 @@ public class ShoppingCartController {
 		for(ShoppingCart cartItem : shoppingCartList){
 			if (id == cartItem.getMovieId())
 			{
+				int oldQ = cartItem.getQuantity();
 				if(newQ == 0)
 				{
+					session.setAttribute("totalCost", ((float) session.getAttribute("totalCost")) - (oldQ * 10));
 					shoppingCartList.remove(cartItem);
 				}
 				else
 				{
+					if (oldQ > newQ)
+					{
+						//has 4 update to 1=> totalCost - (4-1) * 10
+						session.setAttribute("totalCost", 
+								((float) session.getAttribute("totalCost")) - ((oldQ - newQ) * 10));
+					}
+					else //newQ > OldQ
+					{
+						session.setAttribute("totalCost", 
+								((float) session.getAttribute("totalCost")) + ((newQ - oldQ) * 10));
+					}
 					cartItem.setQuantity(newQ);
 				}
 				break;
@@ -125,6 +141,8 @@ public class ShoppingCartController {
 		for(ShoppingCart cartItem : shoppingCartList){
 			if (id == cartItem.getMovieId())
 			{
+				session.setAttribute("totalCost", 
+						((float) session.getAttribute("totalCost")) - (cartItem.getQuantity() * 10));
 				shoppingCartList.remove(cartItem);
 				break;
 			}
@@ -187,7 +205,7 @@ public class ShoppingCartController {
 			}
 			else {
 				ModelAndView model = new ModelAndView();    
-				model.setViewName("redirect:/shopping-cart/order-confirmation");
+				model.setViewName("redirect:/shopping-cart/payment-info");
 				return model; 
 			}
 		}
@@ -212,27 +230,33 @@ public class ShoppingCartController {
 		
 		Date today = Calendar.getInstance().getTime();  
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String sDate = df.format(today); 
+		String sDate = df.format(today);
 		
+		int totalQ = 0;
 		Date javaDay = df.parse(sDate);
 		java.sql.Date sqlDate = new java.sql.Date(javaDay.getTime());
 		
 		for(ShoppingCart cartItem : shoppingCartList){
 			int itemQ = cartItem.getQuantity();
+			totalQ += itemQ;
 			String title = cartItem.getMovieTitle();
 			for(int i = 0; i < itemQ; i++)
 			{
-				sql += "insert into sales (sales.customer_id, sales.movie_id, sales.sale_date)"
-						+ "value (" + cusID +", " + cartItem.getMovieId() + ", " + "'" + sqlDate + "'" + ");";
+				sql += "insert into sales (customer_id, movie_id, sale_date)"
+						+ " values (" + cusID +", " + cartItem.getMovieId() + ", " + "\'" + sqlDate + "\'" + ");";
 			}
 			
 			saleDao.addOrder(sql);
 		}
 		
+		ModelAndView model = new ModelAndView("order-confirmation");
+		List<Sale> listSale = saleDao.getLatestOrder(totalQ);
+		model.addObject(listSale);
+		model.addObject(shoppingCartList);
+		model.addObject(cusName);
 		//empty shoppingCartList
 		shoppingCartList.clear();
-		String msg = "Successfully placed your order";
-		ModelAndView model = new ModelAndView("order-confirmation");    
+		String msg = "Successfully placed your order";    
 		model.addObject(msg);
 		return model; 
 	}

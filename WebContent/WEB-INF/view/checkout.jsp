@@ -56,6 +56,8 @@
 	        <table class="table table-bordered table-inverse">
 				  <thead>
 				    <tr>
+				    	<th></th>
+				    	<th>Price: </th>
 				    	<th>Quantity: </th>
 				      	<th>Movie ID:</th>
 				      	<th>Title: </th>
@@ -66,17 +68,19 @@
 				  <tbody>
 				  <c:forEach items='<%= session.getAttribute("cart") %>' var="c" varStatus="status">
 				    <tr>
+				    	<th><button onclick="deleteItem(${c.movieId}, 'item${status.index}')" class='btn btn-danger btn-sm' id ="update-quantity-checkout" type='submit'>Delete</button></th>
+				    	<th>$10.0</th>
 				    	<th>${c.quantity}</th>
 				      	<td>${c.movieId}</td>
 				      	<td>${c.movieTitle}</td>
 				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px"> 
-				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-		      				<button style="float: right" onclick="deleteItem(${c.movieId}, 'item${status.index}')" class='btn btn-danger btn-sm' id ="update-quantity-checkout" type='submit'>Delete</button>
+				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>		
 		      			</td>
 				    </tr>
 			     </c:forEach>
 			    </tbody>
 	    	</table>
+	    	<div style="float: right; margin-top: "><h3>Total: $${totalCost}</h3></div>
         </div>
       
         

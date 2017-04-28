@@ -68,6 +68,7 @@
 			     </c:forEach>
 			    </tbody>
 	    	</table>
+	    	<div style="float: right; margin-top: 20px"><h3>Total: $${totalCost}</h3></div>
         </div>
 </body>
 </html>
