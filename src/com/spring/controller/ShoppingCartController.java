@@ -197,43 +197,38 @@ public class ShoppingCartController {
 	
 	@Autowired
 	private SaleDao saleDao; 
+	@SuppressWarnings("null")
 	@RequestMapping(value="/order-confirmation")
 	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir) throws ParseException{
 		
 		HttpSession session = request.getSession(true);
+		@SuppressWarnings("unchecked")
 		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
 		int cusID = (int) session.getAttribute("customerID");
 		String cusName = (String) session.getAttribute("customerFN");
 		
-		List<Map<String, List<Sale>>> completedOrder = null;
-		Map<String, List<Sale>> tempS = null;
 		
-		String sql ="";
-		
-		Date today = Calendar.getInstance().getTime();  
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String sDate = df.format(today); 
-		
-		Date javaDay = df.parse(sDate);
-		java.sql.Date sqlDate = new java.sql.Date(javaDay.getTime());
+		List<Integer> movieIDList = new ArrayList<Integer>();
 		
 		for(ShoppingCart cartItem : shoppingCartList){
 			int itemQ = cartItem.getQuantity();
-			String title = cartItem.getMovieTitle();
+			int movieID = cartItem.getMovieId();
 			for(int i = 0; i < itemQ; i++)
 			{
-				sql += "insert into sales (sales.customer_id, sales.movie_id, sales.sale_date)"
-						+ "value (" + cusID +", " + cartItem.getMovieId() + ", " + "'" + sqlDate + "'" + ");";
+				movieIDList.add(movieID);
 			}
-			
-			saleDao.addOrder(sql);
 		}
+		
+		
+		saleDao.addOrder(cusID, movieIDList);
 		
 		//empty shoppingCartList
 		shoppingCartList.clear();
+		
+		
 		String msg = "Successfully placed your order";
 		ModelAndView model = new ModelAndView("order-confirmation");    
-		model.addObject(msg);
+		model.addObject("msg", msg);
 		return model; 
 	}
 }
