@@ -212,11 +212,12 @@ public class ShoppingCartController {
 		int cusID = (int) session.getAttribute("customerID");
 		String cusName = (String) session.getAttribute("customerFN");
 		
-		
 		List<Integer> movieIDList = new ArrayList<Integer>();
+		int totalQ = 0;
 		
 		for(ShoppingCart cartItem : shoppingCartList){
 			int itemQ = cartItem.getQuantity();
+			totalQ += itemQ;
 			int movieID = cartItem.getMovieId();
 			for(int i = 0; i < itemQ; i++)
 			{
@@ -227,16 +228,22 @@ public class ShoppingCartController {
 		
 		saleDao.addOrder(cusID, movieIDList);
 		
+		
+		List<Sale> completedOrder = saleDao.getLatestOrder(totalQ);
+		
 		Customer customer = cusDao.getCustomer(cusID);
 		
+		ModelAndView model = new ModelAndView("order-confirmation");
+		model.addObject("cusName", cusName);
+		model.addObject("cusEmail", customer.getEmail());
+		model.addObject("cusAddr", customer.getAddress());
 		
+		model.addObject("order", completedOrder);
+		model.addObject("scart", shoppingCartList);
 		//empty shoppingCartList
 		shoppingCartList.clear();
+		session.setAttribute("totalCost", 0);
 		
-		
-		String msg = "Successfully placed your order";
-		ModelAndView model = new ModelAndView("order-confirmation");    
-		model.addObject("msg", msg);
 		return model; 
 	}
 }

@@ -42,7 +42,19 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override 
 	public Customer getCustomer(int id)
 	{
-		return null; 
+		try
+		{
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			String sql = "SELECT * FROM Customers WHERE id = ?";
+			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new CustomerRowMapper(), id);
+			
+			return customer; 
+		}
+		catch (EmptyResultDataAccessException e)
+		{
+			return null;
+		}
+		
 	}
 	
 	public Customer getCustomerInfo(String email, String password)
