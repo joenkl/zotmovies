@@ -79,38 +79,44 @@
 
 <div class="container">
 	<div class="table-responsive">
+	<a id="successMsg">
 		<table class="table table-hover table-bordered">
 			<thead>
 				<tr>
 					<th></th>
-					<th>id</th>
-					<th>title <a href="${nextTitleOrder}" style="float: right">
+					<th>Poster</th>
+					<th>Id</th>
+					<th>Title <a href="${nextTitleOrder}" style="float: right">
 							<i class="
 					<c:out value="${classForTitle}"/>
 					"></i>
 					</a>
 					</th>
-					<th>year <a href="${nextYearOrder}" style="float: right">
+					<th>Year <a href="${nextYearOrder}" style="float: right">
 							<i class="
 					<c:out value="${classForYear}"/>
 					"></i>
 					</a>
 					</th>
-					<th>director</th>
-					<th>list of genres</th>
-					<th>list of stars</th>
+					<th>Director</th>
+					<th>List of genres</th>
+					<th>List of stars</th>
 				</tr>
 			</thead>
 
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
-					<td>
-						<button onclick="addToCart(${movie.id}, '${movie.title}')"
+						<td>
+							<button onclick="addToCart(${movie.id}, '${movie.title}')"
 										 class="btn btn btn-success">
 										<span class="glyphicon glyphicon-shopping-cart"></span>
-						</button>
-						<br><a id="successMsg"></a>
+							</button>
 						</td>
+						<td>
+							<a href="./movie-id=${movie.id}">
+	                			<img class="img-responsive" width = "200pt" height = "200pt" src="${movie.banner_url}" alt="${movie.title}" >
+                			</a>
+               			</td>
 						<td>${movie.id}</td>
 						<td><a href="./movie-id=${movie.id}">${movie.title}</a></td>
 						<td>${movie.year}</td>
