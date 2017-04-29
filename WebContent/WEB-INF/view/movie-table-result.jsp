@@ -77,9 +77,14 @@
 
 </c:choose>
 
+<div><p align="center" id="successMsg" style="color:green;"></p></div>
+
+
+
+
+
 <div class="container">
 	<div class="table-responsive">
-	<a id="successMsg">
 		<table class="table table-hover table-bordered">
 			<thead>
 				<tr>

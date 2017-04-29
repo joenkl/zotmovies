@@ -6,7 +6,7 @@ var addToCart = function(movieid, title){
                 	$("#successAdd").html(response);
                 	$("#successAdd").addClass("alert alert-success offset4 span4");
                 	$("#successMsg").fadeIn(100);
-                	$("#successMsg").html("Added");
+                	$("#successMsg").html("Successfuly add movie into cart");
                 	$("#successMsg").fadeOut(1000);
                 }
 			});
