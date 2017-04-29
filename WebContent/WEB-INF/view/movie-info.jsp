@@ -70,19 +70,18 @@
 
 </body>
 
-</html>
 
 <script>
-	$(document).ready(function() {
-		$("#add-to-cart").on("click", function(e)
-				{
-			 		var button =  $(this);
-			 		var data = JSON.stringify(button.attr("data"));
-			 		alert(data);
-			 		
-			 		addToCart(${movie.id}, data);
-				})
-	}
-
-	);
+$(document).ready(function() {
+	$("#add-to-cart").on("click", function(e)
+			{
+		 		var button =  $(this);
+		 		var data = JSON.stringify(button.attr("data"));
+		 		addToCart(${movie.id}, data);
+			})
+}
+);
 </script>
+
+</html>
+

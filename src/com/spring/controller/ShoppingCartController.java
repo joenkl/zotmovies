@@ -202,7 +202,6 @@ public class ShoppingCartController {
 	@Autowired
 	private CustomerDao cusDao;
 	
-	@SuppressWarnings("null")
 	@RequestMapping(value="/order-confirmation")
 	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir) throws ParseException{
 		

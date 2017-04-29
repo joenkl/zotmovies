@@ -112,7 +112,7 @@
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
 						<td>
-							<button onclick="addToCart(${movie.id}, '${movie.title}')"
+							<button id="add-to-cart" data="${movie.title}"
 										 class="btn btn btn-success">
 										<span class="glyphicon glyphicon-shopping-cart"></span>
 							</button>

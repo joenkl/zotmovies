@@ -12,6 +12,11 @@ var addToCart = function(movieid, title){
 			});
 		}
 
+
+
+
+
+
 var updateCart = function(movieid, itemNum){
 			var newq = document.getElementById(itemNum).value;
 			$.ajax({
