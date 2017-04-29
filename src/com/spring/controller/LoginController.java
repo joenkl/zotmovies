@@ -12,14 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class LoginController  {
 	
-	//need a controller method to process the HTML form
-	@RequestMapping("/processLoginForm")
-	public String processLoginForm(){
-		//todo: check whether log in successful 
-		return "redirect:/index"; 
-	}
-	
-	
 	@RequestMapping(value="/logout",method=RequestMethod.GET)
 	public ModelAndView processLogout(HttpServletRequest request, RedirectAttributes redir){
 		
