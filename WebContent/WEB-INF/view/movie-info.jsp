@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="header.jsp"%>
 <body>
 	<!-- Page Content -->
@@ -25,8 +26,8 @@
 						<img class="img-responsive" src="${movie.banner_url}" alt="">
 					</center>
 				</a>
-				<button onclick="addToCart(${movie.id}, '${movie.title}')"
-					style="margin: 10px" class="btn btn btn-success">
+				<button id="add-to-cart" data="${movie.title}" style="margin: 10px"
+					class="btn btn btn-success">
 					Add to Cart <span class="glyphicon glyphicon-shopping-cart"></span>
 				</button>
 			</div>
@@ -66,6 +67,22 @@
 
 	</div>
 	<!-- /.container -->
+
 </body>
 
 </html>
+
+<script>
+	$(document).ready(function() {
+		$("#add-to-cart").on("click", function(e)
+				{
+			 		var button =  $(this);
+			 		var data = JSON.stringify(button.attr("data"));
+			 		alert(data);
+			 		
+			 		addToCart(${movie.id}, data);
+				})
+	}
+
+	);
+</script>
