@@ -11,7 +11,7 @@
 
 <body>
 	<div id=successUpdate>
-        	<h3> Your Cart: </h3>
+        	<h3 href="fabflix/checkout"> Your Cart: <span class="glyphicon glyphicon-shopping-cart"></span></h3>
         	<div id="failUpdate" style="color:#FF0000; padding-bottom:10px"></div>
 	        <table class="table table-bordered table-inverse">
 				  <thead>

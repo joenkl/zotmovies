@@ -49,21 +49,7 @@ public class CustomerController {
 		}
 		
 		else
-		{
-			
-			//TODO: change session 
-			HttpSession session = request.getSession(true);
-			Integer login = (Integer) (session.getAttribute("login"));
-			if(login == null)
-			{
-				login = new Integer(0);
-				session.setAttribute("login", login);
-				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
-				session.setAttribute("customerID", customer.getId());
-				String fullname = customer.getFist_name() + " " + customer.getLast_name();
-				session.setAttribute("customerFN", fullname);
-			}
-			
+		{	
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/login");
 			redir.addFlashAttribute("message", "Invalid Email/Password combination. Please try again!");

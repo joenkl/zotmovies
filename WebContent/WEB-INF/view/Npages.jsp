@@ -38,7 +38,7 @@
 
 <div class="row">
 	<div class="col-lg-12"></div>
-	<div class="col-md-3 col-md-offset-9">
+	<div class="col-md-3 col-md-offset-8" style="width:260pt">
 		<select id="view-n-per-page" class="form-control">
 			<option value="${minPage}"
 				<c:if test="${(minPage) == n}">
