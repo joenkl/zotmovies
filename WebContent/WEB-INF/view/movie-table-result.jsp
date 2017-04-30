@@ -107,8 +107,8 @@
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
 					<td>
-						<button id="add-to-cart" data="${movie.title}"
-							movieId="${movie.id}" class="btn btn btn-success">
+						<button id="add-to-cart" data="${movie.title}" movieid="${movie.id}" 
+								class="btn btn btn-success">
 							<span class="glyphicon glyphicon-shopping-cart"></span>
 						</button>
 					</td>
@@ -146,4 +146,6 @@
 		</table>
 	</div>
 	<%@ include file="pagination.jsp"%>
+	
+	<%@ include file="footer.jsp"%>
 </div>

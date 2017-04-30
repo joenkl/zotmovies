@@ -7,37 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>View Cart</title>
 
-<script>
-		var updateCart = function(movieid, itemNum){
-			var newq = document.getElementById(itemNum).value;
-			$.ajax({
-				url: "./shopping-cart/updatecart?movieId=" + movieid +"&quantity=" + newq,
-				method: "POST",
-                success: function (response) {
-                	$("#successUpdate").html(response);
-                },
-			
-                error: function(){
-                	$("#failUpdate").html("Cannot update quantity with movie: "+ movieid);
-                }               
-			});
-		}
-		
-		var deleteItem = function(movieid){
-			$.ajax({
-				url: "./shopping-cart/deleteItem?movieId=" + movieid,
-				method: "POST",
-                success: function (response) {
-                	$("#successUpdate").html(response);
-                },
-			
-                error: function(){
-                	$("#failUpdate").html("Cannot delete movieID: "+ movieid);
-                }               
-			});
-		}
-</script>
-
 </head>
 
 <body>
@@ -61,8 +30,10 @@
 				      	<td>${c.movieId}</td>
 				      	<td>${c.movieTitle}</td>
 				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px"> 
-				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>Update</button>
-		      				<button style="float: right" onclick="deleteItem(${c.movieId}, 'item${status.index}')" class='btn btn-danger btn-sm' id ="update-quantity-checkout" type='submit'>Delete</button>
+				      		<button onclick="updateCart(${c.movieId}, 'item${status.index}')" class='btn btn-primary btn-sm' id ="update-quantity-checkout" type='submit'>
+				      			Update</button>
+		      				<button  onclick="deleteItem(${c.movieId}, 'item${status.index}')" 
+		      					class='btn btn-danger btn-sm' id ="update-quantity-checkout" type='submit'><span class="glyphicon glyphicon-trash"></span></button>
 		      			</td>
 				    </tr>
 			     </c:forEach>

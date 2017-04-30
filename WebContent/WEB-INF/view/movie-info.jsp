@@ -26,10 +26,11 @@
 						<img class="img-responsive" src="${movie.banner_url}" alt="">
 					</center>
 				</a>
-				<button id="add-to-cart" data="${movie.title}" style="margin: 10px"
+				<button id="add-to-cart" data="${movie.title}" movieid="${movie.id}"style="margin: 10px"
 					class="btn btn btn-success">
 					Add to Cart <span class="glyphicon glyphicon-shopping-cart"></span>
 				</button>
+				<div id="successMsg" style="text-decoration: bold"></div>
 			</div>
 			<div class="col-md-7">
 				<h3>${movie.title}</h3>
@@ -71,17 +72,7 @@
 </body>
 
 
-<script>
-$(document).ready(function() {
-	$("#add-to-cart").on("click", function(e)
-			{
-		 		var button =  $(this);
-		 		var data = JSON.stringify(button.attr("data"));
-		 		addToCart(${movie.id}, data);
-			})
-}
-);
-</script>
+<%@ include file="footer.jsp"%>
 
 </html>
 

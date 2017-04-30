@@ -13,6 +13,16 @@ var addToCart = function(movieid, title){
 		}
 
 
+$(document).ready(function() {
+	$("#add-to-cart").on("click", function(e)
+			{
+		 		var button =  $(this);
+		 		var movieID = button.attr("movieid")
+		 		var data = JSON.stringify(button.attr("data"));
+		 		addToCart(movieID, data);
+			})
+}
+);
 
 
 var updateCart = function(movieid, itemNum){
