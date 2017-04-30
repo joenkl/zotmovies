@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">
-					Star Information 
+					Star Information
 					<!-- <small>Secondary Text</small> -->
 				</h1>
 			</div>
@@ -27,12 +27,19 @@
 
 			</div>
 			<div class="col-md-7">
-				<h3>${star.first_name} ${star.last_name}</h3>
+				<h3>${star.first_name}${star.last_name}</h3>
 				<ul class="star-info">
 					<li>First name: ${star.first_name}</li>
 					<li>Last name: ${star.last_name}</li>
 					<li>Date of Birth: ${star.sDOB}</li>
-					<li>List of Movies: COMING SOON</li>
+					<li>List of Movies:
+						<ul>
+							<c:forEach var="movie" items="${listMovies}">
+								<li><a href="./movie-id=${movie.id}"> ${movie.title} </a></li>
+							</c:forEach>
+						</ul>
+
+					</li>
 
 				</ul>
 

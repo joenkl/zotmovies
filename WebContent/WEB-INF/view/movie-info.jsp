@@ -36,7 +36,7 @@
 				<h4>Year: ${movie.year}</h4>
 				<ul class="movie-info">
 					<li>ID: ${movie.id}</li>
-					<li>Director: <a href="#">${movie.director}</a></li>
+					<li>Director:${movie.director}</li>
 					<li>Stars: <c:forEach var="star" items="${listStars}">
 							<a
 								href="./getStarInfo?id=${star.id}&fn=${star.first_name}

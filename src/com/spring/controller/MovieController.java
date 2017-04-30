@@ -3,10 +3,12 @@ package com.spring.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.plaf.synth.SynthSeparatorUI;
@@ -43,6 +45,57 @@ public class MovieController {
 		return "search";
 	}
 
+	@RequestMapping(value = { "", "/", "/login" })
+	public String login() {
+		// hitting home page => sestting session:
+
+		return "login";
+	}
+
+	@RequestMapping("/index")
+	public ModelAndView home(
+			@RequestParam(value = "page", required = false) String page,
+			@RequestParam(value = "n", required = false) String nPerPage) throws IOException {
+
+		int defaultN = 6;
+
+		nPerPage = prepareNperPage(nPerPage, defaultN);
+
+		page = preparePage(page);
+
+		if (page.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		if (nPerPage.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		List<Movie> listMovies = movieDao.getMovieList(Integer.parseInt(page), Integer.parseInt(nPerPage));
+		ModelAndView model = new ModelAndView("index");
+		//
+		// //shuffle list:
+		// long seed = System.nanoTime();
+		// Collections.shuffle(listMovies, new Random(seed));
+
+		model.addObject("listMovies", listMovies);
+		model.addObject("activePage", page);
+		model.addObject("currentPage", "index");
+
+		// for showing n per page:
+		model.addObject("minPage", defaultN);
+		model.addObject("n", nPerPage);
+		
+		
+		model.addObject("path", "index");
+		
+		// for pagination:
+			if (listMovies.size() < Integer.parseInt(nPerPage))
+				model.addObject("lastPage", true);
+			else
+				model.addObject("lastPage", false);
+
+		return model;
+	}
+
 	@RequestMapping(value = "/search")
 	public ModelAndView searchForMovies(@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "first_name", required = false) String first_name,
@@ -51,7 +104,9 @@ public class MovieController {
 			@RequestParam(value = "director", required = false) String director,
 			@RequestParam(value = "column", required = false) String column,
 			@RequestParam(value = "sort", required = false) String sort,
-			@RequestParam(value = "page", required = false) String page, RedirectAttributes redir) {
+			@RequestParam(value = "page", required = false) String page,
+			@RequestParam(value = "n", required = false) String nPerPage,
+			RedirectAttributes redir) {
 
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
@@ -62,6 +117,12 @@ public class MovieController {
 		else {
 			if (year.isEmpty())
 				year = "-1";
+
+			// prepare n per page:
+			int defaultN = 6;
+			nPerPage = prepareNperPage(nPerPage, defaultN);
+			if (nPerPage.equals("invalid"))
+				return new ModelAndView("404-page");
 
 			// prepare sort:
 			sort = prepareSort(sort);
@@ -79,9 +140,14 @@ public class MovieController {
 				return new ModelAndView("404-page");
 
 			List<Movie> listMovies = movieDao.getMovieListWithSearch(title, Integer.parseInt(year), director,
-					first_name, last_name, column, sort, Integer.parseInt(page));
+					first_name, last_name, column, sort, Integer.parseInt(page), Integer.parseInt(nPerPage));
 
-			ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
+			ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
+			
+			// for showing n per page:
+			model.addObject("minPage", defaultN);
+			model.addObject("n", nPerPage);
+			model.addObject("path", "search");
 
 			return model;
 		}
@@ -94,7 +160,7 @@ public class MovieController {
 		ModelAndView model = new ModelAndView("movie-info");
 
 		model.addObject("movie", movie);
-		
+
 		List<Genre> listGenres = genreDao.getGenreListByMovieId(movie.getId());
 		model.addObject("listGenres", listGenres);
 		model.addObject("listStars", starDao.getStarsByMovieId(movie.getId()));
@@ -106,7 +172,14 @@ public class MovieController {
 	public ModelAndView titleBrowsing(@RequestParam(value = "startWith") String browserTerm,
 			@RequestParam(value = "column", required = false) String column,
 			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
+
+		// prepare n per page:
+		int defaultN = 6;
+		nPerPage = prepareNperPage(nPerPage, defaultN);
+		if (nPerPage.equals("invalid"))
+			return new ModelAndView("404-page");
 
 		// prepare sort:
 		sort = prepareSort(sort);
@@ -127,13 +200,19 @@ public class MovieController {
 			return new ModelAndView("404-page");
 		}
 
-		List<Movie> listMovies = movieDao.getMovieListWhereTitlesStartWith(browserTerm, column, sort, Integer.parseInt(page));
+		List<Movie> listMovies = movieDao.getMovieListWhereTitlesStartWith(browserTerm, column, sort,
+				Integer.parseInt(page), Integer.parseInt(nPerPage));
 
-		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
+		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
 
 		String currentPage = "browseTitle?startWith=" + browserTerm;
 		model.addObject("currentPage", currentPage);
-
+		
+		
+		// for showing n per page:
+		model.addObject("minPage", defaultN);
+		model.addObject("n", nPerPage);
+		model.addObject("path", "browseTitle");
 		return model;
 	}
 
@@ -141,7 +220,14 @@ public class MovieController {
 	public ModelAndView genreBrowsing(@RequestParam(value = "genre") String genre,
 			@RequestParam(value = "column", required = false) String column,
 			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
+
+		// prepare n per page:
+		int defaultN = 6;
+		nPerPage = prepareNperPage(nPerPage, defaultN);
+		if (nPerPage.equals("invalid"))
+			return new ModelAndView("404-page");
 
 		// prepare sort:
 		sort = prepareSort(sort);
@@ -158,12 +244,19 @@ public class MovieController {
 		if (page.equals("invalid"))
 			return new ModelAndView("404-page");
 
-		List<Movie> listMovies = movieDao.getMovieListWithGenre(genre, column, sort, Integer.parseInt(page));
+		List<Movie> listMovies = movieDao.getMovieListWithGenre(genre, column, sort, Integer.parseInt(page),
+				Integer.parseInt(nPerPage));
 
-		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies);
+		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
 
 		String currentPage = "browseGenre?genre=" + genre;
 		model.addObject("currentPage", currentPage);
+		
+		
+		// for showing n per page:
+		model.addObject("minPage", defaultN);
+		model.addObject("n", nPerPage);
+		model.addObject("path", "browseGenre");
 
 		return model;
 
@@ -177,6 +270,17 @@ public class MovieController {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	private String prepareNperPage(String nPerPage, int defaultValue) {
+		if (nPerPage == null || nPerPage.isEmpty()) {
+			nPerPage = Integer.toString(defaultValue);
+		} else if (!tryParseInt(nPerPage)) {
+			nPerPage = "invalid";
+
+		}
+
+		return nPerPage;
 	}
 
 	private String preparePage(String page) {
@@ -240,7 +344,7 @@ public class MovieController {
 
 	}
 
-	private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies) {
+	private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies, String nPerPage) {
 		ModelAndView model = new ModelAndView("movie-table-result");
 
 		if ((listMovies).size() < 10)
@@ -265,7 +369,12 @@ public class MovieController {
 		model.addObject("activePage", page);
 		model.addObject("sort", sort);
 		model.addObject("column", column);
-		
+
+		// for pagination:
+		if (listMovies.size() < Integer.parseInt(nPerPage))
+			model.addObject("lastPage", true);
+		else
+			model.addObject("lastPage", false);
 
 		return model;
 	}

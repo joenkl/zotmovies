@@ -21,9 +21,10 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieList(int page) {
+	public List<Movie> getMovieList(int page, int n) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies LIMIT 12 OFFSET " + ((page - 1)*12);
+		String sql = "SELECT * FROM movies LIMIT " + n
+				+ " OFFSET " + ((page - 1)*n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -39,13 +40,13 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc, int page) {
+	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc, int page, int n) {
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'" 
 					+ "ORDER BY " + orderByColumn + " " + ascOrDesc
-					+ " LIMIT 10 OFFSET " + ((page - 1)*10);
+					+ " LIMIT " + n + " OFFSET " + ((page - 1)*n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -73,7 +74,7 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	// by default the function will return the search result order by title asc
 	public List<Movie> getMovieListWithSearch(String title, int year, String director, String first_name,
-			String last_name, String orderByColumn, String ascOrDesc, int page) {
+			String last_name, String orderByColumn, String ascOrDesc, int page, int n) {
 		String sql = "SELECT * FROM movies M ";
 
 		if (!first_name.isEmpty() || !last_name.isEmpty()) {
@@ -126,7 +127,7 @@ public class MovieDaoImpl implements MovieDao {
 
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
-		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT 10 OFFSET " + ((page - 1)*10);
+		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1)*n);
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
@@ -145,7 +146,7 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page){
+	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n){
 		
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 		
@@ -154,7 +155,7 @@ public class MovieDaoImpl implements MovieDao {
 				+ "join genres_in_movies GM on M.id = GM.movie_id "
 				+ "where GM.genre_id in (select id from genres where name='" + genre + "')"
 				+ " ORDER BY " + orderByColumn + " " + ascOrDesc
-				+ " LIMIT 10 OFFSET " + ((page - 1)*10);
+				+ " LIMIT " + n + " OFFSET " + ((page - 1)*n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 			 
 	            @Override

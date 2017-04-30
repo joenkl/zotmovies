@@ -1,4 +1,4 @@
-
+<%@ include file="header.jsp"%>
 <!--  show N list of page -->
 <%@ include file="Npages.jsp" %>
 

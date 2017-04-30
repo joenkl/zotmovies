@@ -15,8 +15,6 @@ var addToCart = function(movieid, title){
 
 
 
-
-
 var updateCart = function(movieid, itemNum){
 			var newq = document.getElementById(itemNum).value;
 			$.ajax({
@@ -46,4 +44,10 @@ var deleteItem = function(movieid){
 			});
 		}
 
+var changeNperPage = function(url,n){
+		var thisUrl = url + "&n=" + n;
+		//console.log(thisUrl);
+		//window.location = "./index?n=" + n +"&page="+ pageNumber;
+		window.location = thisUrl;
+}
 

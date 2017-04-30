@@ -20,51 +20,6 @@ public class HomeController {
 	@Autowired
 	private MovieDao movieDao; 
 	
-	@RequestMapping(value={"", "/","/login"})
-	public String login()
-	{	
-		//hitting home page => sestting session:
-		
-		return "login"; 
-	}
-
-	@RequestMapping("/index")
-	public ModelAndView home(
-			@RequestParam(value = "page", required = false) String page
-			) throws IOException {
-		
-		if(page == null)
-		{
-			page = "1";
-			if(!tryParseInt(page))
-			{
-				return new ModelAndView("404-page");
-			}
-			
-		}
-		
-		else
-		{
-			if(page.isEmpty())
-				page = "1";
-		}
-		List<Movie> listMovies = movieDao.getMovieList(Integer.parseInt(page));
-		ModelAndView model = new ModelAndView("index");
-		
-		//shuffle list:
-		long seed = System.nanoTime();
-		Collections.shuffle(listMovies, new Random(seed));
-		
-		model.addObject("listMovies", listMovies);
-		model.addObject("activePage", page);
-		model.addObject("currentPage", "index");
-		
-		if(listMovies.size() < 12)
-			model.addObject("lastPage", true);
-		else
-			model.addObject("lastPage", false);
-		return model; 
-	}
 
 	@RequestMapping("/titles")
 	public String titles() {

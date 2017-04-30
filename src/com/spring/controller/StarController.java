@@ -28,6 +28,9 @@ public class StarController {
 	@Autowired
 	StarDao starDao; 
 	
+	@Autowired
+	MovieDao movieDao;
+	
 	@RequestMapping(value="/getStarInfo")
 	public ModelAndView getStarInfo(@RequestParam(value="id") String id,
 			@RequestParam(value="fn") String fn,
@@ -40,6 +43,11 @@ public class StarController {
 		Star star = new Star(Integer.parseInt(id), fn, ln, dob, photo_url);
 		ModelAndView model= new ModelAndView("star-info");
 		model.addObject("star", star);
+		
+		List<Movie> listMovies =  movieDao.getMovieListWithStar(Integer.parseInt(id));
+		
+		model.addObject("listMovies", listMovies);
+		
 		return model; 
 	}
 
