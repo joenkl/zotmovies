@@ -72,9 +72,7 @@
 <!--  <p>nextTitleOrder => ${nextTitleOrder }</p>
 <p>nextYearOrder => ${nextYearOrder }</p> -->
 
-<div>
-	<p align="center" id="successMsg" style="color: green;"></p>
-</div>
+
 
 
 <div class="container">
@@ -107,8 +105,7 @@
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
 					<td>
-						<button id="add-to-cart" data="${movie.title}" movieid="${movie.id}" 
-								class="btn btn btn-success">
+						<button class="btn btn-success add-to-cart" data="${movie.title}" movieid="${movie.id}" >
 							<span class="glyphicon glyphicon-shopping-cart"></span>
 						</button>
 					</td>

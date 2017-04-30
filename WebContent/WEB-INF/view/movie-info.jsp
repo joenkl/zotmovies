@@ -26,11 +26,10 @@
 						<img class="img-responsive" src="${movie.banner_url}" alt="">
 					</center>
 				</a>
-				<button id="add-to-cart" data="${movie.title}" movieid="${movie.id}"style="margin: 10px"
-					class="btn btn btn-success">
-					Add to Cart <span class="glyphicon glyphicon-shopping-cart"></span>
+				<button class="btn btn-success btn-lg add-to-cart"  data="${movie.title}" movieid="${movie.id}" style="margin: 10px">
+					Add to cart<span class="glyphicon glyphicon-shopping-cart"></span>
 				</button>
-				<div id="successMsg" style="text-decoration: bold"></div>
+				<div id="successMsg" style="font-weight: bold"></div>
 			</div>
 			<div class="col-md-7">
 				<h3>${movie.title}</h3>

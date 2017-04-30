@@ -48,10 +48,10 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="./searchForm">Search</a></li>
-					<li><a href="./genres">Genres</a></li>
-					<li><a href="./titles">Titles</a></li>
-					<li><a href="./checkout">Checkout Cart</a></li>
+					<li><a href="${pageContext.request.contextPath}/searchForm">Search</a></li>
+					<li><a href="${pageContext.request.contextPath}/genres">Genres</a></li>
+					<li><a href="${pageContext.request.contextPath}/titles">Titles</a></li>
+					<li><a href="${pageContext.request.contextPath}/checkout">Checkout Cart</a></li>
 					<c:choose>
 						<c:when test="${empty login}">
 							<li><a href="./login"> <span class="glyphicon glyphicon-log-in"></span> Login</a></li>

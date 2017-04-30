@@ -14,7 +14,7 @@
                     <!-- <small>Secondary Text</small> -->
                 </h1>
                 <p align="center" style="color:red;"> ${message} </p>
-                <a style="width: 20%; float:right" class="form-control btn btn-primary place-order-button" href="./shopping-cart/payment-process">Process to Checkout »</a>
+                <a style="width: 150pt; float:right" class="form-control btn btn-primary place-order-button" href="./shopping-cart/payment-process">Process to Checkout »</a>
             </div>
         </div>
         <!-- /.row -->

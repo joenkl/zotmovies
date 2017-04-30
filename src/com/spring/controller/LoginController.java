@@ -12,6 +12,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class LoginController  {
 	
+	@RequestMapping(value = { "", "/", "/login" })
+	public String login() {
+		// hitting home page => setting session:
+
+		return "login";
+	}
+	
 	@RequestMapping(value="/logout",method=RequestMethod.GET)
 	public ModelAndView processLogout(HttpServletRequest request, RedirectAttributes redir){
 		

@@ -45,12 +45,7 @@ public class MovieController {
 		return "search";
 	}
 
-	@RequestMapping(value = { "", "/", "/login" })
-	public String login() {
-		// hitting home page => sestting session:
-
-		return "login";
-	}
+	
 
 	@RequestMapping("/index")
 	public ModelAndView home(

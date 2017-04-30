@@ -6,7 +6,7 @@ var addToCart = function(movieid, title){
                 	$("#successAdd").html(response);
                 	$("#successAdd").addClass("alert alert-success offset4 span4");
                 	$("#successMsg").fadeIn(100);
-                	$("#successMsg").html("Successfuly add movie into cart");
+                	$("#successMsg").html("Your order has fully added to cart");
                 	$("#successMsg").fadeOut(1000);
                 }
 			});
@@ -14,12 +14,16 @@ var addToCart = function(movieid, title){
 
 
 $(document).ready(function() {
-	$("#add-to-cart").on("click", function(e)
+	$(".add-to-cart").on("click", function(e)
 			{
 		 		var button =  $(this);
 		 		var movieID = button.attr("movieid")
 		 		var data = JSON.stringify(button.attr("data"));
 		 		addToCart(movieID, data);
+		 		
+		 		$(this).addClass("glyphicon glyphicon-ok").delay(1000).queue(function(){
+				    $(this).removeClass("glyphicon glyphicon-ok").dequeue();
+				});
 			})
 }
 );
