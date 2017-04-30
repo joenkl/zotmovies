@@ -2,6 +2,8 @@
 <%@ include file="header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<%@ include file="title-list.jsp"%>
+
 <!-- show n per page -->
 <%@ include file="Npages.jsp"%>
 
@@ -71,8 +73,6 @@
 
 <!--  <p>nextTitleOrder => ${nextTitleOrder }</p>
 <p>nextYearOrder => ${nextYearOrder }</p> -->
-
-
 
 
 <div class="container">
