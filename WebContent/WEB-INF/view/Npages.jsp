@@ -63,7 +63,7 @@
 		</select>
 	</div>
 </div>
-<hr>
+<br>
 
 <script>
 	$(document).ready(function(){
