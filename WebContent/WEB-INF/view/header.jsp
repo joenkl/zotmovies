@@ -43,7 +43,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="./index">Fabflix</a>
+				<a class="navbar-brand" href="./index"><span class="glyphicon glyphicon-home"></span> Fabflix</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse">
@@ -54,11 +54,11 @@
 					<li><a href="./checkout">Checkout Cart</a></li>
 					<c:choose>
 						<c:when test="${empty login}">
-							<li><a href="./login">Login</a></li>
+							<li><a href="./login"> <span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="#">Hello ${customerFN}</a></li>
-							<li><a href="./logout">Logout</a></li>
+							<li><a href="#" style="color:#f1c40f"><span class="glyphicon glyphicon-user"></span> Hello, ${customerFN}</a></li>
+							<li><a href="./logout"> <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 						</c:otherwise>
 					</c:choose>
 				</ul>

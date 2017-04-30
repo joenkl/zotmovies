@@ -37,6 +37,7 @@
 
 
 <div class="row">
+	<div class="col-lg-12"></div>
 	<div class="col-md-3 col-md-offset-9">
 		<select id="view-n-per-page" class="form-control">
 			<option value="${minPage}"
