@@ -112,7 +112,7 @@
 			<tbody>
 				<c:forEach var="movie" items="${listMovies}" varStatus="status">
 						<td>
-							<button id="add-to-cart" data="${movie.title}"
+							<button id="add-to-cart" data="${movie.title}" movieID="${movie.id}"
 										 class="btn btn btn-success">
 										<span class="glyphicon glyphicon-shopping-cart"></span>
 							</button>
@@ -152,4 +152,17 @@
 		</table>
 	</div>
 	<%@ include file="pagination.jsp"%>
+	<%@ include file="footer.jsp"%>
+	<script>
+	$(document).ready(function() {
+	$("#add-to-cart").on("click", function(e)
+			{
+		 		var button =  $(this);
+		 		var movieId = button.attr("movieID")
+		 		var data = JSON.stringify(button.attr("data"));
+		 		addToCart(movieId, data);
+			})
+	}
+	);
+</script>
 </div>
