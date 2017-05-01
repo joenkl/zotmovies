@@ -29,6 +29,7 @@
 			<div class="col-md-7">
 				<h3>${star.first_name} ${star.last_name}</h3>
 				<ul class="star-info">
+					<li>Star's ID: ${star.id}</li>
 					<li>First name: ${star.first_name}</li>
 					<li>Last name: ${star.last_name}</li>
 					<li>Date of Birth: ${star.sDOB}</li>

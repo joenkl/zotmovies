@@ -23,6 +23,11 @@ public class LoginController  {
 		{
 			request.getSession(true).setAttribute("url_prior_login", "/index");
 		}
+		
+		else if(referrer.contains("login"))
+		{
+			request.getSession(true).setAttribute("url_prior_login", "/index");
+		}
 		return "login";
 	}
 	
