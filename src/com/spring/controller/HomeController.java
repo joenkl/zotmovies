@@ -31,9 +31,9 @@ public class HomeController {
 		return ("checkout");
 	}
 	
-	@RequestMapping("/testdb")
-	public String testPage() {
-		return ("test-db");
+	@RequestMapping("/reports/like-predicate")
+	public String report() {
+		return ("report");
 	}
 	
 	private Boolean tryParseInt(String number) {
