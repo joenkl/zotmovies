@@ -20,6 +20,9 @@
         <!-- Projects Row -->
         <!-- /.row -->
          <div class="row" >
+         	<c:if test="${not empty message}">
+         		<p style="color:red">${message}</p>
+         	</c:if>
             <h4>Search Movies by: </h4>
             <div class="col-md-5">
                  <form action="./search" class="movie-advanced-search" id = "advanceSearch" style="margin:0;padding:0;display:inline">

@@ -106,7 +106,10 @@ public class MovieController {
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
 
-			return new ModelAndView("index");
+			ModelAndView model = new ModelAndView("search");
+			model.addObject("message", "Please fill out at least one option!");
+			return model; 
+	
 		}
 
 		else {
