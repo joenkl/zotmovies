@@ -22,7 +22,7 @@ public class GenreDaoImpl implements GenreDao {
 	@Override
 	public List<Genre> getGenreList() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM Genres";
+		String sql = "SELECT * FROM genres";
 		List<Genre> listGenre = jdbcTemplate.query(sql, new RowMapper<Genre>() {
 
 			@Override
