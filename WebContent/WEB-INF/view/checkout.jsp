@@ -27,6 +27,7 @@
 				  <thead>
 				    <tr>
 				    	<th>Quantity: </th>
+				    	<th>Price: </th>
 				      	<th>Movie ID:</th>
 				      	<th>Title: </th>
 				      	<th></th>
@@ -39,6 +40,7 @@
 				    <tr>
 				    	<c:set var="totalQ" value="${totalQ +  c.quantity}"/>
 				    	<th>${c.quantity}</th>
+				    	<th>$3.0</th>
 				      	<td>${c.movieId}</td>
 				      	<td>${c.movieTitle}</td>
 				      	<td><input class ="control-label" id="item${status.index}" type="text" style="width:30px"> 

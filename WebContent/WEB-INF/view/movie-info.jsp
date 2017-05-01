@@ -34,6 +34,7 @@
 			<div class="col-md-7">
 				<h3>${movie.title}</h3>
 				<h4>Year: ${movie.year}</h4>
+				<h5>Price: $10</h5>
 				<ul class="movie-info">
 					<li>ID: ${movie.id}</li>
 					<li>Director:${movie.director}</li>

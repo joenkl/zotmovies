@@ -2,7 +2,9 @@
 <%@ include file="header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<c:if test="${not empty path && path == 'browseTitle'}">
 <%@ include file="title-list.jsp"%>
+</c:if>
 
 <!-- show n per page -->
 <%@ include file="Npages.jsp"%>

@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     
-                    <div class='form-row'>
+                   <!--  <div class='form-row'>
                         <div class='col-xs-12 radio'>
                             <label class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input">
@@ -77,7 +77,7 @@
                                 <span class="custom-control-description">Match Substring (Will match portions of a larger string)</span>
                             </label>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class='form-row'>
                         <div class='col-xs-12 form-group'>
