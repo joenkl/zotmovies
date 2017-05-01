@@ -31,9 +31,18 @@ public class HomeController {
 		return ("checkout");
 	}
 	
-	@RequestMapping("/reports/like-predicate")
+	@RequestMapping("/reports")
 	public String report() {
 		return ("report");
+	}
+	
+	@RequestMapping("/reports/like-predicate")
+	public String likePredicate() {
+		return ("like-predicate");
+	}
+	@RequestMapping("/reports/readme")
+	public String readme() {
+		return ("readme");
 	}
 	
 	private Boolean tryParseInt(String number) {

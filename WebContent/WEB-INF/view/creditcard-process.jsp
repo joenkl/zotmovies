@@ -38,17 +38,17 @@
 						<div class='form-row'>
 		                    <div class='col-xs-4 form-group expiration required'>
 		                        <label class='control-label'>Day</label>
-		                        <input class='form-control card-exp-day' name="dd" placeholder='DD' size='2' type='text'>
+		                        <input class='form-control card-exp-day' name="dd" placeholder='DD' size='2' type='text' required>
 		                    </div>
 		
 		                    <div class='col-xs-4 form-group expiration required'>
 		                        <label class='control-label'>Month</label>
-		                        <input class='form-control card-expi-month' name="mm" placeholder='MM' size='2' type='text'>
+		                        <input class='form-control card-expi-month' name="mm" placeholder='MM' size='2' type='text' required>
 		                    </div>
 		
 		                    <div class='col-xs-4 form-group expiration required'>
 		                        <label class='control-label'>Year</label>
-		                        <input class='form-control card-exp-year' name="yyyy" placeholder='YYYY' size='4' type='text'>
+		                        <input class='form-control card-exp-year' name="yyyy" placeholder='YYYY' size='4' type='text' required>
                     		</div>
                			 </div>
 						<input type="submit" name="cc-submit" class="form-control btn btn-primary place-order-button" value="Submit">
