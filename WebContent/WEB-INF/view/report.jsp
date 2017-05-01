@@ -12,12 +12,12 @@
                 <h3 role="button" data-toggle="collapse" data-target="#demo1">Search movie by substring Movie's Title<span class="caret"></span></h3>
                 <div id="demo1" class="collapse">
                     <div class="row">
-						<h5>You know a word from a movie's title</h5>
-                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="ter.PNG" /></div>   
+						<h5>You know a word "Wars" from a movie's title.</h5>
+                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="https://c1.staticflickr.com/5/4193/34216358402_3ba0018296_n.jpg" /></div>   
 					</div>
 					<div class="row">
-						<h5>You know only a partial word from a movie's title</h5>
-                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="ter.PNG" /></div>   
+						<h5>You know only a partial word "ter" from a movie's title</h5>
+                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="https://c1.staticflickr.com/3/2817/33564331193_c51b919596_n.jpg" /></div>   
 					</div>
 				</div>
 			</div>
@@ -32,7 +32,7 @@
                 <div id="demo2" class="collapse">
                     <div class="row">
 						<h5> Searching with a substring like "kris" in "Kristen"</h5>
-						<div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="starf_kris.PNG" /> 
+						<div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="https://c1.staticflickr.com/5/4163/33564306483_75b7f2927c_n.jpg" /> 
 						</div>
 					</div>
 				</div>
@@ -44,14 +44,12 @@
      
         <div class="row">
             <div class="well well-xs">
-                <h3 role="button" data-toggle="collapse" data-target="#demo3">Search movie by substring Star's Last Name <span class="caret"></span></h3>
+                <h3 role="button" data-toggle="collapse" data-target="#demo3">Search movie by substring Star's Last Name<span class="caret"></span></h3>
                 <div id="demo3" class="collapse">
 				<h5> Searching with substring "ride" in "Drive"</h5>
                     <div class="row">
-                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="starl_river.PNG" /> 
+                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="https://c1.staticflickr.com/5/4194/33990189210_9a29fa5b5d_n.jpg" /> 
 						</div>
-							<a href="https://docs.google.com/spreadsheets/d/1oSPVPBkMilP6_DugfSa73SoVxH6ZqdPMj-zu6RN5Yp4/edit#gid=718466304">View movies with star's last name having substring "ride" <i class="fa fa-link" aria-hidden="true"></i></a>
-                    
 					</div>
 				</div>
 			</div>
@@ -63,9 +61,7 @@
                 <div id="demo4" class="collapse">
 				<h5> Searching with substring "jeff" in "Jeff Schaffler"</h5>
                     <div class="row">
-                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="director_jeff.PNG" /> </div>
-                       
-                            <a href="https://docs.google.com/spreadsheets/d/1HcV9eCWnI9NhFF7myKPiYiQEP9aBy8Xjz4bTJ0gRu5c/edit#gid=99542463">View movies with director name <i class="fa fa-link" aria-hidden="true"></i></a>
+                        <div class="col-xs-12 col-md-7 col-lg-8"><img class="img-responsive" alt="Responsive image" src="https://c1.staticflickr.com/3/2838/33564306543_2b3db74d5b_n.jpg" /> </div>
                        
 					</div>
 				</div>
