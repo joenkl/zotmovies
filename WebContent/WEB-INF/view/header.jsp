@@ -48,7 +48,7 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="${pageContext.request.contextPath}//reports/like-predicate">Reports</a></li>
+					<li><a href="${pageContext.request.contextPath}/reports/like-predicate">Reports</a></li>
 					<li><a href="${pageContext.request.contextPath}/searchForm">Search</a></li>
 					<li><a href="${pageContext.request.contextPath}/genres">Genres</a></li>
 					<li><a href="${pageContext.request.contextPath}/titles">Titles</a></li>
