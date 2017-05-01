@@ -13,9 +13,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class LoginController  {
 	
 	@RequestMapping(value = { "", "/", "/login" })
-	public String login() {
+	public String login(HttpServletRequest request) {
 		// hitting home page => setting session:
-
+		String referrer = request.getHeader("Referer");
+		request.getSession(true).setAttribute("url_prior_login", referrer);
+		
+		System.out.println(referrer);
+		if(referrer == null)
+		{
+			request.getSession(true).setAttribute("url_prior_login", "/index");
+		}
 		return "login";
 	}
 	

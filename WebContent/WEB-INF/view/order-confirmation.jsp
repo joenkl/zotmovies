@@ -27,6 +27,7 @@
             <h4>${cusName}</h4>
             <h5>${cusEmail}</h5>
             <h5>${cusAddr}</h5>
+            <h5>Total: $${cost}</h5>
         </div>
         
         <div class="row">
@@ -35,15 +36,17 @@
 				    <tr>
 				    	<th>Order ID: </th>
 				      	<th>Movie ID: </th>
+				   
 				      	<th>Date: </th>
 				    </tr>
 				  </thead>
 				  
 				  <tbody>
-				  <c:forEach items="${order}" var="o">
+				  <c:forEach var="o" items="${order}" >
 				    <tr>
 				    	<th>${o.id}</th>
 				      	<td>${o.movie_id}</td>
+			
 				      	<td>${o.sale_date}</td>
 				    </tr>
 			     </c:forEach>

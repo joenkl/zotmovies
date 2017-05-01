@@ -29,11 +29,12 @@ public class CustomerController {
 	public ModelAndView processLoginForm(HttpServletRequest request, RedirectAttributes redir){
 		Boolean isCustomer = customerdao.isCustomer(request.getParameter("email")
 				, request.getParameter("password"));
+		HttpSession session = request.getSession(true);
 		
 		if(isCustomer)
 		{
 			//TODO: change session 
-			HttpSession session = request.getSession(true);
+			
 			Integer login = (Integer) (session.getAttribute("login"));
 			if(login == null)
 			{
@@ -45,7 +46,12 @@ public class CustomerController {
 				session.setAttribute("customerFN", fullname);
 			}
 			
-			return new ModelAndView("redirect:/index"); 
+			String redirectUrl = (String) session.getAttribute("url_prior_login");
+			System.out.println(redirectUrl);
+			
+			ModelAndView model = new ModelAndView();
+			model.setViewName("redirect:" + redirectUrl);
+			return model;
 		}
 		
 		else

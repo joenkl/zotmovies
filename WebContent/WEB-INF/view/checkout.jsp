@@ -34,8 +34,10 @@
 				  </thead>
 				  
 				  <tbody>
+				  <c:set var="totalQ" value="0"></c:set>
 				  <c:forEach items='<%= session.getAttribute("cart") %>' var="c" varStatus="status">
 				    <tr>
+				    	<c:set var="totalQ" value="${totalQ +  c.quantity}"/>
 				    	<th>${c.quantity}</th>
 				      	<td>${c.movieId}</td>
 				      	<td>${c.movieTitle}</td>
@@ -48,6 +50,8 @@
 			     </c:forEach>
 			    </tbody>
 	    	</table>
+	    	<h3>Total Cost: $${totalQ * 3.0}</h3>
+	    	<c:set var="totalCost" value="${totalQ * 3.0}" scope="session"/>
         </div>
       
         

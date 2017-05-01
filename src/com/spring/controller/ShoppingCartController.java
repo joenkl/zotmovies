@@ -156,6 +156,8 @@ public class ShoppingCartController {
 		if (isCorrectCard){
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/shopping-cart/order-confirmation");
+			HttpSession session = request.getSession(true);
+			session.setAttribute("isCC", 1);
 			return model; 
 		}
 		else{
@@ -187,7 +189,7 @@ public class ShoppingCartController {
 				return model; 
 			}
 			else {
-				ModelAndView model = new ModelAndView();    
+				ModelAndView model = new ModelAndView();   
 				model.setViewName("redirect:/shopping-cart/payment-info");
 				return model; 
 			}
@@ -205,7 +207,12 @@ public class ShoppingCartController {
 	@RequestMapping(value="/order-confirmation")
 	public ModelAndView orderProcess(HttpServletRequest request, RedirectAttributes redir) throws ParseException{
 		
+		
 		HttpSession session = request.getSession(true);
+		
+		if (session.getAttribute("login") == null || session.getAttribute("isCC") == null){
+			return new ModelAndView("404-page");
+		}
 		@SuppressWarnings("unchecked")
 		List<ShoppingCart> shoppingCartList=(List<ShoppingCart>) session.getAttribute("cart");
 		int cusID = (int) session.getAttribute("customerID");
@@ -238,10 +245,12 @@ public class ShoppingCartController {
 		model.addObject("cusAddr", customer.getAddress());
 		
 		model.addObject("order", completedOrder);
+		model.addObject("cost", session.getAttribute("totalCost"));
 		model.addObject("scart", shoppingCartList);
 		//empty shoppingCartList
 		shoppingCartList.clear();
 		session.setAttribute("totalCost", 0);
+		session.removeAttribute("isCC");
 		
 		return model; 
 	}
