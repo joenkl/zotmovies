@@ -12,6 +12,12 @@
 		--Ubuntu 16: 52.53.176.91:8080<br>
 		--Ubuntu 14.04: 54.183.52.35:8080<br>
 		
+		Tomcat:
+		jnguyen - demonjos93
+		
+		localhost:
+		admin - 1593
+		
 		File: project2_01.war<br>
 		(Exported from Eclipse)<br>
 		

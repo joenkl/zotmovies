@@ -10,30 +10,42 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class LoginController  {
-	
+public class LoginController {
+
 	@RequestMapping(value = { "", "/", "/login" })
-	public String login(HttpServletRequest request) {
-		// hitting home page => setting session:
-		String referrer = request.getHeader("Referer");
-		request.getSession(true).setAttribute("url_prior_login", referrer);
-		
-		System.out.println(referrer);
-		if(referrer == null)
-		{
+	public String login(HttpServletRequest request, RedirectAttributes redir) {
+
+		HttpSession session = request.getSession(true);
+		Integer login = (Integer) (session.getAttribute("login"));
+
+		if (login == null) {
+			String referrer = request.getHeader("Referer");
 			request.getSession(true).setAttribute("url_prior_login", "/index");
-		}
-		
-		else if(referrer.contains("login"))
-		{
-			request.getSession(true).setAttribute("url_prior_login", "/index");
-		}
-		return "login";
+			
+			
+			//if(!referrer.contains("checkout"))
+			if (referrer != null && referrer.contains("checkout")) {
+				request.getSession(true).setAttribute("url_prior_login", referrer);
+			}
+
+//			else if (referrer.contains("login")) {
+//				request.getSession(true).setAttribute("url_prior_login", "/index");
+//			}
+//
+//			else if (!referrer.contains(request.getServerName()) || !referrer.contains(request.getContextPath())) {
+//				request.getSession(true).setAttribute("url_prior_login", "/index");
+//			}
+			
+			
+			
+			return "login";
+		} else
+			return "redirect:/index";
 	}
-	
-	@RequestMapping(value="/logout",method=RequestMethod.GET)
-	public ModelAndView processLogout(HttpServletRequest request, RedirectAttributes redir){
-		
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView processLogout(HttpServletRequest request, RedirectAttributes redir) {
+
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("login");
 		session.removeAttribute("customerID");
