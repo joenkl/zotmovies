@@ -102,6 +102,7 @@ public class MovieController {
 			@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "n", required = false) String nPerPage,
 			RedirectAttributes redir) {
+		
 
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
@@ -115,6 +116,11 @@ public class MovieController {
 		else {
 			if (year.isEmpty())
 				year = "-1";
+			
+			if(!tryParseInt(year))
+			{
+				return new ModelAndView("404-page");
+			}
 
 			// prepare n per page:
 			int defaultN = 6;
@@ -156,6 +162,7 @@ public class MovieController {
 	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("movie-info");
+		
 
 		model.addObject("movie", movie);
 
@@ -172,7 +179,8 @@ public class MovieController {
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
-
+		
+		
 		// prepare n per page:
 		int defaultN = 6;
 		nPerPage = prepareNperPage(nPerPage, defaultN);
