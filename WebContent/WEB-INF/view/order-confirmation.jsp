@@ -27,7 +27,6 @@
             <h4>${cusName}</h4>
             <h5>${cusEmail}</h5>
             <h5>${cusAddr}</h5>
-            <h5>Total: $${cost}</h5>
         </div>
         
         <div class="row">
