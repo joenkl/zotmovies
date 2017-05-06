@@ -22,48 +22,6 @@ import com.spring.model.Movie;
 @Controller 
 public class CustomerController {
 	
-	@Autowired
-	CustomerDao customerdao;
-	
-	@RequestMapping(value="/processLoginForm",method=RequestMethod.POST)
-	public ModelAndView processLoginForm(HttpServletRequest request, RedirectAttributes redir){
-		Boolean isCustomer = customerdao.isCustomer(request.getParameter("email")
-				, request.getParameter("password"));
-		HttpSession session = request.getSession(true);
-		
-		if(isCustomer)
-		{
-			//TODO: change session 
-			
-			Integer login = (Integer) (session.getAttribute("login"));
-			if(login == null)
-			{
-				login = new Integer(1);
-				session.setAttribute("login", login);
-				Customer customer = customerdao.getCustomerInfo(request.getParameter("email"), request.getParameter("password"));
-				session.setAttribute("customerID", customer.getId());
-				String fullname = customer.getFist_name() + " " + customer.getLast_name();
-				session.setAttribute("customerFN", fullname);
-			}
-			
-			String redirectUrl = (String) session.getAttribute("url_prior_login");
-			System.out.println(redirectUrl);
-			
-			ModelAndView model = new ModelAndView();
-			model.setViewName("redirect:" + redirectUrl);
-			return model;
-		}
-		
-		else
-		{	
-			ModelAndView model = new ModelAndView();
-			model.setViewName("redirect:/login");
-			redir.addFlashAttribute("message", "Invalid Email/Password combination. Please try again!");
-			return model; 
-		}
-		
-	}
-	
 	
 	
 
