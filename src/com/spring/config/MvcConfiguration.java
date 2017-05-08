@@ -28,6 +28,16 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		return resolver;
 	}
 	
+	
+	@Bean
+	public ViewResolver getAdminViewResolver(){
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setPrefix("/WEB-INF/view/admin");
+		resolver.setSuffix(".jsp");
+		return resolver;
+	}
+	
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
@@ -73,5 +83,12 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		JndiTemplate jndiTemplate = new JndiTemplate();
 		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
 		return new SaleDaoImpl(dataSource);
+	}
+	
+	@Bean
+	public AdminDao getAdminDao() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		return new AdminDaoImpl(dataSource);
 	}
 }
