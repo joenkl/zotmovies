@@ -3,29 +3,30 @@ package com.spring.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
 import com.spring.dao.AdminDao;
 import com.spring.model.Admin;
 
+@Controller
 public class AdminController {
 	@Autowired
 	private AdminDao adminDao;
 	
-	@RequestMapping(value={"/_dashboard"})
+	@RequestMapping(value="/_dashboard")
 	public ModelAndView admin(HttpServletRequest request, RedirectAttributes redir)
 	{
 		HttpSession session = request.getSession(true);
 		if (session.getAttribute("isAdmin") == null)
 		{
 			ModelAndView model = new ModelAndView();
-			model.setViewName("redirect:/admin-login");
+			model.setViewName("redirect:/_dashboard-login");
 			return model;
 		}
 		
@@ -34,7 +35,7 @@ public class AdminController {
 		return model;
 	}
 	
-	@RequestMapping(value="/_dashboard-login", method = RequestMethod.POST)
+	@RequestMapping(value="/_dashboard-login")
 	public String adminLogin(HttpServletRequest request, RedirectAttributes redir)
 	{
 		HttpSession session = request.getSession(true);
@@ -45,7 +46,8 @@ public class AdminController {
 		else
 			return "redirect:/_dashboard";
 	}
-	@RequestMapping(value={"/_process-dashboard-login"})
+	
+	@RequestMapping(value="/_process-dashboard-login")
 	public ModelAndView processAdminLogin(HttpServletRequest request, RedirectAttributes redir)
 	{
 		Admin admin = adminDao.getAdminInfo(request.getParameter("email"), request.getParameter("password"));
