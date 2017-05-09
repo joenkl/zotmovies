@@ -5,5 +5,4 @@
 				01: Thuc Huyen, Joseph L. Nguyen, Lan Tran</p>
 		</div>
 	</div>
-	<!-- /.row -->
 </footer>

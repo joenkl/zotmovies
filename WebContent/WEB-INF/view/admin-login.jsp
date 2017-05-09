@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%@ include file="header.jsp"%>
+<%@ include file="_dashboard-header.jsp"%>
 <body>
 
 	<!-- Page Content -->
@@ -9,8 +9,8 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="login-container">
-					<h3>Admin Login Panel</h3>
-					<p align="center" style="color: red;">${message}</p>
+					<h3 style="color: red">Admin Login Panel</h3>
+					<p align="center" style="color: #c0392b;">${message}</p>
 					<form id="login-form" action="_process-dashboard-login" method="post"
 						role="form">
 						<input type="text" name="email" placeholder="Email" required autofocus>

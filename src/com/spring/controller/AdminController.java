@@ -47,7 +47,7 @@ public class AdminController {
 			return "redirect:/_dashboard";
 	}
 	
-	@RequestMapping(value="/_process-dashboard-login")
+	@RequestMapping(value="/_process-dashboard-login", method = RequestMethod.POST)
 	public ModelAndView processAdminLogin(HttpServletRequest request, RedirectAttributes redir)
 	{
 		Admin admin = adminDao.getAdminInfo(request.getParameter("email"), request.getParameter("password"));

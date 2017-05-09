@@ -33,7 +33,7 @@
 	<script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 
 		
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<nav class="navbar navbar-inverse navbar-fixed-top admin-dashboard" style="background-color: #c0392b" role="navigation">
 		<div class="container">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -43,29 +43,26 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/index"><span class="glyphicon glyphicon-home"></span> Fabflix</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/_dashboard"><span class="glyphicon glyphicon-tasks"></span> Admin Dashboard</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="${pageContext.request.contextPath}/searchForm">Search</a></li>
-					<li><a href="${pageContext.request.contextPath}/genres">Genres</a></li>
-					<li><a href="${pageContext.request.contextPath}/titles">Titles</a></li>
-					<li><a href="${pageContext.request.contextPath}/checkout">Checkout Cart</a></li>
 					<c:choose>
-						<c:when test="${empty login}">
-							<li><a href="${pageContext.request.contextPath}/login"> <span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						<c:when test="${empty isAdmin}">
+							<li><a href="#"> <span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="#" style="color:#FFEB3B"><span class="glyphicon glyphicon-user"></span> Hello, ${customerFN}</a></li>
-							<li><a href="${pageContext.request.contextPath}/logout"> <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+							<li><a href="#">Add New Star</a></li>
+							<li><a href="#">Add New Movie</a></li>
+							<li><a href="#">Edit Movie</a></li>
+							<li><a href="#">MetaData</a></li>
+							<li><a href="#">Parsing XML</a></li>
+							<li><a href="#" style="color:#FFEB3B"><span class="glyphicon glyphicon-user"></span> Hello, ${adminFN}</a></li>
+							<li><a href="${pageContext.request.contextPath}/_dashboard-logout"> <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 						</c:otherwise>
 					</c:choose>
-					<c:choose>
-						<c:when test="${not empty isAdmin}">
-							<li><a style="color:#FFEB3B" href="${pageContext.request.contextPath}/_dashboard"> <span class="glyphicon glyphicon-tasks"></span> Admin Dashboard</a></li>
-						</c:when>
-					</c:choose>
+					<li><a style="color:#FFEB3B" href="${pageContext.request.contextPath}/index"><span class="glyphicon glyphicon-home"></span> Fabflix</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
