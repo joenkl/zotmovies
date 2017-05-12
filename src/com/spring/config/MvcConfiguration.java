@@ -81,4 +81,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
 		return new AdminDaoImpl(dataSource);
 	}
+	
+	@Bean
+	public MetadataDao getMetaDao() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		return new MetadataDaoImpl(dataSource);
+	}
 }

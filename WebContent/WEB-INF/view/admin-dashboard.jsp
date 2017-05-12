@@ -33,7 +33,7 @@
                 <button type="button" class="btn btn-danger btn-lg btn-block">Edit Movie</button>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger btn-lg btn-block">Retrieving MetaData</button>
+                <a href ="${pageContext.request.contextPath}/_metadata" class="btn btn-danger btn-lg btn-block">Retrieving MetaData</a>
             </div>
         </div>
         
