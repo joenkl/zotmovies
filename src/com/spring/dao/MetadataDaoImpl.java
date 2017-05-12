@@ -1,16 +1,14 @@
 package com.spring.dao;
 
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.*;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.DatabaseMetaData;
 
 
 public class MetadataDaoImpl implements MetadataDao {
@@ -41,7 +39,6 @@ public class MetadataDaoImpl implements MetadataDao {
 				}
 				md += "\n";
 			}
-			
 			return md;
 		} catch (SQLException e) {
 			md = "Error: " + e.getMessage();

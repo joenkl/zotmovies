@@ -11,6 +11,7 @@
 	
 	<title>Fabflix - Group 01 -CS122B - Spring 2017</title>
 	
+	
 	<!-- Bootstrap Core CSS -->
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.css" rel="stylesheet">
 	

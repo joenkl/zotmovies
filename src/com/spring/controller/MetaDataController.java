@@ -27,7 +27,8 @@ public class MetaDataController {
 		
 		String metaData = metadata.getMeta();
 		
-		model.addObject(metaData);
+		System.out.println(metaData);
+		model.addObject("metaData", metaData);
 		return model;
 	}
 	
