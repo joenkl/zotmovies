@@ -80,4 +80,15 @@ public class AdminController {
 		session.removeAttribute("adminFN");
 		return new ModelAndView("redirect:/_dashboard-login");
 	}
+	
+	@RequestMapping(value="/_add-new-star")
+	public String addNewStar() {
+		return ("_add-new-star");
+	}
+	
+	
+	@RequestMapping(value="/_add-new-movie")
+	public String addNewMovieProc() {
+		return ("_add-new-movie");
+	}
 }

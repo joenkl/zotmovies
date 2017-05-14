@@ -1,6 +1,8 @@
 
 package com.spring.dao;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.spring.model.Movie;;
@@ -21,5 +23,9 @@ public interface MovieDao {
 	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n); 
 	
 	public Movie getMovieListWithID(int id);
+	
+	public String addMovieProcedure(String title, int year, String director,
+			String banner_url, String trailer_url, String starFN, String starLN, Date starDob,
+			String starPhotoURL, String genre);
 	
 }

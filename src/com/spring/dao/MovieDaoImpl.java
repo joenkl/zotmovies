@@ -1,15 +1,22 @@
 
 package com.spring.dao;
 
+import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 import com.spring.model.Movie;
 
@@ -212,5 +219,30 @@ public class MovieDaoImpl implements MovieDao {
 
 		return movie;
 	}
-	
+
+	@Override
+	public String addMovieProcedure(String title, int year, String director, String banner_url, String trailer_url,
+			String starFN, String starLN, Date starDob, String starPhotoURL, String genre) 
+	{
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("add_movie");
+		
+		Map<String, Object> in = new HashMap<String, Object>();
+		in.put("new_movieTitle", title);
+		in.put("new_year", year);
+		in.put("new_director", director);
+		in.put("new_banner_url", banner_url);
+		in.put("new_trailer_url", trailer_url);
+		in.put("new_star_FN", starFN);
+		in.put("new_star_LN", starLN);
+		in.put("new_star_dob", starDob);
+		in.put("new_star_photo_url", starPhotoURL);
+		in.put("new_genre", genre);
+		
+		SqlParameterSource sql = new MapSqlParameterSource(in);
+		
+		Map<String, Object> result = simpleJdbcCall.execute(sql);
+		return result.toString();
+	}
 }

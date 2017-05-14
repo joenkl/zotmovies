@@ -54,10 +54,10 @@
 							<li><a href="#"> <span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="#">Add New Star</a></li>
-							<li><a href="#">Add New Movie</a></li>
+							<li><a href="${pageContext.request.contextPath}/_add-new-star">Add New Star</a></li>
+							<li><a href="${pageContext.request.contextPath}/_add-new-movie">Add New Movie</a></li>
 							<li><a href="#">Edit Movie</a></li>
-							<li><a href="#">MetaData</a></li>
+							<li><a href="${pageContext.request.contextPath}/_metadata">MetaData</a></li>
 							<li><a href="#">Parsing XML</a></li>
 							<li><a href="#" style="color:#FFEB3B"><span class="glyphicon glyphicon-user"></span> Hello, ${adminFN}</a></li>
 							<li><a href="${pageContext.request.contextPath}/_dashboard-logout"> <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

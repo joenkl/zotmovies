@@ -384,5 +384,32 @@ public class MovieController {
 
 		return model;
 	}
-
+	
+	
+	
+	@RequestMapping(value="/_movie-confirmation", method = RequestMethod.POST)
+	public ModelAndView addNewMovie(
+			@RequestParam(value="title") String title,
+			@RequestParam(value="director") String director,
+			@RequestParam(value="year") Integer year,
+			@RequestParam(value="banner_url") String banner_url,
+			@RequestParam(value="trailer_url") String trailer_url,
+			
+			@RequestParam(value="genre") String genre,
+			
+			@RequestParam(value="first_name") String starFN,
+			@RequestParam(value="last_name") String starLN, 
+			@RequestParam(value="dob") java.sql.Date starDob,
+			@RequestParam(value="photo_url") String starPhotoURL)
+	{
+		ModelAndView model = new ModelAndView("_movie-confirmation");
+		
+		String msg = movieDao.addMovieProcedure(title, year, director, banner_url, trailer_url, 
+				starFN, starLN, starDob, starPhotoURL, genre);
+		
+		model.addObject("msg", msg);
+		
+		return model;
+		
+	}
 }

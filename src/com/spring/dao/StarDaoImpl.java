@@ -46,12 +46,12 @@ public class StarDaoImpl implements StarDao {
 	@Override
 	public void addNewStar(String first_name, String last_name, Date dob, String photo_url) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql ="insert into stars (id, first_name, last_name, dob, photo_url) values (?, ?, ?, ?)";
+		String sql ="insert into stars (first_name, last_name, dob, photo_url) values (?, ?, ?, ?)";
 		jdbcTemplate.update(sql, first_name, last_name, dob, photo_url);
 	}
 
 	@Override
-	public Boolean isStarExit(String first_name, String last_name) {
+	public Boolean isStarExitByNames(String first_name, String last_name) {
 		try{
 			
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

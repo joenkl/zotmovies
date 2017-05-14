@@ -19,7 +19,7 @@
         <!-- Projects Row -->
         <div class="row">
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger btn-lg btn-block">Add a new Star</button>
+                <a href ="${pageContext.request.contextPath}/_add-new-star" class="btn btn-danger btn-lg btn-block">Add New Star</a>
             </div>
             <div class="col-md-6">
                 <button type="button" class="btn btn-danger btn-lg btn-block">Add a new movie</button>
