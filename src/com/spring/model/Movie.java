@@ -1,5 +1,6 @@
 package com.spring.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,31 @@ public class Movie {
 	String director;
 	String banner_url;
 	String trailer_url;
-	
+
+	// for XML
+	List<Star> listOfStars;
+	int directorId;
+	String fid;
+
+	public void setFid(String fid) {
+		this.fid = fid;
+	}
+
+	public String getFid() {
+		return fid;
+	}
+
 	@Autowired
 	MovieDao movieDao;
-	
-	public Movie()
-	{
+
+	public Movie() {
 		id = -1;
-		year = -1; 
+		year = 0000;
+		listOfStars = new ArrayList<Star>();
+		directorId = -1;
+		fid = "N/A";
 	}
-	
-	
-	
+
 	public Movie(int id, String title, int year, String director, String banner_url, String trailer_url) {
 		this.id = id;
 		this.title = title;
@@ -33,49 +47,63 @@ public class Movie {
 		this.banner_url = banner_url;
 		this.trailer_url = trailer_url;
 	}
-	
+
+	public void addStar(Star newStar) {
+		listOfStars.add(newStar);
+	}
+
 	@Override
 	public String toString() {
-		return "Movie [id=" + id + ", title=" + title + ", year=" + year + ", director=" + director + ", banner_url="
-				+ banner_url + ", trailer_url=" + trailer_url + "]";
+		return "Movie [title=" + title + ", director=" + director 
+				+ "stars = " + listOfStars + "]";
 	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public int getYear() {
 		return year;
 	}
+
 	public void setYear(int year) {
 		this.year = year;
 	}
+
 	public String getDirector() {
 		return director;
 	}
+
 	public void setDirector(String director) {
 		this.director = director;
 	}
+
 	public String getBanner_url() {
 		return banner_url;
 	}
+
 	public void setBanner_url(String banner_url) {
 		this.banner_url = banner_url;
 	}
+
 	public String getTrailer_url() {
 		return trailer_url;
 	}
+
 	public void setTrailer_url(String trailer_url) {
 		this.trailer_url = trailer_url;
 	}
-	
-	
 
 }

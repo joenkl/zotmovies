@@ -77,5 +77,8 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-websocket-4.3.7.RELEASE-javadoc.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-websocket-4.3.7.RELEASE-sources.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-websocket-4.3.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javax.json-1.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/recaptcha4j-0.0.7.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-lang3-3.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -1,9 +1,13 @@
 
 package com.spring.dao;
 
+import java.util.Hashtable;
 import java.util.List;
 
-import com.spring.model.Movie;;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+
+import com.spring.model.Movie;
+
 
 public interface MovieDao {
 
@@ -21,5 +25,6 @@ public interface MovieDao {
 	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n); 
 	
 	public Movie getMovieListWithID(int id);
+	
 	
 }

@@ -3,12 +3,18 @@ package com.spring.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.spring.model.Movie;
@@ -212,5 +218,7 @@ public class MovieDaoImpl implements MovieDao {
 
 		return movie;
 	}
+	
+	
 	
 }

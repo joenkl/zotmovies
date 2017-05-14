@@ -10,6 +10,11 @@ public class Star {
 	String photo_url;
 	String sDOB; 
 	
+	public Star()
+	{
+		id = -1;
+	}
+	
 	public Star(int id, String first_name, String last_name, Date dob, String photo_url) {
 		super();
 		this.id = id;
@@ -66,7 +71,7 @@ public class Star {
 	public String getsDOB() {
 		return sDOB;
 	}
-	public void setJavaDOB(String sDOB) {
+	public void setsDOB(String sDOB) {
 		this.sDOB = sDOB;
 	}
 	
