@@ -21,7 +21,7 @@
 
         <!-- Projects Row -->
         <div class="row">
-        	<span style="white-space: pre"><c:out value="${msg}"></c:out></span>
+        	<h3><span style="white-space: pre"><c:out value="${msg}"></c:out></span></h3>
         </div>
 
         <%@ include file="footer.jsp"%>

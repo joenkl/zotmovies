@@ -22,7 +22,7 @@ public class AdminDaoImpl implements AdminDao {
 	public Admin getAdminInfo(String email, String password) {
 		try{
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			String sql = "select * from admin "
+			String sql = "select * from employees "
 					+ "where email = ? and password = ?";
 			
 			Admin admin = (Admin) jdbcTemplate.queryForObject(sql, new RowMapper<Admin>() {

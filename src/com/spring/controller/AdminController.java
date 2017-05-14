@@ -91,4 +91,9 @@ public class AdminController {
 	public String addNewMovieProc() {
 		return ("_add-new-movie");
 	}
+	
+	@RequestMapping(value="/_edit-movie")
+	public String editMovieProc() {
+		return ("_edit-movie");
+	}
 }

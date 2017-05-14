@@ -22,7 +22,7 @@
                 <a href ="${pageContext.request.contextPath}/_add-new-star" class="btn btn-danger btn-lg btn-block">Add New Star</a>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger btn-lg btn-block">Add a new movie</button>
+                <a href ="${pageContext.request.contextPath}/_add-new-movie" class="btn btn-danger btn-lg btn-block">Add New Movie</a>
             </div>
         </div>
         <!-- /.row -->
@@ -30,7 +30,7 @@
         <!-- Projects Row -->
         <div class="row">
             <div class="col-md-6">
-                <button type="button" class="btn btn-danger btn-lg btn-block">Edit Movie</button>
+                <a href ="${pageContext.request.contextPath}/_edit-movie" class="btn btn-danger btn-lg btn-block">Edit Movie</a>
             </div>
             <div class="col-md-6">
                 <a href ="${pageContext.request.contextPath}/_metadata" class="btn btn-danger btn-lg btn-block">Retrieving MetaData</a>
@@ -43,7 +43,6 @@
                 <button type="button" class="btn btn-danger btn-lg btn-block">Parsing XML</button>
             </div>
         </div>
-
 
         <!-- Footer -->
        <%@ include file="footer.jsp" %>

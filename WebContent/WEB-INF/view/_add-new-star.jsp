@@ -6,6 +6,9 @@
 <%@ include file="_dashboard-header.jsp"%>
 
 <body>
+	<c:if test="${empty isAdmin}">
+	    	<c:redirect url="_dashboard-login"/>
+    </c:if>
     <!-- Page Content -->
     <div class="container">
 
@@ -25,17 +28,17 @@
                 <div class="form-group row">
                     <div class="col-md-5 ">
                         <label>First Name</label>
-                        <input class="form-control" type="text"  name="first_name"/>
+                        <input class="form-control" type="text"  name="first_name" required/>
                     </div>
                     <div class="col-md-5">
                         <label>Last Name</label>
-                        <input class="form-control" type="text"  name="last_name"/>
+                        <input class="form-control" type="text"  name="last_name" required/>
                     </div>
                 </div>
                 <div class ="form-group row">
                      <div class="col-xs-2 ">
                         <label>Date of Birth</label>
-                        <input class="form-control" type="date" data-date-format="yyyy-mm-dd" name="dob"/>
+                        <input class="form-control" type="date" data-date-format="yyyy-mm-dd" name="dob" required/>
                     </div>
                     <div class="col-lg-8 ">
                         <label>Photo URL</label>
@@ -50,7 +53,7 @@
 
 
 	<%@ include file="footer.jsp"%>
-
+</div>
 
 </body>
 

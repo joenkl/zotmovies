@@ -243,6 +243,6 @@ public class MovieDaoImpl implements MovieDao {
 		SqlParameterSource sql = new MapSqlParameterSource(in);
 		
 		Map<String, Object> result = simpleJdbcCall.execute(sql);
-		return result.toString();
+		return result.get("msg").toString();
 	}
 }

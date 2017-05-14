@@ -389,20 +389,23 @@ public class MovieController {
 	
 	@RequestMapping(value="/_movie-confirmation", method = RequestMethod.POST)
 	public ModelAndView addNewMovie(
-			@RequestParam(value="title") String title,
-			@RequestParam(value="director") String director,
-			@RequestParam(value="year") Integer year,
-			@RequestParam(value="banner_url") String banner_url,
-			@RequestParam(value="trailer_url") String trailer_url,
+			@RequestParam(value="title", required = true ) String title,
+			@RequestParam(value="director", required = true) String director,
+			@RequestParam(value="year", required = true) Integer year,
+			@RequestParam(value="banner_url", required = false) String banner_url,
+			@RequestParam(value="trailer_url", required = false) String trailer_url,
 			
-			@RequestParam(value="genre") String genre,
+			@RequestParam(value="genre", required = false) String genre,
 			
-			@RequestParam(value="first_name") String starFN,
-			@RequestParam(value="last_name") String starLN, 
-			@RequestParam(value="dob") java.sql.Date starDob,
-			@RequestParam(value="photo_url") String starPhotoURL)
+			@RequestParam(value="first_name", required = false) String starFN,
+			@RequestParam(value="last_name", required = true) String starLN, 
+			@RequestParam(value="dob", required = true) java.sql.Date starDob,
+			@RequestParam(value="photo_url", required = false) String starPhotoURL)
 	{
 		ModelAndView model = new ModelAndView("_movie-confirmation");
+		
+		if (banner_url == null) banner_url ="";
+		if (trailer_url == null) trailer_url ="";
 		
 		String msg = movieDao.addMovieProcedure(title, year, director, banner_url, trailer_url, 
 				starFN, starLN, starDob, starPhotoURL, genre);

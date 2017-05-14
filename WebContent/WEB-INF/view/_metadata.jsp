@@ -6,6 +6,10 @@
 <%@ include file="_dashboard-header.jsp"%>
 <body>
     <!-- Page Content -->
+    <c:if test="${empty isAdmin}">
+    	<c:redirect url="_dashboard-login"/>
+    </c:if>
+    
     <div class="container">
 
         <!-- Page Header -->

@@ -1,4 +1,4 @@
-<<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,12 +20,8 @@
 
         <!-- Projects Row -->
         <div class="row">
-            <h3 style="color: green">${success-msg}</h3>
-            <br>
-            <h3 style="color: orange">${warning-msg}</h3>
-            <br>
-            <h3 style="color: red">${error-msg}<h3>
-        </div>
+            <h3>${msg}</h3>
+                </div>
 
         <%@ include file="footer.jsp"%>
 

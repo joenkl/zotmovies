@@ -15,7 +15,7 @@
         <!-- Page Header -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">New Movie's Information
+                <h1 class="page-header">Edit Movie's Information
                     <small style="color: #F64747" >* = Required</small>
                 </h1>
             </div>
@@ -27,7 +27,7 @@
             <form id="newMovie" action="_movie-confirmation" method="post">
             	<div class="form-group row">
                     <div class="col-md-5 ">
-                        <label style="color: #1E824C">Movie's Information</label>
+                        <label style="color: #1E824C">Which movie?</label>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -44,24 +44,15 @@
                         <input class="form-control" type="year" name="year" placeholder="YYYY" maxlength="4" Required/>
                     </div>
                 </div>
-                <div class ="form-group row">
-                    <div class="col-lg-10">
-                        <label>Banner URL</label>
-                        <input type="text" class="form-control" name="banner_url" placeholder="http://"/>
-                    </div>
-                </div>
-
-                <div class ="form-group row">
-                      <div class="col-lg-10">
-                        <label>Trailer URL</label>
-                        <input type="text" class="form-control" name="trailer_url" placeholder="http://"/>
-                    </div>
-                </div>
+                 
+                 <c:set var="banner_url" value=""/>
+                 <c:set var="trailer_url" value=""/>
+                
                 
                 <div class ="form-group row">
                       <div class="col-lg-3">
-                        <label style="color: #1E824C" >Genre *</label>
-                        <input type="text" class="form-control" name="genre" required/>
+                        <label style="color: #1E824C" >Genre </label>
+                        <input type="text" class="form-control" name="genre"/>
                     </div>
                 </div>
                 
