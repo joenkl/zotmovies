@@ -1,6 +1,8 @@
 package com.spring.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Star {
 	int id;
@@ -9,6 +11,39 @@ public class Star {
 	Date dob; 
 	String photo_url;
 	String sDOB; 
+	
+	String stagename; 
+	
+	//for xml
+	List<Movie> movies; 
+	
+	public List<Movie> getMovies() {
+		return movies;
+	}
+
+	public void setMovies(List<Movie> movies) {
+		this.movies = movies;
+	}
+	
+	public void addMovies(Movie movie){
+		this.movies.add(movie);
+	}
+
+	public Star()
+	{
+		id = -1;
+		movies = new ArrayList<Movie>();
+		sDOB = "0000";
+	}
+	
+	public void setStagename(String name){
+		stagename = name;
+	}
+	
+	public String getStagename(){
+		return stagename; 
+	}
+
 	
 	public Star(int id, String first_name, String last_name, Date dob, String photo_url) {
 		super();
@@ -66,7 +101,7 @@ public class Star {
 	public String getsDOB() {
 		return sDOB;
 	}
-	public void setJavaDOB(String sDOB) {
+	public void setsDOB(String sDOB) {
 		this.sDOB = sDOB;
 	}
 	
