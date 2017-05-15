@@ -9,10 +9,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-<<<<<<< HEAD
-=======
+
 import java.util.Hashtable;
->>>>>>> project-3-final
 import java.util.List;
 import java.util.Map;
 
@@ -229,7 +227,6 @@ public class MovieDaoImpl implements MovieDao {
 
 		return movie;
 	}
-<<<<<<< HEAD
 
 	@Override
 	public String addMovieProcedure(String title, int year, String director, String banner_url, String trailer_url,
@@ -258,9 +255,4 @@ public class MovieDaoImpl implements MovieDao {
 		
 		return result.get("msg").toString();
 	}
-=======
-	
-	
-	
->>>>>>> project-3-final
 }
