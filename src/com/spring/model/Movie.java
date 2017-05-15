@@ -20,6 +20,8 @@ public class Movie {
 	int directorId;
 	String fid;
 	
+	List<Genre> listOfGenres;
+	
 
 	public void setFid(String fid) {
 		this.fid = fid;
@@ -39,6 +41,8 @@ public class Movie {
 		listOfStars = new ArrayList<Star>();
 		directorId = -1;
 		fid = "N/A";
+		
+		listOfGenres = new ArrayList<Genre>(); 
 	}
 
 	public Movie(int id, String title, int year, String director, String banner_url, String trailer_url) {
@@ -52,6 +56,10 @@ public class Movie {
 
 	public void addStar(Star newStar) {
 		listOfStars.add(newStar);
+	}
+	
+	public void addGenre(Genre genre){
+		listOfGenres.add(genre);
 	}
 
 	@Override

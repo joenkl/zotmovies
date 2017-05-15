@@ -3,6 +3,11 @@ package com.spring.model;
 public class Genre {
 	int id;
 	String name;
+	
+	public Genre(){
+		this.id = -1;
+		
+	}
 	public Genre(int id, String name) {
 		this.id = id;
 		this.name = name;

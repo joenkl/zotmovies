@@ -1,6 +1,8 @@
 package com.spring.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Star {
 	int id;
@@ -11,9 +13,26 @@ public class Star {
 	String sDOB; 
 	
 	String stagename; 
+	
+	//for xml
+	List<Movie> movies; 
+	
+	public List<Movie> getMovies() {
+		return movies;
+	}
+
+	public void setMovies(List<Movie> movies) {
+		this.movies = movies;
+	}
+	
+	public void addMovies(Movie movie){
+		this.movies.add(movie);
+	}
+
 	public Star()
 	{
 		id = -1;
+		movies = new ArrayList<Movie>();
 	}
 	
 	public void setStagename(String name){

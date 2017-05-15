@@ -48,11 +48,15 @@ import org.xml.sax.InputSource;
 import com.spring.config.AppConfig;
 import com.spring.config.MvcConfiguration;
 import com.spring.dao.MovieDao;
+import com.spring.model.Genre;
 import com.spring.model.Movie;
 
 public class MovieParser extends DefaultHandler {
 	// movies from database
 	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviedb;
+	
+	//genres from database
+	private Hashtable<String, Movie> genredb; 
 
 	// hash table of movie in xml with fid 
 	private Hashtable<String, Movie> movies;
@@ -74,10 +78,6 @@ public class MovieParser extends DefaultHandler {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
 
-		// ApplicationContext context = new
-		// AnnotationConfigApplicationContext(MvcConfiguration.class);
-		// moviedao = (MovieDao) context.getBean("MovieDao");
-		//
 		movies = new Hashtable<String, Movie>();
 
 		moviedb = getMoviedb();
@@ -153,7 +153,6 @@ public class MovieParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("film")) {
 
 			//validate data: 
-			boolean isEmpty = movies.isEmpty() || moviexml.isEmpty();
 			boolean isValidFid = !tempMovie.getFid().equals("N/A");
 			boolean isValidYear = tempMovie.getYear() != 0000;
 			
@@ -172,7 +171,7 @@ public class MovieParser extends DefaultHandler {
 			}
 			
 			// insert those valid
-			if (isEmpty || (isValidFid && isValidYear && !isDuplicate)) {
+			if ((isValidFid && isValidYear && !isDuplicate)) {
 				
 				movies.put(tempMovie.getFid(), tempMovie);
 				moviexml.put(key, tempMovie);
@@ -200,6 +199,10 @@ public class MovieParser extends DefaultHandler {
 			}
 		} else if (qName.equalsIgnoreCase("dirn")) {
 			tempMovie.setDirector(tempVal);
+		} else if(qName.equalsIgnoreCase("cattext")){
+			Genre genre = new Genre();
+			genre.setName(tempVal);
+			tempMovie.addGenre(genre);
 		}
 
 	}
