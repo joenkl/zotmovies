@@ -55,6 +55,8 @@ import com.spring.model.Genre;
 import com.spring.model.Movie;
 import com.spring.model.Star;
 
+import javafx.util.Pair;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.sql.Connection;
@@ -74,7 +76,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import com.spring.model.Genre;
-
 
 public class MovieParser extends DefaultHandler {
 	// movies from database with key = (Director, Year, Title)
@@ -98,14 +99,23 @@ public class MovieParser extends DefaultHandler {
 	// boolean to indicate whether xml provides genre
 	boolean hasCat;
 
+	// new movie to add
+	List<Movie> movieToAdd;
+
+	// new genre_in_movie to add
+	List<Pair<Genre, Movie>> genre_in_movieToAdd;
+
 	// Hashtable of new genre to add:
 	Hashtable<String, Genre> new_genres;
 
 	// Hashtable of genre in db:
 	Hashtable<String, Genre> genres_in_db;
-	
-	//Connection of autocommit:
-	Connection con; 
+
+	// Hashtable of genre in xml:
+	Hashtable<String, ImmutableTriple<String, Integer, String>> genre_in_movie_db;
+
+	// Connection of autocommit:
+	Connection con;
 
 	/*
 	 * constructor for MovieParser() for: get data source to connect to db
@@ -113,11 +123,15 @@ public class MovieParser extends DefaultHandler {
 	 * initialize moviexml
 	 */
 	public MovieParser() throws NamingException, SQLException {
+
+		movieToAdd = new ArrayList<Movie>();
+		genre_in_movieToAdd = new ArrayList<Pair<Genre, Movie>>();
+
 		System.out.println("Star logging for mains243.xml");
 
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
-		
+
 		con = dataSource.getConnection();
 		con.setAutoCommit(false);
 
@@ -133,8 +147,6 @@ public class MovieParser extends DefaultHandler {
 		new_genres = new Hashtable<String, Genre>();
 
 		genres_in_db = getGenresInDb();
-		
-		
 
 	}
 
@@ -197,8 +209,14 @@ public class MovieParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("film")) {
 
 			// validate data:
-			boolean isValidFid = !tempMovie.getFid().equals("N/A");
-			boolean isValidYear = tempMovie.getYear() != 0000;
+			boolean isValidFid = !tempMovie.getFid().equals("N/A"); // if not
+																	// valid
+																	// then get
+																	// rid of
+																	// tempMovie
+			boolean isValidYear = tempMovie.getYear() != 0000; // if not valid
+																// then reformat
+																// to 0000
 
 			// key is <director, year, title> => if string, then all are lower
 			// case
@@ -225,10 +243,25 @@ public class MovieParser extends DefaultHandler {
 			// insert those valid
 			if ((isValidFid && isValidYear && !isDuplicate)) {
 
-				moviesFidXml.put(tempMovie.getFid(), tempMovie);
-				moviexml.put(key, tempMovie);
+				this.movieToAdd.add(tempMovie);
 
 			}
+
+			// if(isDuplicate){
+			// if(moviedb.containsKey(key)){
+			// //check whether that movie has that genre or not:
+			// Movie m = moviedb.get(key);
+			// List<Genre> tempGenre = tempMovie.getGenres();
+			// List<Genre> genreMovieInDb = m.getGenres();
+			//
+			//
+			// for(Genre genre : m.getGenres()){
+			// Pair<Genre, Movie> g_in_m = new Pair<Genre, Movie>(genre, m);
+			// this.genre_in_movieToAdd.add(g_in_m);
+			// }
+			//
+			// }
+			// }
 
 		} else if (qName.equalsIgnoreCase("fid")) {
 			tempMovie.setFid(tempVal);
@@ -247,6 +280,7 @@ public class MovieParser extends DefaultHandler {
 			}
 		} else if (qName.equalsIgnoreCase("dirn")) {
 			tempMovie.setDirector(tempVal);
+			// following => add list of genre for tempMovie
 		} else if (qName.equalsIgnoreCase("cat")) {
 
 			this.hasCat = true;
@@ -256,17 +290,14 @@ public class MovieParser extends DefaultHandler {
 			for (int i = 0; i < parts.length; i++) {
 				Genre genre = new Genre();
 				genre.setName(parts[i].toLowerCase());
-				
-				//
-				// // add genre:
-				// // check whether genre already exist in that movie:
-				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty() && !this.new_genres.containsKey(genre.getName().toLowerCase())
+
+				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty()
+						&& !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
-					
-					tempMovie.addGenre(genre);
-				}
 
+					//tempMovie.addGenre(genre);
+				}
 			}
 
 		} else if (!hasCat && qName.equalsIgnoreCase("cattext")) {
@@ -275,14 +306,13 @@ public class MovieParser extends DefaultHandler {
 			for (int i = 0; i < parts.length; i++) {
 				Genre genre = new Genre();
 				genre.setName(parts[i].toLowerCase());
-				//
-				// // add genre:
-				// // check whether genre already exist in that movie:
-				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty() && !this.new_genres.containsKey(genre.getName().toLowerCase())
+
+				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty()
+						&& !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
-					
-					tempMovie.addGenre(genre);
+
+					//tempMovie.addGenre(genre);
 				}
 			}
 		}
@@ -292,19 +322,16 @@ public class MovieParser extends DefaultHandler {
 	public void PopulateGenre() throws SQLException {
 		List<String> genreList = new ArrayList<String>();
 
-		for(Entry<String, Genre> entry : this.new_genres.entrySet())
-		{
+		for (Entry<String, Genre> entry : this.new_genres.entrySet()) {
 			genreList.add(entry.getValue().getName());
-			
+
 		}
-		
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(con, false));
-		
-		
-		
-		String sql ="insert into genres (name) values (?)";
-	
-		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter(){
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+		String sql = "insert into genres (name) values (?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
 			@Override
 			public int getBatchSize() {
@@ -317,15 +344,38 @@ public class MovieParser extends DefaultHandler {
 			}
 
 		});
-		
-	
-		//dataSource.getConnection().commit();
-		
+
+		// dataSource.getConnection().commit();
+
+	}
+
+	public void PopulateMovie() throws SQLException {
+
+		// this.movieToAdd
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "insert into movies (title, year, director) values (?, ?, ?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+			@Override
+			public int getBatchSize() {
+				return movieToAdd.size();
+			}
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ps.setString(1, movieToAdd.get(i).getTitle());
+				ps.setInt(2, movieToAdd.get(i).getYear());
+				ps.setString(3, movieToAdd.get(i).getDirector());
+			}
+		});
+
 	}
 
 	public void run() throws SQLException {
 		parseDocument();
-		PopulateGenre(); 
+		PopulateGenre();
+		PopulateMovie(); 
 		// printData();
 		// testMoviedb();
 		// System.out.println(moviedb);
