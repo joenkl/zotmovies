@@ -22,7 +22,11 @@
         </div>
         <!-- /.row -->
 
-  
+  		<div class="row">
+            <div class="col-lg-12">
+            	<a href="file:///${log}">MetaData Logs</a>
+            </div>
+        </div>
 		
 		 <div class="row">
             <div class="col-lg-12">
