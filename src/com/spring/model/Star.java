@@ -33,6 +33,7 @@ public class Star {
 	{
 		id = -1;
 		movies = new ArrayList<Movie>();
+		sDOB = "0000";
 	}
 	
 	public void setStagename(String name){

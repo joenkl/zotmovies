@@ -256,12 +256,15 @@ public class MovieParser extends DefaultHandler {
 			for (int i = 0; i < parts.length; i++) {
 				Genre genre = new Genre();
 				genre.setName(parts[i].toLowerCase());
+				
 				//
 				// // add genre:
 				// // check whether genre already exist in that movie:
 				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty() && !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
+					
+					tempMovie.addGenre(genre);
 				}
 
 			}
@@ -278,6 +281,8 @@ public class MovieParser extends DefaultHandler {
 				if (!genre.getName().equals("N/A") && !genre.getName().isEmpty() && !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
+					
+					tempMovie.addGenre(genre);
 				}
 			}
 		}

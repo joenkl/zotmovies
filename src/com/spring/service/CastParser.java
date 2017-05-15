@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -57,7 +58,7 @@ public class CastParser extends DefaultHandler {
 	// hash table of star_in_movie
 	private Hashtable<String, List<Movie>> star_in_movie_db;
 
-	public CastParser() throws NamingException, IOException, SQLException {
+	public CastParser() throws NamingException, IOException, SQLException, ParseException {
 		System.out.println("CASTS124.XML PARSING");
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
@@ -219,7 +220,7 @@ public class CastParser extends DefaultHandler {
 		System.out.println("star in movie found so far: " + this.star_in_movie_xml.size());
 	}
 
-	public static void main(String[] args) throws NamingException, IOException, SQLException {
+	public static void main(String[] args) throws NamingException, IOException, SQLException, ParseException {
 		CastParser spe = new CastParser();
 		spe.run();
 

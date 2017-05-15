@@ -10,13 +10,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -27,13 +32,16 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;
 
+import com.spring.model.Genre;
 import com.spring.model.Movie;
 import com.spring.model.Star;
 
@@ -47,24 +55,20 @@ public class ActorParser extends DefaultHandler {
 	
 	//star from parsing xml
 	private Hashtable<String, Star> starxml;
+	
 	private String tempVal;
 
 	private Star tempStar;
 
 	private DataSource dataSource;
 
-	private FileWriter writer;
-
 	boolean isClosedTag;
 
 	public ActorParser() throws NamingException, IOException {
 
-		File file = new File("star_log.txt");
-
-		writer = new FileWriter(file);
-
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
+		
 		starxml = new Hashtable<String, Star>();
 		stardb = getStardb();
 
@@ -182,16 +186,66 @@ public class ActorParser extends DefaultHandler {
 			tempStar.setLast_name(last_name);
 			tempStar.setStagename(tempVal);
 		} else if (qName.equalsIgnoreCase("dob")) {
-			tempStar.setsDOB(tempVal);
+			if(!tempVal.isEmpty() &&tryParseInt(tempVal) && tempVal.length() == 4)
+				tempStar.setsDOB(tempVal);
+			else
+				tempStar.setsDOB("0000");
 		}
 
 	}
 
-	public void run() throws IOException {
+	public void run() throws IOException, ParseException {
 		parseDocument();
 //
 //		System.out.println(starxml.size());
 //		System.out.println(stardb.size());
+		PopulateStar();
+	}
+	
+	public void PopulateStar() throws ParseException{
+		List<Star> listStar = new ArrayList<Star>();
+
+		for(Entry<String, Star> entry : this.starxml.entrySet())
+		{
+			Star s = entry.getValue();
+			listStar.add(s);
+		}
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		
+		
+		String sql ="insert into stars (first_name, last_name, dob) values (?, ?, ?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter(){
+
+			@Override
+			public int getBatchSize() {
+				return listStar.size();
+			}
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ps.setString(1, listStar.get(i).getFirst_name());
+				ps.setString(2, listStar.get(i).getLast_name());
+				
+
+				
+				String dob = listStar.get(i).getsDOB() +"-01-01";
+				
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				Date myDate;
+				try {
+					myDate = formatter.parse(dob);
+					java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());
+					ps.setDate(3, sqlDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+		});
 	}
 
 	
@@ -236,9 +290,19 @@ public class ActorParser extends DefaultHandler {
 
 	}
 
-	public static void main(String[] args) throws NamingException, IOException {
+	public static void main(String[] args) throws NamingException, IOException, ParseException {
 		ActorParser spe = new ActorParser();
 		spe.run();
+	}
+	
+	private boolean tryParseInt(String number) {
+		try {
+			int temp = Integer.parseInt(number);
+			return true;
+
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
