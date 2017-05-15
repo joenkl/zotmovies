@@ -37,6 +37,7 @@ import javafx.util.Pair;
 public class CastParser extends DefaultHandler {
 	// hash table of movies
 	private Hashtable<String, Movie> movies;
+	
 	private String tempVal;
 
 	// hash table of new casts:
@@ -56,11 +57,14 @@ public class CastParser extends DefaultHandler {
 	// hash table of star_in_movie
 	private Hashtable<String, List<Movie>> star_in_movie_db;
 
-	public CastParser() throws NamingException, IOException {
+	public CastParser() throws NamingException, IOException, SQLException {
+		System.out.println("CASTS124.XML PARSING");
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
 		mp = new MovieParser();
+		mp.run();
 		movies = mp.getMoviesHashTable();
+		
 		star_in_movie_db = getStardb();
 		star_in_movie_xml = new Hashtable<String, List<Movie>>();
 
@@ -163,9 +167,13 @@ public class CastParser extends DefaultHandler {
 
 					// look up for star:
 					if (this.starxml.containsKey(tempVal.toLowerCase()) || this.stardb.containsKey(tempVal.toLowerCase())) {
-						Star tempS = this.starxml.get(tempVal.toLowerCase());
 						
-						if(tempS == null)
+						Star tempS = new Star();
+						
+						if(this.starxml.containsKey(tempVal.toLowerCase()))
+							tempS = this.starxml.get(tempVal.toLowerCase());
+						
+						else
 							tempS = this.stardb.get(tempVal.toLowerCase()); 
 
 						boolean isNewActor = this.star_in_movie_db.containsKey(tempS.getStagename().toLowerCase());
@@ -211,7 +219,7 @@ public class CastParser extends DefaultHandler {
 		System.out.println("star in movie found so far: " + this.star_in_movie_xml.size());
 	}
 
-	public static void main(String[] args) throws NamingException, IOException {
+	public static void main(String[] args) throws NamingException, IOException, SQLException {
 		CastParser spe = new CastParser();
 		spe.run();
 
@@ -283,7 +291,7 @@ public class CastParser extends DefaultHandler {
 			}
 
 		}
-		System.out.println(hashtable);
+	
 		return hashtable;
 
 	}

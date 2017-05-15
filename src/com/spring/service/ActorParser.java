@@ -39,13 +39,13 @@ import com.spring.model.Star;
 
 import javafx.util.Pair;
 
-//TODO: check for duplicate actors in xml files and database  
-//same stagename and birthday 
 
 public class ActorParser extends DefaultHandler {
 
 	// star from db:
 	private Hashtable<String, Star> stardb;
+	
+	//star from parsing xml
 	private Hashtable<String, Star> starxml;
 	private String tempVal;
 
@@ -124,7 +124,7 @@ public class ActorParser extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		// reset:
 		tempVal = "";
-		if (qName.equalsIgnoreCase("actor")) {
+		if (qName.equalsIgnoreCase("Actor")) {
 			tempStar = new Star();
 			isClosedTag = false;
 		}

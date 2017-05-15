@@ -43,6 +43,7 @@ public class Movie {
 		fid = "N/A";
 		
 		listOfGenres = new ArrayList<Genre>(); 
+		director = "N/A";
 	}
 
 	public Movie(int id, String title, int year, String director, String banner_url, String trailer_url) {
@@ -61,11 +62,19 @@ public class Movie {
 	public void addGenre(Genre genre){
 		listOfGenres.add(genre);
 	}
+	
+	public List<Genre> getGenres(){
+		return this.listOfGenres;
+	}
+	
+	public void setGenres(List<Genre> genres){
+		this.listOfGenres = genres; 
+	}
 
 	@Override
 	public String toString() {
-		return "Movie [title=" + title + ", director=" + director 
-				+ "stars = " + listOfStars + "]";
+		return "Movie [title=" + title + ", director=" + director + " year=" + year 
+				+ " stars = " + listOfStars + " genres= " + listOfGenres +"]";
 	}
 
 	public int getId() {
