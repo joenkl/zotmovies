@@ -19,6 +19,7 @@ public class Movie {
 	List<Star> listOfStars;
 	int directorId;
 	String fid;
+	
 
 	public void setFid(String fid) {
 		this.fid = fid;
@@ -27,7 +28,8 @@ public class Movie {
 	public String getFid() {
 		return fid;
 	}
-
+	
+	
 	@Autowired
 	MovieDao movieDao;
 

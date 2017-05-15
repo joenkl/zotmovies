@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
     <Resource
-        name="jdbc/moviedb" type="javax.sql.DataSource"
+        name="jdbc/moviedb" auth="Container" type="javax.sql.DataSource"
         maxActive="100" maxIdle="30" maxWait="10000" 
         url="jdbc:mysql:///moviedb"
         driverClassName="com.mysql.jdbc.Driver"
@@ -9,4 +9,9 @@
         autoReconnect="true"
         useSSL="false"
     />
+    
+    <ResourceLink name="jdbc/moviedb"
+                global="jdbc/moviedb"
+                auth="Container"
+                type="javax.sql.DataSource" />
 </Context>

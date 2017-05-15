@@ -34,6 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -49,47 +50,44 @@ import com.spring.config.MvcConfiguration;
 import com.spring.dao.MovieDao;
 import com.spring.model.Movie;
 
-@Component 
 public class MovieParser extends DefaultHandler {
-	//movies from database
-	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviedb; 
-	
-	// hash table of movie in xml 
+	// movies from database
+	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviedb;
+
+	// hash table of movie in xml with fid 
 	private Hashtable<String, Movie> movies;
-	
-	//hash table of movie with <director, year, title> as key:
-	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviexml; 
+
+	// hash table of movie with <director, year, title> as key:
+	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviexml;
 	private String tempVal;
 
 	private Movie tempMovie;
-	
-	@Autowired
-	private MovieDao moviedao; 
 
-	 
-	public Hashtable<ImmutableTriple<String, Integer, String>, Movie> getMoviedb() throws NamingException{
-		Hashtable<ImmutableTriple<String,Integer,String>, Movie> hashtable = new  Hashtable<ImmutableTriple<String,Integer,String>, Movie>();
-		System.out.println(moviedao.getTotalNumOfMovies());
-	
-		return hashtable;
-		
-	}
+//	@Autowired
+//	private MovieDao moviedao;
+
+	@Resource(name = "jdbc/moviedb")
+	private DataSource dataSource;
+
 	public MovieParser() throws NamingException {
 
-//		ApplicationContext context = new AnnotationConfigApplicationContext(MvcConfiguration.class);
-//		moviedao = (MovieDao) context.getBean("MovieDao");
-//		
-		movies = new Hashtable<String, Movie>(); 
-		
-		
-		moviedb = getMoviedb(); 
-		//System.out.println(movieDao.getMovieHashtable());
-		
-		moviexml = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>(); 
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
+		dataSource = (DataSource) ctx.getBean("dataSource");
+
+		// ApplicationContext context = new
+		// AnnotationConfigApplicationContext(MvcConfiguration.class);
+		// moviedao = (MovieDao) context.getBean("MovieDao");
+		//
+		movies = new Hashtable<String, Movie>();
+
+		moviedb = getMoviedb();
+		// System.out.println(movieDao.getMovieHashtable());
+
+		moviexml = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>();
 
 	}
-	
-	private void testMoviedb(){
+
+	private void testMoviedb() {
 		System.out.println(moviedb.size());
 	}
 
@@ -153,35 +151,52 @@ public class MovieParser extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
 		if (qName.equalsIgnoreCase("film")) {
-			
-			// check whether fid is valid
-			if (tempMovie.getFid().equals("N/A"))
-				System.out.println("Encounter invalid fid in mains");
-			// check for duplicates with fid
-			if (movies.containsKey(tempMovie.getFid()))
-				System.out.println("Duplicate movie.");
 
+			//validate data: 
+			boolean isEmpty = movies.isEmpty() || moviexml.isEmpty();
+			boolean isValidFid = !tempMovie.getFid().equals("N/A");
+			boolean isValidYear = tempMovie.getYear() != 0000;
+			
+			ImmutableTriple<String, Integer, String> key = new ImmutableTriple<String, Integer, String>(tempMovie.getDirector(), tempMovie.getYear(), tempMovie.getTitle()); 
+			
+			
+			boolean isDuplicate = movies.containsKey(tempMovie.getFid()) || moviedb.containsKey(key) || moviexml.containsKey(key);
+			
+			if(!isValidFid){
+				System.out.println("Encounter invalid fid format " + tempMovie.getFid());
+			}
+			
+			if(isDuplicate){
+				System.out.println("Encounter duplicate movie where title=" + tempMovie.getTitle() + " year = " + tempMovie.getYear() + " director = " + tempMovie.getDirector());
+				
+			}
+			
 			// insert those valid
-			if (movies.isEmpty() || (!tempMovie.getFid().equals("N/A") && tempMovie.getYear() != 0000
-					&& !(movies.containsKey(tempMovie.getFid()))))
-			{
-				movies.put(tempMovie.getFid(), tempMovie); 
-			}
-			else {
-				System.out.println("Cannot insert the following into database: ");
-				System.out.println(tempMovie);
-			}
+			if (isEmpty || (isValidFid && isValidYear && !isDuplicate)) {
+				
+				movies.put(tempMovie.getFid(), tempMovie);
+				moviexml.put(key, tempMovie);
+				
+			} 
+			//else {
+//				System.out.println("Cannot insert the following into database: ");
+//				System.out.println(tempMovie);
+//			}
 
 		} else if (qName.equalsIgnoreCase("fid")) {
 			tempMovie.setFid(tempVal);
+			
 		} else if (qName.equalsIgnoreCase("t")) {
 			tempMovie.setTitle(tempVal);
+			
 		} else if (qName.equalsIgnoreCase("year")) {
 			if (tryParseInt(tempVal))
 				tempMovie.setYear(Integer.parseInt(tempVal));
 			else {
+				//invalid year format
 				tempMovie.setYear(0000);
 				System.out.println("Invalid year format " + tempVal);
+				
 			}
 		} else if (qName.equalsIgnoreCase("dirn")) {
 			tempMovie.setDirector(tempVal);
@@ -190,9 +205,10 @@ public class MovieParser extends DefaultHandler {
 	}
 
 	public void runExample() {
-		//parseDocument();
-		//printData();
-		testMoviedb(); 
+		parseDocument();
+		printData();
+		testMoviedb();
+		//System.out.println(moviedb);
 	}
 
 	public static void main(String[] args) throws NamingException {
@@ -211,8 +227,37 @@ public class MovieParser extends DefaultHandler {
 	}
 
 	public Hashtable<String, Movie> getMoviesHashTable() {
-		runExample(); 
+		runExample();
 		return movies;
+	}
+
+	public Hashtable<ImmutableTriple<String, Integer, String>, Movie> getMoviedb() throws NamingException {
+
+		Hashtable<ImmutableTriple<String, Integer, String>, Movie> hashtable = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>();
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String query = "SELECT * FROM movies";
+
+		List<Movie> listMovies = jdbcTemplate.query(query, new RowMapper<Movie>() {
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+				return movie;
+			}
+
+		});
+
+		for (Movie movie : listMovies) {
+			ImmutableTriple<String, Integer, String> key = new ImmutableTriple<String, Integer, String>(
+					movie.getDirector(), movie.getYear(), movie.getTitle());
+
+			hashtable.put(key, movie);
+		}
+
+		return hashtable;
+
 	}
 
 }

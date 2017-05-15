@@ -2,24 +2,39 @@ package com.spring.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;
 
+import com.spring.model.Movie;
 import com.spring.model.Star;
 
 import javafx.util.Pair;
@@ -28,13 +43,34 @@ import javafx.util.Pair;
 //same stagename and birthday 
 
 public class ActorParser extends DefaultHandler {
-	private Hashtable<Pair<String, String>, Star> stars; 
+
+	// star from db:
+	private Hashtable<Pair< String, String>, Star> stardb;
+	private Hashtable<Pair< String, String>, Star> starxml;
 	private String tempVal;
 
 	private Star tempStar;
 
-	public ActorParser() {
-		stars = new Hashtable<Pair<String, String>, Star>(); 
+	private DataSource dataSource;
+
+	private FileWriter writer;
+
+	boolean isClosedTag;
+
+	public ActorParser() throws NamingException, IOException {
+
+		File file = new File("star_log.txt");
+
+		writer = new FileWriter(file);
+
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
+		dataSource = (DataSource) ctx.getBean("dataSource");
+		starxml = new Hashtable<Pair<String, String>, Star>();
+		stardb = getStardb();
+
+		System.out.println("Logging for actors63.xml\n");
+
+		isClosedTag = false;
 
 	}
 
@@ -71,15 +107,17 @@ public class ActorParser extends DefaultHandler {
 
 	/**
 	 * Iterate through the list and print the contents
+	 * 
+	 * @throws IOException
 	 */
-	private void printData() {
+	private void printData() throws IOException {
 
-		System.out.println("No of Stars '" + stars.size() + "'.");
+		System.out.println("No of Stars '" + starxml.size() + "'.");
 
-//		Iterator<Star> it = myStars.iterator();
-//		while (it.hasNext()) {
-//			System.out.println(it.next().toString());
-//		}
+		// Iterator<Star> it = myStars.iterator();
+		// while (it.hasNext()) {
+		// System.out.println(it.next().toString());
+		// }
 	}
 
 	// Event Handlers
@@ -88,6 +126,7 @@ public class ActorParser extends DefaultHandler {
 		tempVal = "";
 		if (qName.equalsIgnoreCase("actor")) {
 			tempStar = new Star();
+			isClosedTag = false;
 		}
 	}
 
@@ -98,47 +137,99 @@ public class ActorParser extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
 		if (qName.equalsIgnoreCase("Actor")) {
-			
-			Pair<String, String> key = new Pair<String, String>(tempStar.getLast_name(),tempStar.getsDOB());
-			
-			//if star already exist:
-			if(stars.containsKey(key))
-				System.out.println("Duplicate star in actors63.xml");
-			//insert if stars hashtable is empty or it's a new actor 
-			if(stars.isEmpty() || 
-					(!stars.containsKey(key)))
-				stars.put(key, tempStar);
-			
+
+			boolean isDuplicateClosedTag = false;
+
+			if (!isClosedTag)
+				isClosedTag = true;
 			else
-			{
-				System.out.println("Cannot insert the following into database: ");
-				System.out.println(tempStar);
-				
+				isDuplicateClosedTag = true;
+
+			if (isClosedTag && !isDuplicateClosedTag) {
+				Pair<String, String> key = new Pair<String, String>(
+						tempStar.getFirst_name().toLowerCase() + " " + tempStar.getLast_name().toLowerCase(),
+						tempStar.getsDOB());
+				boolean isEmpty = starxml.isEmpty();
+				boolean isDuplicate = starxml.containsKey(tempStar.getStagename()) || stardb.containsKey(key);
+
+				if (starxml.containsKey(key)) {
+					System.out.println("Encounter duplicate star in actors63.xml where star= " + tempStar.getStagename());
+				}
+
+				if (stardb.containsKey(key)) {
+					System.out.println("Encounter duplicate star with database where star= " + key);
+				}
+
+				// insert if stars hashtable is empty or it's a new actor
+				if (isEmpty || !isDuplicate)
+					starxml.put(key, tempStar);
+			} else {
+
+				System.out.println("Encounter double end tag with starName= " + tempStar.getStagename());
+
 			}
-			
 
 		} else if (qName.equalsIgnoreCase("stagename")) {
-			// TODO: parse last name & first name
-			//
-			// String FN = tempVal.substring(0, tempVal.lastIndexOf(" "));
-			// String LN = tempVal.substring(tempVal.lastIndexOf(" "));
-			//
-			// System.out.println(FN);
-			// System.out.println(LN);
-			// tempStar.setFirst_name(FN);
-			tempStar.setLast_name(tempVal);
+			// parse first name and last name:
+			String[] parts = tempVal.split("[~\\s@&.?$+-]+");
+			String last_name = parts[parts.length - 1];
+
+			String first_name = "";
+			// first name:
+			for (int i = 0; i < parts.length - 1; i++)
+				first_name += parts[i];
+
+			tempStar.setFirst_name(first_name);
+			tempStar.setLast_name(last_name);
+			tempStar.setStagename(tempVal);
 		} else if (qName.equalsIgnoreCase("dob")) {
 			tempStar.setsDOB(tempVal);
 		}
 
 	}
 
-	public void runExample() {
+	public void runExample() throws IOException {
 		parseDocument();
-		printData();
+
+		System.out.println(starxml.size());
+		System.out.println(stardb.size());
 	}
 
-	public static void main(String[] args) {
+	public Hashtable<Pair<String, String>, Star> getStardb() throws NamingException {
+
+		Hashtable<Pair<String, String>, Star> hashtable = new Hashtable<Pair<String, String>, Star>();
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String query = "SELECT * FROM stars";
+
+		List<Star> listStars = jdbcTemplate.query(query, new RowMapper<Star>() {
+
+			@Override
+			public Star mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Star star = new Star();
+				star.setId(resultSet.getInt(1));
+				star.setLast_name(resultSet.getString(2));
+				star.setFirst_name(resultSet.getString(3));
+				star.setDob(resultSet.getDate(4));
+				star.setPhoto_url(resultSet.getString(5));
+				return star;
+			}
+
+		});
+
+		for (Star star : listStars) {
+			String year = Integer.toString(star.getDob().getYear());
+			Pair<String, String> key = new Pair<String, String>(
+					star.getFirst_name().toLowerCase() + " " + star.getLast_name().toLowerCase(), year);
+
+			hashtable.put(key, star);
+		}
+
+		return hashtable;
+
+	}
+
+	public static void main(String[] args) throws NamingException, IOException {
 		ActorParser spe = new ActorParser();
 		spe.runExample();
 	}

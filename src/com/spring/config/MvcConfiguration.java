@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
-@ComponentScan(basePackages="com.spring.")
+@ComponentScan(basePackages="com.spring")
 @EnableWebMvc
 public class MvcConfiguration extends WebMvcConfigurerAdapter{
 
@@ -33,7 +33,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
 
-	@Bean(value="MovieDao")
+	@Bean
 	public MovieDao getMovieDao() throws NamingException {
 		JndiTemplate jndiTemplate = new JndiTemplate();
 		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");

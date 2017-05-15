@@ -10,10 +10,20 @@ public class Star {
 	String photo_url;
 	String sDOB; 
 	
+	String stagename; 
 	public Star()
 	{
 		id = -1;
 	}
+	
+	public void setStagename(String name){
+		stagename = name;
+	}
+	
+	public String getStagename(){
+		return stagename; 
+	}
+
 	
 	public Star(int id, String first_name, String last_name, Date dob, String photo_url) {
 		super();

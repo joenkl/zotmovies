@@ -23,7 +23,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.spring.model.Movie;
 import com.spring.model.Star;
-
+//TODO: fid doesnt exist then pass that cast 
 public class CastParser extends DefaultHandler {
 	// hash table of movies
 	private Hashtable<String, Movie> movies;
@@ -128,7 +128,7 @@ public class CastParser extends DefaultHandler {
 				if(tempVal.equals("s a"))
 				{
 					System.out.println("Encounter unknown actor for " + tempMovie + " in casts124.xml");
-					movies.remove(tempMovie.getFid());
+					//movies.remove(tempMovie.getFid());
 				}
 			}
 
