@@ -52,6 +52,7 @@ import com.spring.config.AppConfig;
 import com.spring.config.MvcConfiguration;
 import com.spring.dao.MovieDao;
 import com.spring.model.Genre;
+import com.spring.model.Genre_In_Movie;
 import com.spring.model.Movie;
 import com.spring.model.Star;
 
@@ -117,13 +118,16 @@ public class MovieParser extends DefaultHandler {
 	// Connection of autocommit:
 	Connection con;
 
+	//
+	List<Genre_In_Movie> genre_in_movie_toAdd;
+
 	/*
 	 * constructor for MovieParser() for: get data source to connect to db
 	 * initialize moviesFidXml initialize moviedb to movies in database
 	 * initialize moviexml
 	 */
 	public MovieParser() throws NamingException, SQLException {
-
+		genre_in_movie_toAdd = new ArrayList<Genre_In_Movie>();
 		movieToAdd = new ArrayList<Movie>();
 		genre_in_movieToAdd = new ArrayList<Pair<Genre, Movie>>();
 
@@ -137,7 +141,7 @@ public class MovieParser extends DefaultHandler {
 
 		moviesFidXml = new Hashtable<String, Movie>();
 
-		moviedb = getMoviedb();
+		moviedb = getMovieWithGenresInDb();
 		// System.out.println(movieDao.getMovieHashtable());
 
 		moviexml = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>();
@@ -247,21 +251,17 @@ public class MovieParser extends DefaultHandler {
 
 			}
 
-			// if(isDuplicate){
-			// if(moviedb.containsKey(key)){
-			// //check whether that movie has that genre or not:
-			// Movie m = moviedb.get(key);
-			// List<Genre> tempGenre = tempMovie.getGenres();
-			// List<Genre> genreMovieInDb = m.getGenres();
-			//
-			//
-			// for(Genre genre : m.getGenres()){
-			// Pair<Genre, Movie> g_in_m = new Pair<Genre, Movie>(genre, m);
-			// this.genre_in_movieToAdd.add(g_in_m);
-			// }
-			//
-			// }
-			// }
+			if (isDuplicate) {
+				if (moviedb.containsKey(key)) {
+					// check whether that movie has that genre or not:
+					Movie m = moviedb.get(key);
+					List<Genre> tempGenre = tempMovie.getGenres();
+					List<Genre> genreMovieInDb = m.getGenres();
+
+					
+
+				}
+			}
 
 		} else if (qName.equalsIgnoreCase("fid")) {
 			tempMovie.setFid(tempVal);
@@ -295,9 +295,8 @@ public class MovieParser extends DefaultHandler {
 						&& !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
-
-					//tempMovie.addGenre(genre);
 				}
+				tempMovie.addGenre(genre);
 			}
 
 		} else if (!hasCat && qName.equalsIgnoreCase("cattext")) {
@@ -311,9 +310,8 @@ public class MovieParser extends DefaultHandler {
 						&& !this.new_genres.containsKey(genre.getName().toLowerCase())
 						&& !this.genres_in_db.containsKey(genre.getName().toLowerCase())) {
 					this.new_genres.put(genre.getName().toLowerCase(), genre);
-
-					//tempMovie.addGenre(genre);
 				}
+				tempMovie.addGenre(genre);
 			}
 		}
 
@@ -372,17 +370,143 @@ public class MovieParser extends DefaultHandler {
 
 	}
 
-	public void run() throws SQLException {
-		parseDocument();
+	public void run() throws SQLException, NamingException {
+
+		long startTime = System.nanoTime();
+		System.out.println("Start parsing.... @" + startTime);
+		// parseDocument();
+
+		System.out.println("Start Populate Genre ... ");
 		PopulateGenre();
-		PopulateMovie(); 
+
+		System.out.println("Start Populate Movie ... ");
+		PopulateMovie();
+
+		this.moviexml.putAll(this.moviedb);
+
+		Hashtable<Pair<Integer, Integer>, Integer> genres_in_movies_in_db = get_genre_in_movie_db();
+		System.out.println(genres_in_movies_in_db.size());
+		System.out.println(movieToAdd.size());
+		Hashtable<String, Genre> genres_in_db = getGenresInDb();
+		Hashtable<ImmutableTriple<String, Integer, String>, Movie> movies_in_db = getMoviedb();
+
+		for (Entry<ImmutableTriple<String, Integer, String>, Movie> entry : this.moviexml.entrySet()) {
+			List<Genre> genres = entry.getValue().getGenres();
+			List<Integer> genreIds = new ArrayList<Integer>();
+
+			ImmutableTriple<String, Integer, String> mKey = entry.getKey();
+
+			int movieId = movies_in_db.get(mKey).getId();
+			for (Genre genre : genres) {
+				int genreId = (genres_in_db.get(genre.getName()).getId());
+
+				// look up id for movie:
+				Pair<Integer, Integer> key = new Pair<Integer, Integer>(movieId, genreId);
+				if (!genres_in_movies_in_db.containsKey(key)) {
+					Genre_In_Movie gim = new Genre_In_Movie();
+					gim.setGenreId(genreId);
+					gim.setMovieId(movieId);
+
+					this.genre_in_movie_toAdd.add(gim);
+				}
+			}
+		}
+
+		System.out.println("Start Populate genres_in_movies ... ");
+		PopulateGenreInMovie();
+
 		// printData();
 		// testMoviedb();
 		// System.out.println(moviedb);
 
 		// System.out.println("Total valid movies parsing from this xml: " +
 		// this.moviesFidXml.size());
-		System.out.println(this.new_genres);
+		// System.out.println(this.new_genres);
+
+		long endTime = System.nanoTime();
+		System.out.println("Finish mains.xml @" + endTime);
+		System.out.println("Total: " + (endTime - startTime));
+	}
+
+	public void PopulateGenreInMovie() {
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "insert into genres_in_movies (genre_id, movie_id) values (?, ?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+			@Override
+			public int getBatchSize() {
+				return genre_in_movie_toAdd.size();
+			}
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+
+				ps.setInt(1, genre_in_movie_toAdd.get(i).getGenreId());
+				ps.setInt(2, genre_in_movie_toAdd.get(i).getMovieId());
+
+			}
+		});
+
+	}
+
+	public Hashtable<ImmutableTriple<String, Integer, String>, Movie> getMovieWithGenresInDb() throws NamingException {
+
+		Hashtable<ImmutableTriple<String, Integer, String>, Movie> hashtable = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>();
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String query = "select genre_id, g.name, movie_id, m.director, m.year, m.title " + "from genres_in_movies gm "
+				+ "join genres g on gm.genre_id = g.id " + "join movies m on gm.movie_id = m.id; ";
+
+		List<Movie> listMovies = jdbcTemplate.query(query, new RowMapper<Movie>() {
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie();
+				Genre genre = new Genre();
+
+				genre.setId(resultSet.getInt(1));
+				genre.setName(resultSet.getString(2));
+
+				movie.setId(resultSet.getInt(3));
+				movie.setDirector(resultSet.getString(4));
+				movie.setYear(resultSet.getInt(5));
+				movie.setTitle(resultSet.getString(6));
+				movie.addGenre(genre);
+				return movie;
+			}
+
+		});
+
+		for (Movie movie : listMovies) {
+			ImmutableTriple<String, Integer, String> key = new ImmutableTriple<String, Integer, String>(
+					movie.getDirector().toLowerCase(), movie.getYear(), movie.getTitle().toLowerCase());
+			boolean isEmpty = hashtable.isEmpty();
+			boolean isDuplicate = hashtable.containsKey(key);
+
+			if (isEmpty || !isDuplicate) {
+				hashtable.put(key, movie);
+			}
+
+			if (isDuplicate) {
+				List<Genre> tempGenre = hashtable.get(key).getGenres();
+				List<Genre> currentGenre = movie.getGenres();
+
+				// combine list of genres:
+				tempGenre.addAll(currentGenre);
+				Movie m = hashtable.get(key);
+				m.setGenres(tempGenre);
+
+				// update accordingly
+				hashtable.remove(key);
+				hashtable.put(key, m);
+			}
+		}
+
+		// System.out.println(hashtable);
+		return hashtable;
+
 	}
 
 	public static void main(String[] args) throws NamingException, SQLException {
@@ -446,24 +570,19 @@ public class MovieParser extends DefaultHandler {
 		Hashtable<ImmutableTriple<String, Integer, String>, Movie> hashtable = new Hashtable<ImmutableTriple<String, Integer, String>, Movie>();
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String query = "select genre_id, g.name, movie_id, m.director, m.year, m.title " + "from genres_in_movies gm "
-				+ "join genres g on gm.genre_id = g.id " + "join movies m on gm.movie_id = m.id; ";
+		String query = "select * from movies";
 
 		List<Movie> listMovies = jdbcTemplate.query(query, new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
 				Movie movie = new Movie();
-				Genre genre = new Genre();
 
-				genre.setId(resultSet.getInt(1));
-				genre.setName(resultSet.getString(2));
-
-				movie.setId(resultSet.getInt(3));
+				movie.setId(resultSet.getInt(1));
+				movie.setTitle(resultSet.getString(2));
+				movie.setYear(resultSet.getInt(3));
 				movie.setDirector(resultSet.getString(4));
-				movie.setYear(resultSet.getInt(5));
-				movie.setTitle(resultSet.getString(6));
-				movie.addGenre(genre);
+
 				return movie;
 			}
 
@@ -472,26 +591,37 @@ public class MovieParser extends DefaultHandler {
 		for (Movie movie : listMovies) {
 			ImmutableTriple<String, Integer, String> key = new ImmutableTriple<String, Integer, String>(
 					movie.getDirector().toLowerCase(), movie.getYear(), movie.getTitle().toLowerCase());
-			boolean isEmpty = hashtable.isEmpty();
-			boolean isDuplicate = hashtable.containsKey(key);
 
-			if (isEmpty || !isDuplicate) {
-				hashtable.put(key, movie);
+			hashtable.put(key, movie);
+		}
+
+		// System.out.println(hashtable);
+		return hashtable;
+
+	}
+
+	public Hashtable<Pair<Integer, Integer>, Integer> get_genre_in_movie_db() throws NamingException {
+		Hashtable<Pair<Integer, Integer>, Integer> hashtable = new Hashtable<Pair<Integer, Integer>, Integer>();
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String query = "select * from genres_in_movies;";
+
+		List<Genre_In_Movie> resultList = jdbcTemplate.query(query, new RowMapper<Genre_In_Movie>() {
+
+			@Override
+			public Genre_In_Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Genre_In_Movie gim = new Genre_In_Movie();
+				gim.setGenreId(resultSet.getInt(1));
+				gim.setMovieId(resultSet.getInt(2));
+				return gim;
 			}
 
-			if (isDuplicate) {
-				List<Genre> tempGenre = hashtable.get(key).getGenres();
-				List<Genre> currentGenre = movie.getGenres();
+		});
 
-				// combine list of genres:
-				tempGenre.addAll(currentGenre);
-				Movie m = hashtable.get(key);
-				m.setGenres(tempGenre);
+		for (Genre_In_Movie gim : resultList) {
+			Pair<Integer, Integer> key = new Pair<Integer, Integer>(gim.getGenreId(), gim.getMovieId());
+			hashtable.put(key, 1);
 
-				// update accordingly
-				hashtable.remove(key);
-				hashtable.put(key, m);
-			}
 		}
 
 		// System.out.println(hashtable);
