@@ -11,9 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -249,7 +251,7 @@ public class CastParser extends DefaultHandler {
 
 					if (this.starAfterPopulated.containsKey(tempVal.toLowerCase())) {
 						star_id = starAfterPopulated.get(tempVal.toLowerCase()).getId();
-						System.out.println(star_id);
+						//System.out.println(star_id);
 
 					}
 					
@@ -294,11 +296,20 @@ public class CastParser extends DefaultHandler {
 
 		// List<Star_In_Movie> star_in_movie_toAdd;
 	
+		//remove duplicate in list of star to add"
+		// add elements to al, including duplicates
+		Hashtable<Pair<Integer, Integer>, Integer> star_in_movie = new Hashtable<Pair<Integer, Integer>, Integer>();
+	
+	
 		for (Star_In_Movie sim : this.star_in_movie_toAdd) {
 			Pair<Integer, Integer> key = new Pair<Integer, Integer>(sim.getStarId(), sim.getMovieId());
-			if (lookUpStar_in_Movie.containsKey(key)) {
+			
+			if (lookUpStar_in_Movie.containsKey(key) || star_in_movie.containsKey(key)) {
 				this.star_in_movie_toAdd.remove(sim);
 			}
+			
+			star_in_movie.put(key, 1);
+			
 		}
 		
 		populateStarInMovie(); 
