@@ -299,23 +299,34 @@ public class CastParser extends DefaultHandler {
 		//remove duplicate in list of star to add"
 		// add elements to al, including duplicates
 		Hashtable<Pair<Integer, Integer>, Integer> star_in_movie = new Hashtable<Pair<Integer, Integer>, Integer>();
-	
-	
-		for (int i = 0; i < this.star_in_movie_toAdd.size(); i++) {
-			Pair<Integer, Integer> key = new Pair<Integer, Integer>(star_in_movie_toAdd.get(i).getStarId(), star_in_movie_toAdd.get(i).getMovieId());
 		
-			
-			if (lookUpStar_in_Movie.containsKey(key) || star_in_movie.containsKey(key)) {
-				this.star_in_movie_toAdd.get(i).setMovieId(-1);
-			}
-			
+		for(Star_In_Movie sim : this.star_in_movie_toAdd){
+			Pair<Integer, Integer> key = new Pair<Integer, Integer>(sim.getStarId(), sim.getMovieId());
 			star_in_movie.put(key, 1);
-			
-			
-			
 		}
 		
+		List<Star_In_Movie> finalToAdd = new ArrayList<Star_In_Movie>();
+		
+		this.star_in_movie_toAdd.clear();
+	
+		for(Entry<Pair<Integer, Integer>, Integer> entry : star_in_movie.entrySet())
+		{
+			
+			Pair<Integer, Integer> key = entry.getKey();
+			
+			if (!lookUpStar_in_Movie.containsKey(key)) {
+				Star_In_Movie sim = new Star_In_Movie();
+				sim.setStarId(key.getKey());
+				sim.setMovieId(key.getValue());
+				this.star_in_movie_toAdd.add(sim);
+			}
+			
+		}
+	
+		System.out.println("New star_in_movie to add = " + star_in_movie_toAdd.size());
+		
 		populateStarInMovie(); 
+		System.out.println("Finish time: " + System.nanoTime());
 
 	}
 
@@ -334,11 +345,11 @@ public class CastParser extends DefaultHandler {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				
-				if(star_in_movie_toAdd.get(i).getMovieId() != -1 && star_in_movie_toAdd.get(i).getStarId() != -1)
-				{
-					ps.setInt(1, star_in_movie_toAdd.get(i).getStarId());
-					ps.setInt(2, star_in_movie_toAdd.get(i).getMovieId());
-				}
+				
+				ps.setInt(1, star_in_movie_toAdd.get(i).getStarId());
+				ps.setInt(2, star_in_movie_toAdd.get(i).getMovieId());
+			
+				
 			}
 		});
 	}
