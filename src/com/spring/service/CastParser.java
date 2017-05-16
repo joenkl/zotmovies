@@ -303,11 +303,13 @@ public class CastParser extends DefaultHandler {
 	
 		for (int i = 0; i < this.star_in_movie_toAdd.size(); i++) {
 			Pair<Integer, Integer> key = new Pair<Integer, Integer>(star_in_movie_toAdd.get(i).getStarId(), star_in_movie_toAdd.get(i).getMovieId());
-			star_in_movie.put(key, 1);
+		
 			
 			if (lookUpStar_in_Movie.containsKey(key) || star_in_movie.containsKey(key)) {
 				this.star_in_movie_toAdd.get(i).setMovieId(-1);
 			}
+			
+			star_in_movie.put(key, 1);
 			
 			
 			
