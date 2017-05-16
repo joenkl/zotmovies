@@ -74,34 +74,7 @@ public class CastParser extends DefaultHandler {
 	int movie_id;
 	int star_id;
 
-	public Hashtable<String, Star> get_star_in_db_after_populated() {
-		Hashtable<String, Star> hashtable = new Hashtable<String, Star>();
-
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String query = "select * from stars";
-
-		List<Star> listS = jdbcTemplate.query(query, new RowMapper<Star>() {
-
-			@Override
-			public Star mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-
-				Star star = new Star();
-				star.setId(resultSet.getInt(1));
-				star.setFirst_name(resultSet.getString(2));
-				star.setLast_name(resultSet.getString(3));
-
-				return star;
-			}
-
-		});
-
-		for (Star star : listS) {
-			hashtable.put(star.getFirst_name() + " " + star.getLast_name(), star);
-		}
-
-		// System.out.println(hashtable);
-		return hashtable;
-	}
+	
 
 	public Hashtable<Pair<Integer, Integer>, Integer> getStar_in_Movie_in_db() {
 		Hashtable<Pair<Integer, Integer>, Integer> hashtable = new Hashtable<Pair<Integer, Integer>, Integer>();
@@ -140,7 +113,37 @@ public class CastParser extends DefaultHandler {
 		star_in_movie_toAdd = new ArrayList<Star_In_Movie>(); 
 
 	}
+	
+	public Hashtable<String, Star> get_star_in_db_after_populated() {
+		Hashtable<String, Star> hashtable = new Hashtable<String, Star>();
 
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String query = "select * from stars";
+
+		List<Star> listS = jdbcTemplate.query(query, new RowMapper<Star>() {
+
+			@Override
+			public Star mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+
+				Star star = new Star();
+				star.setId(resultSet.getInt(1));
+				star.setFirst_name(resultSet.getString(2));
+				star.setLast_name(resultSet.getString(3));
+
+				return star;
+			}
+
+		});
+
+		for (Star star : listS) {
+			hashtable.put(star.getFirst_name().toLowerCase() + " " + star.getLast_name().toLowerCase(), star);
+		}
+
+		// System.out.println(hashtable);
+		return hashtable;
+	}
+	
+	
 	private void parseDocument() {
 
 		// get a factory
@@ -216,9 +219,12 @@ public class CastParser extends DefaultHandler {
 							tempMovie.getDirector().toLowerCase(), tempMovie.getYear(),
 							tempMovie.getTitle().toLowerCase());
 					
-					if(this.movieAfterPopulated.containsKey(key))
+					if(this.movieAfterPopulated.containsKey(key)){
+						
+					
 						movie_id = this.movieAfterPopulated.get(key).getId();
-
+//						System.out.println(movie_id);
+					}
 				}
 
 				else {
@@ -243,13 +249,16 @@ public class CastParser extends DefaultHandler {
 
 					if (this.starAfterPopulated.containsKey(tempVal.toLowerCase())) {
 						star_id = starAfterPopulated.get(tempVal.toLowerCase()).getId();
+						System.out.println(star_id);
 
 					}
+					
 
 					if (star_id != -1 && movie_id != -1) {
 						Star_In_Movie sim = new Star_In_Movie();
 						sim.setStarId(star_id);
 						sim.setMovieId(movie_id);
+						
 						this.star_in_movie_toAdd.add(sim);
 					}
 
@@ -299,7 +308,7 @@ public class CastParser extends DefaultHandler {
 	public void populateStarInMovie() {
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "insert into stars_in_movies (genre_id, movie_id) values (?, ?)";
+		String sql = "insert into stars_in_movies (star_id, movie_id) values (?, ?)";
 
 		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
