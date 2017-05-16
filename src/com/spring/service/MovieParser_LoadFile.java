@@ -78,7 +78,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import com.spring.model.Genre;
 
-public class MovieParser extends DefaultHandler {
+public class MovieParser_LoadFile extends DefaultHandler {
 	// movies from database with key = (Director, Year, Title)
 	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> moviedb;
 
@@ -120,17 +120,13 @@ public class MovieParser extends DefaultHandler {
 
 	//
 	List<Genre_In_Movie> genre_in_movie_toAdd;
-	
-	
-	//
-	Hashtable<ImmutableTriple<String, Integer, String>, Movie> movies_in_db; 
 
 	/*
 	 * constructor for MovieParser() for: get data source to connect to db
 	 * initialize moviesFidXml initialize moviedb to movies in database
 	 * initialize moviexml
 	 */
-	public MovieParser() throws NamingException, SQLException {
+	public MovieParser_LoadFile() throws NamingException, SQLException {
 		genre_in_movie_toAdd = new ArrayList<Genre_In_Movie>();
 		movieToAdd = new ArrayList<Movie>();
 		genre_in_movieToAdd = new ArrayList<Pair<Genre, Movie>>();
@@ -252,12 +248,9 @@ public class MovieParser extends DefaultHandler {
 			if ((isValidFid && isValidYear && !isDuplicate)) {
 
 				this.moviexml.put(key, tempMovie);
+				this.moviesFidXml.put(tempMovie.getFid(), tempMovie);
 				this.movieToAdd.add(tempMovie);
 
-			}
-			
-			if(isValidFid){
-				this.moviesFidXml.put(tempMovie.getFid(), tempMovie);
 			}
 
 			if (isDuplicate) {
@@ -416,7 +409,7 @@ public class MovieParser extends DefaultHandler {
 		Hashtable<Pair<Integer, Integer>, Integer> genres_in_movies_in_db = get_genre_in_movie_db();
 
 		Hashtable<String, Genre> genres_in_db = getGenresInDb();
-		movies_in_db = getMoviedb();
+		Hashtable<ImmutableTriple<String, Integer, String>, Movie> movies_in_db = getMoviedb();
 		
 		Hashtable<Pair<Integer, Integer>, Integer> genre_in_movie_to_Add_hashtable = new Hashtable<Pair<Integer, Integer>, Integer>(); 
 
@@ -427,7 +420,7 @@ public class MovieParser extends DefaultHandler {
 			// System.out.println(genres);
 			ImmutableTriple<String, Integer, String> mKey = entry.getKey();
 
-			//System.out.println(mKey);
+			System.out.println(mKey);
 			if (movies_in_db.containsKey(mKey)) {
 				int movieId = movies_in_db.get(mKey).getId();
 
@@ -459,10 +452,6 @@ public class MovieParser extends DefaultHandler {
 		long endTime = System.nanoTime();
 		System.out.println("Finish mains.xml @" + endTime);
 		System.out.println("Total: " + (endTime - startTime));
-	}
-	
-	public Hashtable<ImmutableTriple<String, Integer, String>, Movie> getMovieDbAfterPopulated(){
-		return this.movies_in_db; 
 	}
 
 	public void PopulateGenreInMovie() {
