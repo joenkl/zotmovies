@@ -427,7 +427,7 @@ public class MovieParser extends DefaultHandler {
 			// System.out.println(genres);
 			ImmutableTriple<String, Integer, String> mKey = entry.getKey();
 
-			System.out.println(mKey);
+			//System.out.println(mKey);
 			if (movies_in_db.containsKey(mKey)) {
 				int movieId = movies_in_db.get(mKey).getId();
 

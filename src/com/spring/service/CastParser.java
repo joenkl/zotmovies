@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -23,6 +24,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.xml.sax.Attributes;
@@ -41,7 +43,7 @@ import javafx.util.Pair;
 public class CastParser extends DefaultHandler {
 	// hash table of movies where key = fid
 	private Hashtable<String, Movie> movies;
-	
+
 	private String tempVal;
 
 	// hash table of new casts:
@@ -52,24 +54,29 @@ public class CastParser extends DefaultHandler {
 	private MovieParser mp;
 
 	private DataSource dataSource;
-	
-	private Hashtable<String, Star> starxml;
-	//hash table of star from db from actorparser
-	private Hashtable<String, Star> stardb;
 
+	private Hashtable<String, Star> starxml;
+	// hash table of star from db from actorparser
+	private Hashtable<String, Star> stardb;
 
 	// hash table of star_in_movie
 	private Hashtable<String, List<Movie>> star_in_movie_db;
-	
-	//hash table 
-	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> movieAfterPopulated; 
-	
-	//hash table
-	private Hashtable<String, Star> starAfterPopulated; 
-	
-	public Hashtable<String, Star> get_star_in_db_after_populated(){
+
+	// hash table
+	private Hashtable<ImmutableTriple<String, Integer, String>, Movie> movieAfterPopulated;
+
+	// hash table
+	private Hashtable<String, Star> starAfterPopulated;
+
+	//
+	List<Star_In_Movie> star_in_movie_toAdd;
+
+	int movie_id;
+	int star_id;
+
+	public Hashtable<String, Star> get_star_in_db_after_populated() {
 		Hashtable<String, Star> hashtable = new Hashtable<String, Star>();
-		
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String query = "select * from stars";
 
@@ -77,13 +84,13 @@ public class CastParser extends DefaultHandler {
 
 			@Override
 			public Star mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-				
+
 				Star star = new Star();
 				star.setId(resultSet.getInt(1));
 				star.setFirst_name(resultSet.getString(2));
 				star.setLast_name(resultSet.getString(3));
-				
-				return star; 
+
+				return star;
 			}
 
 		});
@@ -95,11 +102,9 @@ public class CastParser extends DefaultHandler {
 		// System.out.println(hashtable);
 		return hashtable;
 	}
-	
-	
-	
-	public Hashtable<Pair<Integer, Integer>, Integer> getStar_in_Movie_in_db(){
-		Hashtable<Pair<Integer, Integer>, Integer> hashtable = new Hashtable<Pair<Integer, Integer>, Integer> ();
+
+	public Hashtable<Pair<Integer, Integer>, Integer> getStar_in_Movie_in_db() {
+		Hashtable<Pair<Integer, Integer>, Integer> hashtable = new Hashtable<Pair<Integer, Integer>, Integer>();
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String query = "select * from stars_in_movies";
@@ -108,12 +113,12 @@ public class CastParser extends DefaultHandler {
 
 			@Override
 			public Star_In_Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-				
+
 				Star_In_Movie sim = new Star_In_Movie();
 				sim.setStarId(resultSet.getInt(1));
 				sim.setMovieId(resultSet.getInt(2));
-				
-				return sim; 
+
+				return sim;
 			}
 
 		});
@@ -126,8 +131,6 @@ public class CastParser extends DefaultHandler {
 		// System.out.println(hashtable);
 		return hashtable;
 	}
-	
-	
 
 	public CastParser() throws NamingException, IOException, SQLException, ParseException {
 		System.out.println("CASTS124.XML PARSING");
@@ -189,6 +192,8 @@ public class CastParser extends DefaultHandler {
 		tempVal = "";
 		if (qName.equalsIgnoreCase("f")) {
 			tempMovie = new Movie();
+			star_id = -1;
+			movie_id = -1;
 		}
 	}
 
@@ -201,12 +206,17 @@ public class CastParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("f")) {
 			if (!tempVal.isEmpty()) {
 				if (movies.containsKey(tempVal)) {
-					//look up movie 
+					// look up movie
 					tempMovie = movies.get(tempVal);
+
+					// get movieid:
+					ImmutableTriple<String, Integer, String> key = new ImmutableTriple<String, Integer, String>(
+							tempMovie.getDirector().toLowerCase(), tempMovie.getYear(),
+							tempMovie.getTitle().toLowerCase());
 					
-				
-					
-					
+					if(this.movieAfterPopulated.containsKey(key))
+						movie_id = this.movieAfterPopulated.get(key).getId();
+
 				}
 
 				else {
@@ -225,48 +235,20 @@ public class CastParser extends DefaultHandler {
 				// movie has unknown actors would be removed
 				if (tempVal.equals("s a")) {
 					System.out.println("Encounter unknown actor for " + tempMovie + " in casts124.xml");
-					// movies.remove(tempMovie.getFid());
 				}
 
 				else {
 
-					// look up for star:
-					if (this.starxml.containsKey(tempVal.toLowerCase()) || this.stardb.containsKey(tempVal.toLowerCase())) {
-						
-						Star tempS = new Star();
-						
-						if(this.starxml.containsKey(tempVal.toLowerCase()))
-							tempS = this.starxml.get(tempVal.toLowerCase());
-						
-						else
-							tempS = this.stardb.get(tempVal.toLowerCase()); 
+					if (this.starAfterPopulated.containsKey(tempVal.toLowerCase())) {
+						star_id = starAfterPopulated.get(tempVal.toLowerCase()).getId();
 
-						boolean isNewActor = this.star_in_movie_db.containsKey(tempS.getStagename().toLowerCase());
+					}
 
-						if (!isNewActor){
-							List<Movie> tempMovies = new ArrayList<Movie>();
-							tempMovies.add(tempMovie);
-							this.star_in_movie_xml.put(tempVal, tempMovies);
-						}
-					
-						//else do something...
-						else{
-							//check which movie star in 
-							List<Movie> listMoviesStarIn = this.star_in_movie_db.get(tempS.getStagename().toLowerCase());
-							for(Movie movie : listMoviesStarIn){
-								boolean sameDirector = movie.getDirector().equals(tempMovie.getDirector());
-								boolean sameTitle = movie.getTitle().equals(tempMovie.getTitle());
-								boolean sameYear = movie.getYear() == tempMovie.getYear(); 
-								
-								//it's a new movie that an actor in
-								if(!sameDirector || !sameTitle || !sameYear){
-									tempS.addMovies(tempMovie);
-									this.star_in_movie_xml.put(tempVal, tempS.getMovies());
-								}
-							}
-						}
-					} else {
-						System.out.println("Star doesn't exist in actors63.xml nor database where starName= " + tempVal);
+					if (star_id != -1 && movie_id != -1) {
+						Star_In_Movie sim = new Star_In_Movie();
+						sim.setStarId(star_id);
+						sim.setMovieId(movie_id);
+						this.star_in_movie_toAdd.add(sim);
 					}
 
 				}
@@ -278,25 +260,60 @@ public class CastParser extends DefaultHandler {
 	}
 
 	public void run() throws NamingException, SQLException, IOException, ParseException {
-		
+
 		mp = new MovieParser();
 		mp.run();
-		movies = mp.getMoviesHashTable(); //with key = fid
-		movieAfterPopulated = mp.getMovieDbAfterPopulated(); //with key = director, year, title
-		
+		movies = mp.getMoviesHashTable(); // with key = fid
+		movieAfterPopulated = mp.getMovieDbAfterPopulated(); // with key =
+																// director,
+																// year, title
 
 		ActorParser ap = new ActorParser();
 		ap.run();
-		
-		starAfterPopulated = get_star_in_db_after_populated(); //with key = stagename 
 
-		
-		
-		
+		starAfterPopulated = get_star_in_db_after_populated(); // with key =
+																// stagename
+
 		parseDocument();
+
+		// public Hashtable<Pair<Integer, Integer>, Integer>
+		// getStar_in_Movie_in_db()
+		Hashtable<Pair<Integer, Integer>, Integer> lookUpStar_in_Movie = getStar_in_Movie_in_db();
+
+		// List<Star_In_Movie> star_in_movie_toAdd;
+
+		for (Star_In_Movie sim : this.star_in_movie_toAdd) {
+			Pair<Integer, Integer> key = new Pair<Integer, Integer>(sim.getStarId(), sim.getMovieId());
+			if (lookUpStar_in_Movie.containsKey(key)) {
+				this.star_in_movie_toAdd.remove(sim);
+			}
+		}
 		
-		
+		populateStarInMovie(); 
+
 	}
+
+	public void populateStarInMovie() {
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "insert into stars_in_movies (genre_id, movie_id) values (?, ?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+			@Override
+			public int getBatchSize() {
+				return star_in_movie_toAdd.size();
+			}
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+
+				ps.setInt(1, star_in_movie_toAdd.get(i).getStarId());
+				ps.setInt(2, star_in_movie_toAdd.get(i).getMovieId());
+			}
+		});
+	}
+	
 
 	public static void main(String[] args) throws NamingException, IOException, SQLException, ParseException {
 		CastParser spe = new CastParser();
@@ -362,7 +379,7 @@ public class CastParser extends DefaultHandler {
 			if (isDuplicate) {
 				List<Movie> temp = hashtable.get(key.toLowerCase());
 				List<Movie> current = star.getMovies();
-				//combine movie list
+				// combine movie list
 				temp.addAll(current);
 				hashtable.remove(key);
 				hashtable.put(key, temp);
@@ -370,7 +387,7 @@ public class CastParser extends DefaultHandler {
 			}
 
 		}
-	
+
 		return hashtable;
 
 	}
