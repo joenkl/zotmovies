@@ -301,14 +301,15 @@ public class CastParser extends DefaultHandler {
 		Hashtable<Pair<Integer, Integer>, Integer> star_in_movie = new Hashtable<Pair<Integer, Integer>, Integer>();
 	
 	
-		for (Star_In_Movie sim : this.star_in_movie_toAdd) {
-			Pair<Integer, Integer> key = new Pair<Integer, Integer>(sim.getStarId(), sim.getMovieId());
+		for (int i = 0; i < this.star_in_movie_toAdd.size(); i++) {
+			Pair<Integer, Integer> key = new Pair<Integer, Integer>(star_in_movie_toAdd.get(i).getStarId(), star_in_movie_toAdd.get(i).getMovieId());
+			star_in_movie.put(key, 1);
 			
 			if (lookUpStar_in_Movie.containsKey(key) || star_in_movie.containsKey(key)) {
-				this.star_in_movie_toAdd.remove(sim);
+				this.star_in_movie_toAdd.get(i).setMovieId(-1);
 			}
 			
-			star_in_movie.put(key, 1);
+			
 			
 		}
 		
@@ -330,9 +331,12 @@ public class CastParser extends DefaultHandler {
 
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-
-				ps.setInt(1, star_in_movie_toAdd.get(i).getStarId());
-				ps.setInt(2, star_in_movie_toAdd.get(i).getMovieId());
+				
+				if(star_in_movie_toAdd.get(i).getMovieId() != -1 && star_in_movie_toAdd.get(i).getStarId() != -1)
+				{
+					ps.setInt(1, star_in_movie_toAdd.get(i).getStarId());
+					ps.setInt(2, star_in_movie_toAdd.get(i).getMovieId());
+				}
 			}
 		});
 	}
