@@ -136,6 +136,8 @@ public class CastParser extends DefaultHandler {
 		System.out.println("CASTS124.XML PARSING");
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("file:src/com/spring/config/dataSource_config.xml");
 		dataSource = (DataSource) ctx.getBean("dataSource");
+		
+		star_in_movie_toAdd = new ArrayList<Star_In_Movie>(); 
 
 	}
 
@@ -274,6 +276,7 @@ public class CastParser extends DefaultHandler {
 		starAfterPopulated = get_star_in_db_after_populated(); // with key =
 																// stagename
 
+		System.out.println("Star logging for casts.xml");
 		parseDocument();
 
 		// public Hashtable<Pair<Integer, Integer>, Integer>
@@ -281,7 +284,7 @@ public class CastParser extends DefaultHandler {
 		Hashtable<Pair<Integer, Integer>, Integer> lookUpStar_in_Movie = getStar_in_Movie_in_db();
 
 		// List<Star_In_Movie> star_in_movie_toAdd;
-
+	
 		for (Star_In_Movie sim : this.star_in_movie_toAdd) {
 			Pair<Integer, Integer> key = new Pair<Integer, Integer>(sim.getStarId(), sim.getMovieId());
 			if (lookUpStar_in_Movie.containsKey(key)) {
