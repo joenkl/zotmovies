@@ -40,7 +40,8 @@
         <hr>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-danger btn-lg btn-block">Parsing XML</button>
+              	<center><img src="https://c1.staticflickr.com/5/4187/33846839094_776a72214d.jpg" class="img-fluid" alt="Responsive image">
+            </center>
             </div>
         </div>
 

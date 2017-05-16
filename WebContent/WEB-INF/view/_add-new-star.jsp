@@ -28,7 +28,7 @@
                 <div class="form-group row">
                     <div class="col-md-5 ">
                         <label>First Name</label>
-                        <input class="form-control" type="text"  name="first_name" required/>
+                        <input class="form-control" type="text"  name="first_name"/>
                     </div>
                     <div class="col-md-5">
                         <label>Last Name</label>
