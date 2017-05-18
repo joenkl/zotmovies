@@ -9,11 +9,11 @@
 	</c:if>
 
 	<div class="col-md-4 text-center movie" id ="movie${status.index + 1}" movieid="${movie.id}">
-			<div class="movie">
+			
 				<a href="./movie-id=${movie.id}"> <img class="img-responsive center-block"
 					src="${movie.banner_url}" alt="banner_url">
 				</a>
-			</div>
+			
 			<h3>
 				<a href="./movie-id=${movie.id}">${movie.title} - ${movie.year}</a>
 			</h3>

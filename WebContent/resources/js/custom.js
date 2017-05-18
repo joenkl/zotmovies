@@ -74,22 +74,24 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
-	$('.movie').tooltip({
-    	title: getMovie,
-    	placement: function(tip, element) { //$this is implicit
+	$('.movie').popover({
+    	trigger: 'hover',
+		title: getMovie,
+    	placement: function(tip, element) {
             var position = $(element).position();
-            if (position.left > 515) {
+            if (position.left > 215) {
                 return "left";
             }
-            if (position.left < 515) {
+            if (position.left < 215) {
                 return "right";
             }
-            if (position.top < 110){
+            if (position.top < 210){
                 return "bottom";
             }
             return "top";
         },
-    	html: true
+        html: true,
+    	container: $('.movie')
     });
 	
 	
@@ -98,7 +100,7 @@ $(document).ready(function(){
 		var movieID = movie.attr("movieid");
 		var returnData =" ";
 		$.ajax({
-			url :"./movie-id=" + movieID,
+			url :"./tool-movie-id=" + movieID,
 			method: "GET",
 			async : false,
 			success:function(data)
