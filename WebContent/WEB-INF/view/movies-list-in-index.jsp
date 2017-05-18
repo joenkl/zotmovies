@@ -8,13 +8,15 @@
 		<div class="row" name="${status.index}">
 	</c:if>
 
-	<div class="col-md-4 movie-post">
-		<a href="./movie-id=${movie.id}"> <img class="img-responsive"
-			src="${movie.banner_url}" alt="banner_url">
-		</a>
-		<h3>
-			<a href="./movie-id=${movie.id}">${movie.title} - ${movie.year}</a>
-		</h3>
+	<div class="col-md-4 text-center movie" id ="movie${status.index + 1}" movieid="${movie.id}">
+			<div class="movie">
+				<a href="./movie-id=${movie.id}"> <img class="img-responsive center-block"
+					src="${movie.banner_url}" alt="banner_url">
+				</a>
+			</div>
+			<h3>
+				<a href="./movie-id=${movie.id}">${movie.title} - ${movie.year}</a>
+			</h3>
 	</div>
 
 	<c:if test="${(status.index + 1) % 3 == 0}">

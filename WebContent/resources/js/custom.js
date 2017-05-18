@@ -65,3 +65,62 @@ var changeNperPage = function(url,n){
 		window.location = thisUrl;
 }
 
+
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+
+
+
+$(document).ready(function(){
+	$('.movie').tooltip({
+    	title: getMovie,
+    	placement: function(tip, element) { //$this is implicit
+            var position = $(element).position();
+            if (position.left > 515) {
+                return "left";
+            }
+            if (position.left < 515) {
+                return "right";
+            }
+            if (position.top < 110){
+                return "bottom";
+            }
+            return "top";
+        },
+    	html: true
+    });
+	
+	
+	function getMovie(){
+		var movie =  $(this);
+		var movieID = movie.attr("movieid");
+		var returnData =" ";
+		$.ajax({
+			url :"./movie-id=" + movieID,
+			method: "GET",
+			async : false,
+			success:function(data)
+			{
+				returnData = data;
+			},
+			error: function()
+			{
+				returnData ="Error! Cannot get movie data"
+			}
+		});
+		
+		return returnData;
+	};
+    
+});
+
+
+
+
+
+
+
+
+

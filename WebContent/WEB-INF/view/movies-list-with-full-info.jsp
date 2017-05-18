@@ -4,9 +4,9 @@
 		<div class="col-lg-12 movie-post" style="border:1px #d3d3d3 solid; padding:5px">
 
 	        <div class="col-md-4 movie-img">
-	            <center><a href="./movie-id=${movie.id}">
-	                <img class="img-responsive" width = "50%" height = "50%" src="${movie.banner_url}" alt="${movie.title}" >
-	            </a></center>
+	            <a href="./movie-id=${movie.id}">
+	                <img class="img-responsive center-block" width = "50pt" height = "50pt" src="${movie.banner_url}" alt="${movie.title}" >
+	            </a>
 	        </div>
 	        
 	        <div class="col-md-8 movie-info">
