@@ -3,6 +3,7 @@ package com.spring.config;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.spring.controller.SearchController;
 import com.spring.dao.*;
 
 import org.springframework.context.annotation.Bean;
@@ -88,4 +89,5 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
 		return new MetadataDaoImpl(dataSource);
 	}
+	
 }
