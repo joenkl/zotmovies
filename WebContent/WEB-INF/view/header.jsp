@@ -48,7 +48,7 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="${pageContext.request.contextPath}/searchForm">Search</a></li>
+					<li><a href="${pageContext.request.contextPath}/searchForm">Advanced Search</a></li>
 					<li><a href="${pageContext.request.contextPath}/genres">Genres</a></li>
 					<li><a href="${pageContext.request.contextPath}/titles">Titles</a></li>
 					<li><a href="${pageContext.request.contextPath}/checkout">Checkout Cart</a></li>
@@ -66,6 +66,7 @@
 							<li><a style="color:#FFEB3B" href="${pageContext.request.contextPath}/_dashboard"> <span class="glyphicon glyphicon-tasks"></span> Admin Dashboard</a></li>
 						</c:when>
 					</c:choose>
+					
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -75,6 +76,7 @@
 	
 	
 	<!-- Navigation -->
+	
 
 </head>
 

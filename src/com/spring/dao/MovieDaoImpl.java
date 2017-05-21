@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.Hashtable;
@@ -38,8 +39,7 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	public List<Movie> getMovieList(int page, int n) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies LIMIT " + n
-				+ " OFFSET " + ((page - 1)*n);
+		String sql = "SELECT * FROM movies LIMIT " + n + " OFFSET " + ((page - 1) * n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -55,13 +55,13 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc, int page, int n) {
+	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc,
+			int page, int n) {
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
-		
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'" 
-					+ "ORDER BY " + orderByColumn + " " + ascOrDesc
-					+ " LIMIT " + n + " OFFSET " + ((page - 1)*n);
+		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'" + "ORDER BY " + orderByColumn
+				+ " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -142,7 +142,7 @@ public class MovieDaoImpl implements MovieDao {
 
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
-		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1)*n);
+		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
@@ -161,33 +161,26 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n){
-		
+	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n) {
+
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
-		
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "select * from movies M "
-				+ "join genres_in_movies GM on M.id = GM.movie_id "
-				+ "where GM.genre_id in (select id from genres where name='" + genre + "')"
-				+ " ORDER BY " + orderByColumn + " " + ascOrDesc
-				+ " LIMIT " + n + " OFFSET " + ((page - 1)*n);
+		String sql = "select * from movies M " + "join genres_in_movies GM on M.id = GM.movie_id "
+				+ "where GM.genre_id in (select id from genres where name='" + genre + "')" + " ORDER BY "
+				+ orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
-			 
-	            @Override
-	            public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-	            	Movie movie = new Movie(resultSet.getInt(1),
-							resultSet.getString(2),
-							resultSet.getInt(3),
-							resultSet.getString(4),
-							resultSet.getString(5),
-							resultSet.getString(6)
-							);
-					return movie;
-	            }
-	             
-	        });
-		 
-	        return listMovies;
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+				return movie;
+			}
+
+		});
+
+		return listMovies;
 	}
 
 	@Override
@@ -230,12 +223,11 @@ public class MovieDaoImpl implements MovieDao {
 
 	@Override
 	public String addMovieProcedure(String title, int year, String director, String banner_url, String trailer_url,
-			String starFN, String starLN, Date starDob, String starPhotoURL, String genre) 
-	{
-		
+			String starFN, String starLN, Date starDob, String starPhotoURL, String genre) {
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("add_movie");
-		
+
 		Map<String, Object> in = new HashMap<String, Object>();
 		in.put("new_movieTitle", title);
 		in.put("new_year", year);
@@ -247,12 +239,29 @@ public class MovieDaoImpl implements MovieDao {
 		in.put("new_star_dob", starDob);
 		in.put("new_star_photo_url", starPhotoURL);
 		in.put("new_genre", genre);
-		
+
 		SqlParameterSource sql = new MapSqlParameterSource(in);
-		
+
 		Map<String, Object> result = simpleJdbcCall.execute(sql);
-		
-		
+
 		return result.get("msg").toString();
+	}
+
+	@Override
+	public List<Movie> fuzzy_search(String query) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = query; 
+		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+				return movie;
+			}
+
+		});
+
+		return listMovies;
 	}
 }

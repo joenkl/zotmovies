@@ -1,6 +1,8 @@
 <%@ include file="header.jsp"%>
+<!--  search bar -->
+<%@ include file="fuzzysearch.jsp"%>
 <!--  show N list of page -->
-<%@ include file="Npages.jsp" %>
+<%@ include file="Npages.jsp"%>
 
 <c:forEach var="movie" items="${listMovies}" varStatus="status">
 

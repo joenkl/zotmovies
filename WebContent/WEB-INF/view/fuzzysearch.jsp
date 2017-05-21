@@ -1,15 +1,62 @@
-<%@ include file="header.jsp"%>
 
-<style> 
-#search-box{
-	width:30%;
+<c:url var="home" value="/" scope="request" />
+
+<style>
+#searchResult{
+	width: 40%;
 }
 </style>
-<body>
-	<div class="container">
+
+<div class="container">
+	<div class="row">
 		<form class="form-group has-feedback" id="search-box">
-			<input type="text" class="form-control" name="search-bar" placeholder="Search...." />
-			<i class="glyphicon glyphicon-search form-control-feedback"></i>
+			<input type="text" class="form-control" name="search-bar"
+				placeholder="Search...." /> <i
+				class="glyphicon glyphicon-search form-control-feedback"></i>
 		</form>
+
+		<ul class="list-group" id="searchResult" style="position:absolute; z-index:1">
+		</ul>
 	</div>
-</body>
+</div>
+
+<script>
+	$(document)
+			.ready(
+					function() {
+						$('[name=search-bar]')
+								.on(
+										'keyup keypress',
+										function() {
+											var query = $("input").val();
+											if (query) {
+												$
+														.ajax({
+															url : "${home}api/search?title="
+																	+ query,
+															method : "GET",
+															success : function(
+																	data) {
+																$(
+																		"#searchResult")
+																		.empty();
+																for ( var i in data) {
+																	if (i == 5)
+																		return false;
+																	$(
+																			"#searchResult")
+																			.append(
+																					"<li class='list-group-item'>"
+																							+ "<a href='./movie-id=" + data[i]['id'] + "'>"
+																							+ "<p>"
+																							+ data[i]['title']
+																							+ "</p>"
+																							+ "</li></a>");
+																}
+															}
+														});
+											} else
+												$("#searchResult").empty();
+										});
+					});
+</script>

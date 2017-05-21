@@ -415,4 +415,9 @@ public class MovieController {
 		return model;
 		
 	}
+	
+	@RequestMapping("/searchBox")
+	public ModelAndView showSearchBox(){
+		return new ModelAndView("fuzzysearch");
+	}
 }
