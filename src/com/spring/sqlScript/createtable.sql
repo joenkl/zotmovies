@@ -1,3 +1,14 @@
+DROP DATABASE IF EXISTS moviedb;
+CREATE DATABASE moviedb;
+USE moviedb;
+
+CREATE TABLE IF NOT EXISTS user_stopword(
+	value varchar(30)
+    )engine = innodb;
+    
+SET GLOBAL innodb_ft_server_stopword_table="moviedb/user_stopword";
+    
+
 DROP TABLE IF EXISTS `sales`;
 DROP TABLE IF EXISTS `customers`;
 DROP TABLE IF EXISTS `creditcards`;
@@ -7,6 +18,7 @@ DROP TABLE IF EXISTS `stars_in_movies`;
 DROP TABLE IF EXISTS `stars`;
 DROP TABLE IF EXISTS `movies`;
 
+SET @@SESSION.innodb_ft_enable_stopword = 'ON';
 CREATE TABLE movies (
     id INTEGER NOT NULL AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,

@@ -66,6 +66,7 @@
 							<li><a style="color:#FFEB3B" href="${pageContext.request.contextPath}/_dashboard"> <span class="glyphicon glyphicon-tasks"></span> Admin Dashboard</a></li>
 						</c:when>
 					</c:choose>
+					
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -75,6 +76,7 @@
 	
 	
 	<!-- Navigation -->
+	
 
 </head>
 
