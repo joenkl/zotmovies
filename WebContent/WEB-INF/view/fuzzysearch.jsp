@@ -41,7 +41,7 @@
 																		"#searchResult")
 																		.empty();
 																for ( var i in data) {
-																	if (i == 5)
+																	if (i == 10)
 																		return false;
 																	$(
 																			"#searchResult")

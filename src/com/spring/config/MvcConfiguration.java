@@ -3,7 +3,7 @@ package com.spring.config;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.spring.controller.SearchController;
+import com.spring.api.SearchAPI;
 import com.spring.dao.*;
 
 import org.springframework.context.annotation.Bean;

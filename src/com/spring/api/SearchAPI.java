@@ -1,4 +1,4 @@
-package com.spring.controller;
+package com.spring.api;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,12 +29,11 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-public class SearchController {
+public class SearchAPI {
 
 	@Autowired
 	MovieDao movieDao;
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/api/search")
 	public List<Movie> search(
 			@RequestParam(value = "title", required = false) String query)

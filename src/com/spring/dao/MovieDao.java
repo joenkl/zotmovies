@@ -34,4 +34,8 @@ public interface MovieDao {
 	
 	public List<Movie> fuzzy_search(String query); 
 	
+	public List<Movie> getAllMovie();
+	
+	public List<String> getAllMovieTitle();
+	
 }
