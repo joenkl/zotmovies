@@ -20,7 +20,7 @@ public class LoginAPI {
 			@RequestParam(value = "username", required = true) String username,
 			@RequestParam(value = "password", required = true) String password
 			){
-		
+			System.out.println("received a request!");
 			if(username.isEmpty() || password.isEmpty()){
 				return false;
 			}
