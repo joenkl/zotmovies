@@ -420,4 +420,19 @@ public class MovieController {
 	public ModelAndView showSearchBox(){
 		return new ModelAndView("fuzzysearch");
 	}
+	
+	@RequestMapping(value ="/tool-movie-id={condition}", method = RequestMethod.GET)
+	public ModelAndView tooltipMovieByID(@PathVariable("condition") int id) {
+		Movie movie = movieDao.getMovieListWithID(id);
+		ModelAndView model = new ModelAndView("tool-movie-info");
+		
+
+		model.addObject("movie", movie);
+
+		List<Genre> listGenres = genreDao.getGenreListByMovieId(movie.getId());
+		model.addObject("listGenres", listGenres);
+		model.addObject("listStars", starDao.getStarsByMovieId(movie.getId()));
+
+		return model;
+	}
 }

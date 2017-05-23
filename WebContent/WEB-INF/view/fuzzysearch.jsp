@@ -47,7 +47,10 @@
 																			"#searchResult")
 																			.append(
 																					"<li class='list-group-item'>"
-																							+ "<a href='./movie-id=" + data[i]['id'] + "'>"
+																							+ "<a class='movie-item' movieid="
+																							+ data[i]['id']
+																							+ " href='./movie-id=" 
+																							+ data[i]['id'] + "'>"
 																							+ "<p>"
 																							+ data[i]['title']
 																							+ "</p>"
@@ -58,5 +61,9 @@
 											} else
 												$("#searchResult").empty();
 										});
+						
+						$('.movie-item').on("mouseenter", hooverMovieDetails());
+						
+						//hooverMovieDetails();
 					});
 </script>

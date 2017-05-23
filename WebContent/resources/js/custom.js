@@ -65,3 +65,35 @@ var changeNperPage = function(url,n){
 		window.location = thisUrl;
 }
 
+var hooverMovieDetails = function(){
+	$('.movie-item').popover({
+    	trigger: 'hover',
+		title: getMovie,
+    	placement: "right",
+        html: true,
+    	container: $('.movie-item')
+    });
+	
+	
+	function getMovie(){
+		var movie =  $(this);
+		var movieID = movie.attr("movieid");
+		var returnData =" ";
+		$.ajax({
+			url :"./tool-movie-id=" + movieID,
+			method: "GET",
+			async : false,
+			success:function(data)
+			{
+				returnData = data;
+			},
+			error: function()
+			{
+				returnData ="Error! Cannot get movie data"
+			}
+		});
+		
+		return returnData;
+	};
+}
+
