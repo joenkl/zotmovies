@@ -47,7 +47,8 @@
 																			"#searchResult")
 																			.append(
 																					"<li class='list-group-item'>"
-																							+ "<a class='movie-item' movieid="+data[i]['id']+ " href='./movie-id=" + data[i]['id'] + "'>"
+																							+ "<a class='movie-item' movieid="+data[i]['id'] 
+																							+ "  href='./movie-id=" + data[i]['id'] + "'>"
 																							+ "<p>"
 																							+ data[i]['title']
 																							+ "</p>"

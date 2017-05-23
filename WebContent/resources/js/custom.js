@@ -67,17 +67,26 @@ var changeNperPage = function(url,n){
 
 var hooverMovieDetails = function(){
 	$('.movie-item').popover({
-    	trigger: 'hover',
+    	trigger: 'focus',
 		content: getMovie,
     	placement: "right",
         html: true,
     	container: 'body',
-    	hoverable: true,
-        delay: { 
-            show: "500", 
-            hide: "300"
-         },
-    });
+    	hoverable: true
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 200);
+});
 	
 	function getMovie(){
 		var movie =  $(this);
