@@ -103,7 +103,11 @@ public class MovieController {
 			@RequestParam(value = "n", required = false) String nPerPage,
 			RedirectAttributes redir) {
 		
-
+		if(title == null) title = "";
+		if(first_name == null) first_name = "";
+		if(last_name == null) last_name = "";
+		if(year == null) year = "";
+		if(director == null) director = "";
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
 

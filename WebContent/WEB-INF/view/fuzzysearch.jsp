@@ -9,8 +9,8 @@
 
 <div class="container">
 	<div class="row">
-		<form class="form-group has-feedback" id="search-box">
-			<input type="text" class="form-control" name="search-bar"
+		<form class="form-group has-feedback" action="./search" id="search-box">
+			<input type="text" class="form-control" name="title" id="search-bar"
 				placeholder="Search...." /> <i
 				class="glyphicon glyphicon-search form-control-feedback"></i>
 		</form>
@@ -24,7 +24,7 @@
 	$(document)
 			.ready(
 					function() {
-						$('[name=search-bar]')
+						$('#search-bar')
 								.on(
 										'keyup keypress',
 										function() {
@@ -46,8 +46,8 @@
 																	$(
 																			"#searchResult")
 																			.append(
-																					"<li class='list-group-item'>"
-																							+ "<a class='movie-item' movieid="+data[i]['id'] 
+																					"<li class='list-group-item movie-item' movieid="+data[i]['id']+">"  
+																							+ "<a "
 																							+ "  href='./movie-id=" + data[i]['id'] + "'>"
 																							+ "<p>"
 																							+ data[i]['title']
