@@ -13,7 +13,7 @@
 	<!-- Projects Row -->
 	<div class="container-fluid">
 
-		<strong>${movie.title}- ${movie.year}</strong>
+		<h5><strong>${movie.title}- ${movie.year}</strong></h5>
 		<button class="btn btn-success btn-sm add-to-cart"
 			data="${movie.title}" movieid="${movie.id}" style="margin: 10px">
 			Add to cart<span class="glyphicon glyphicon-shopping-cart"></span>

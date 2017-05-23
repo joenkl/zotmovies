@@ -72,6 +72,7 @@ var hooverMovieDetails = function(){
     	placement: "right",
         html: true,
     	container: 'body',
+    	hoverable: true,
         delay: { 
             show: "500", 
             hide: "300"
