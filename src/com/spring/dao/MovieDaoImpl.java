@@ -266,6 +266,24 @@ public class MovieDaoImpl implements MovieDao {
 	}
 	
 	@Override
+	public List<String> api_search(String query){
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = query; 
+		List<String> listMovies = jdbcTemplate.query(sql, new RowMapper<String>() {
+
+			@Override
+			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				String movieTitle = resultSet.getString(1);
+				return movieTitle;
+			}
+
+		});
+
+		return listMovies;
+		
+	}
+	
+	@Override
 	public List<Movie> getAllMovie(){
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

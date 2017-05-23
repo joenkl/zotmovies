@@ -52,4 +52,24 @@ public class SearchAPI {
 		System.out.println(stmt);
 		return(movieDao.fuzzy_search(stmt));
 	}
+	
+	
+	@GetMapping("/api/searchTitle")
+	public List<String> searchTitle(
+			@RequestParam(value = "title", required = false) String query)
+	{
+		String[] words = query.split(" ");
+		
+		String stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST('";
+		
+		for(String word : words){
+			stmt += "+"+word+"* ";
+			
+		}
+		
+		stmt += "' IN BOOLEAN MODE)";
+		
+		System.out.println(stmt);
+		return(movieDao.api_search(stmt));
+	}
 }
