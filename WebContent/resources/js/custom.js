@@ -68,12 +68,15 @@ var changeNperPage = function(url,n){
 var hooverMovieDetails = function(){
 	$('.movie-item').popover({
     	trigger: 'hover',
-		title: getMovie,
+		content: getMovie,
     	placement: "right",
         html: true,
-    	container: $('.movie-item')
+    	container: 'body',
+        delay: { 
+            show: "500", 
+            hide: "300"
+         },
     });
-	
 	
 	function getMovie(){
 		var movie =  $(this);

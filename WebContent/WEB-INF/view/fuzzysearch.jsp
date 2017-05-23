@@ -3,7 +3,7 @@
 
 <style>
 #searchResult{
-	width: 40%;
+	width: 30%;
 }
 </style>
 
@@ -41,29 +41,27 @@
 																		"#searchResult")
 																		.empty();
 																for ( var i in data) {
-																	if (i == 10)
+																	if (i == 5)
 																		return false;
 																	$(
 																			"#searchResult")
 																			.append(
 																					"<li class='list-group-item'>"
-																							+ "<a class='movie-item' movieid="
-																							+ data[i]['id']
-																							+ " href='./movie-id=" 
-																							+ data[i]['id'] + "'>"
+																							+ "<a class='movie-item' movieid="+data[i]['id']+ " href='./movie-id=" + data[i]['id'] + "'>"
 																							+ "<p>"
 																							+ data[i]['title']
 																							+ "</p>"
 																							+ "</li></a>");
+																	
+																	$('.movie-item').on("click", function(){
+																		 window.location.assign($(this).attr('href'));
+																	});
+																	$('.movie-item').on("mouseover", hooverMovieDetails());
 																}
 															}
 														});
 											} else
 												$("#searchResult").empty();
 										});
-						
-						$('.movie-item').on("mouseenter", hooverMovieDetails());
-						
-						//hooverMovieDetails();
 					});
 </script>
