@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS user_stopword(
     )engine = innodb;
     
 SET GLOBAL innodb_ft_server_stopword_table="moviedb/user_stopword";
-    
 
 DROP TABLE IF EXISTS `sales`;
 DROP TABLE IF EXISTS `customers`;

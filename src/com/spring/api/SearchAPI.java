@@ -43,7 +43,8 @@ public class SearchAPI {
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
 		
 		for(String word : words){
-			stmt += "+"+word+"* ";
+			if(word.length() >= 3)
+				stmt += "+"+word+"* ";
 			
 		}
 		
