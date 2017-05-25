@@ -2,12 +2,14 @@ DROP DATABASE IF EXISTS moviedb;
 CREATE DATABASE moviedb;
 USE moviedb;
 
+[mysqld]
+ft_min_word_len = 3;
+
 CREATE TABLE IF NOT EXISTS user_stopword(
 	value varchar(30)
     )engine = innodb;
     
 SET GLOBAL innodb_ft_server_stopword_table="moviedb/user_stopword";
-
 DROP TABLE IF EXISTS `sales`;
 DROP TABLE IF EXISTS `customers`;
 DROP TABLE IF EXISTS `creditcards`;

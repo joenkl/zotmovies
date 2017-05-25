@@ -9,7 +9,7 @@
 
 <div class="container">
 	<div class="row">
-		<form class="form-group has-feedback" action="./search" id="search-box">
+		<form class="form-group has-feedback" action="./tokenSearch" id="search-box">
 			<input type="text" class="form-control" name="title" id="search-bar"
 				placeholder="Search...." /> <i
 				class="glyphicon glyphicon-search form-control-feedback"></i>

@@ -33,44 +33,38 @@ public class SearchAPI {
 
 	@Autowired
 	MovieDao movieDao;
-	
+
 	@GetMapping("/api/search")
-	public List<Movie> search(
-			@RequestParam(value = "title", required = false) String query)
-	{
+	public List<Movie> search(@RequestParam(value = "title", required = false) String query) {
 		String[] words = query.split(" ");
-		
+
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
-		
-		for(String word : words){
-			if(word.length() >= 3)
-				stmt += "+"+word+"* ";
-			
+
+		for (String word : words) {
+			stmt += "+" + word + "* ";
+
 		}
-		
+
 		stmt += "' IN BOOLEAN MODE)";
-		
+
 		System.out.println(stmt);
-		return(movieDao.fuzzy_search(stmt));
+		return (movieDao.fuzzy_search(stmt));
 	}
-	
-	
+
 	@GetMapping("/api/searchTitle")
-	public List<String> searchTitle(
-			@RequestParam(value = "title", required = false) String query)
-	{
+	public List<String> searchTitle(@RequestParam(value = "title", required = false) String query) {
 		String[] words = query.split(" ");
-		
+
 		String stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST('";
-		
-		for(String word : words){
-			stmt += "+"+word+"* ";
-			
+
+		for (String word : words) {
+			stmt += "+" + word + "* ";
+
 		}
-		
+
 		stmt += "' IN BOOLEAN MODE)";
-		
+
 		System.out.println(stmt);
-		return(movieDao.api_search(stmt));
+		return (movieDao.api_search(stmt));
 	}
 }

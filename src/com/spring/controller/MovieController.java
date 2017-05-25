@@ -45,11 +45,8 @@ public class MovieController {
 		return "search";
 	}
 
-	
-
 	@RequestMapping("/index")
-	public ModelAndView home(
-			@RequestParam(value = "page", required = false) String page,
+	public ModelAndView home(@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "n", required = false) String nPerPage) throws IOException {
 
 		int defaultN = 6;
@@ -78,17 +75,46 @@ public class MovieController {
 		// for showing n per page:
 		model.addObject("minPage", defaultN);
 		model.addObject("n", nPerPage);
-		
-		
+
 		model.addObject("path", "index");
-		
+
 		// for pagination:
-			if (listMovies.size() < Integer.parseInt(nPerPage))
-				model.addObject("lastPage", true);
-			else
-				model.addObject("lastPage", false);
+		if (listMovies.size() < Integer.parseInt(nPerPage))
+			model.addObject("lastPage", true);
+		else
+			model.addObject("lastPage", false);
 
 		return model;
+	}
+
+	@RequestMapping(value = "/tokenSearch")
+	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title) {
+
+		
+		String[] words = title.split(" ");
+
+		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
+
+		for (String word : words) {
+			if (word.length() >= 3)
+				stmt += "+" + word + "* ";
+
+		}
+
+		stmt += "' IN BOOLEAN MODE)";
+
+		System.out.println(stmt);
+
+		/*
+		 * private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies,
+			String nPerPage)
+		 */
+		
+		ModelAndView model = prepareForMovieTableResult("a-z", "title", "1", movieDao.fuzzy_search(stmt),
+				"6");
+
+		return model;
+
 	}
 
 	@RequestMapping(value = "/search")
@@ -100,29 +126,32 @@ public class MovieController {
 			@RequestParam(value = "column", required = false) String column,
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "page", required = false) String page,
-			@RequestParam(value = "n", required = false) String nPerPage,
-			RedirectAttributes redir) {
-		
-		if(title == null) title = "";
-		if(first_name == null) first_name = "";
-		if(last_name == null) last_name = "";
-		if(year == null) year = "";
-		if(director == null) director = "";
+			@RequestParam(value = "n", required = false) String nPerPage, RedirectAttributes redir) {
+
+		if (title == null)
+			title = "";
+		if (first_name == null)
+			first_name = "";
+		if (last_name == null)
+			last_name = "";
+		if (year == null)
+			year = "";
+		if (director == null)
+			director = "";
 		if (title.isEmpty() && first_name.isEmpty() && last_name.isEmpty() && year.isEmpty() && director.isEmpty()) {
 			// return all movie list
 
 			ModelAndView model = new ModelAndView("search");
 			model.addObject("message", "Please fill out at least one option!");
-			return model; 
-	
+			return model;
+
 		}
 
 		else {
 			if (year.isEmpty())
 				year = "-1";
-			
-			if(!tryParseInt(year))
-			{
+
+			if (!tryParseInt(year)) {
 				return new ModelAndView("404-page");
 			}
 
@@ -151,7 +180,7 @@ public class MovieController {
 					first_name, last_name, column, sort, Integer.parseInt(page), Integer.parseInt(nPerPage));
 
 			ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
-			
+
 			// for showing n per page:
 			model.addObject("minPage", defaultN);
 			model.addObject("n", nPerPage);
@@ -166,7 +195,6 @@ public class MovieController {
 	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("movie-info");
-		
 
 		model.addObject("movie", movie);
 
@@ -183,8 +211,7 @@ public class MovieController {
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
-		
-		
+
 		// prepare n per page:
 		int defaultN = 6;
 		nPerPage = prepareNperPage(nPerPage, defaultN);
@@ -217,8 +244,7 @@ public class MovieController {
 
 		String currentPage = "browseTitle?startWith=" + browserTerm;
 		model.addObject("currentPage", currentPage);
-		
-		
+
 		// for showing n per page:
 		model.addObject("minPage", defaultN);
 		model.addObject("n", nPerPage);
@@ -261,8 +287,7 @@ public class MovieController {
 
 		String currentPage = "browseGenre?genre=" + genre;
 		model.addObject("currentPage", currentPage);
-		
-		
+
 		// for showing n per page:
 		model.addObject("minPage", defaultN);
 		model.addObject("n", nPerPage);
@@ -354,7 +379,8 @@ public class MovieController {
 
 	}
 
-	private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies, String nPerPage) {
+	private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies,
+			String nPerPage) {
 		ModelAndView model = new ModelAndView("movie-table-result");
 
 		if ((listMovies).size() < 10)
@@ -388,48 +414,45 @@ public class MovieController {
 
 		return model;
 	}
-	
-	
-	
-	@RequestMapping(value="/_movie-confirmation", method = RequestMethod.POST)
-	public ModelAndView addNewMovie(
-			@RequestParam(value="title", required = true ) String title,
-			@RequestParam(value="director", required = true) String director,
-			@RequestParam(value="year", required = true) Integer year,
-			@RequestParam(value="banner_url", required = false) String banner_url,
-			@RequestParam(value="trailer_url", required = false) String trailer_url,
-			
-			@RequestParam(value="genre", required = false) String genre,
-			
-			@RequestParam(value="first_name", required = false) String starFN,
-			@RequestParam(value="last_name", required = true) String starLN, 
-			@RequestParam(value="dob", required = true) java.sql.Date starDob,
-			@RequestParam(value="photo_url", required = false) String starPhotoURL)
-	{
+
+	@RequestMapping(value = "/_movie-confirmation", method = RequestMethod.POST)
+	public ModelAndView addNewMovie(@RequestParam(value = "title", required = true) String title,
+			@RequestParam(value = "director", required = true) String director,
+			@RequestParam(value = "year", required = true) Integer year,
+			@RequestParam(value = "banner_url", required = false) String banner_url,
+			@RequestParam(value = "trailer_url", required = false) String trailer_url,
+
+			@RequestParam(value = "genre", required = false) String genre,
+
+			@RequestParam(value = "first_name", required = false) String starFN,
+			@RequestParam(value = "last_name", required = true) String starLN,
+			@RequestParam(value = "dob", required = true) java.sql.Date starDob,
+			@RequestParam(value = "photo_url", required = false) String starPhotoURL) {
 		ModelAndView model = new ModelAndView("_movie-confirmation");
-		
-		if (banner_url == null) banner_url ="";
-		if (trailer_url == null) trailer_url ="";
-		
-		String msg = movieDao.addMovieProcedure(title, year, director, banner_url, trailer_url, 
-				starFN, starLN, starDob, starPhotoURL, genre);
-		
+
+		if (banner_url == null)
+			banner_url = "";
+		if (trailer_url == null)
+			trailer_url = "";
+
+		String msg = movieDao.addMovieProcedure(title, year, director, banner_url, trailer_url, starFN, starLN, starDob,
+				starPhotoURL, genre);
+
 		model.addObject("msg", msg);
-		
+
 		return model;
-		
+
 	}
-	
+
 	@RequestMapping("/searchBox")
-	public ModelAndView showSearchBox(){
+	public ModelAndView showSearchBox() {
 		return new ModelAndView("fuzzysearch");
 	}
-	
-	@RequestMapping(value ="/tool-movie-id={condition}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/tool-movie-id={condition}", method = RequestMethod.GET)
 	public ModelAndView tooltipMovieByID(@PathVariable("condition") int id) {
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("tool-movie-info");
-		
 
 		model.addObject("movie", movie);
 
