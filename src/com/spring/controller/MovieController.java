@@ -88,16 +88,18 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/tokenSearch")
-	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title) {
+	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title,
+			@RequestParam(value = "column", required = false) String column,
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "page", required = false) String page,
+			@RequestParam(value = "n", required = false) String nPerPage, RedirectAttributes redir) {
 
-		
 		String[] words = title.split(" ");
 
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
 
 		for (String word : words) {
-			if (word.length() >= 3)
-				stmt += "+" + word + "* ";
+			stmt += "+" + word + "* ";
 
 		}
 
@@ -105,13 +107,35 @@ public class MovieController {
 
 		System.out.println(stmt);
 
-		/*
-		 * private ModelAndView prepareForMovieTableResult(String sort, String column, String page, List<Movie> listMovies,
-			String nPerPage)
-		 */
-		
-		ModelAndView model = prepareForMovieTableResult("a-z", "title", "1", movieDao.fuzzy_search(stmt),
-				"6");
+		// prepare n per page:
+		int defaultN = 6;
+		nPerPage = prepareNperPage(nPerPage, defaultN);
+		if (nPerPage.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare sort:
+		sort = prepareSort(sort);
+		if (sort.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare column
+		column = prepareColumn(column);
+		if (column.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		// prepare page:
+		page = preparePage(page);
+		if (page.equals("invalid"))
+			return new ModelAndView("404-page");
+
+		List<Movie> listMovies = movieDao.fuzzy_search(stmt);
+
+		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
+
+		// for showing n per page:
+		model.addObject("minPage", defaultN);
+		model.addObject("n", nPerPage);
+		model.addObject("path", "tokenSearch");
 
 		return model;
 
