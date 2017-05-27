@@ -2,14 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <style>
 #tokenSearchResult{
-	width: 70%;
+	width: 80%;
+}
+
+.items {
+	padding: 35px;
 }
 </style>
 <body>
 	<div class="container">
 		<ul class="list-group" id="tokenSearchResult">
 			<c:forEach var="movie" items="${listMovies}" varStatus="status">
-				<li class='list-group-item movie-item' movieid="${movie.id}"><a
+				<li class='list-group-item movie-item items' movieid="${movie.id}"><a
 					href="./movie-id=${movie.id}">${movie.title}</a></li>
 			</c:forEach>
 

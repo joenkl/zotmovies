@@ -57,7 +57,6 @@
 																	$('.movie-item').on("click", function(){
 																		 window.location.assign($(this).attr('href'));
 																	});
-																	$('.movie-item').on("mouseover", hooverMovieDetails());
 																}
 															}
 														});

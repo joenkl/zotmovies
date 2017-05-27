@@ -8,16 +8,17 @@
 	<h5>
 		<strong>${movie.title}- ${movie.year}</strong>
 	</h5>
-	<button class="btn btn-success btn-sm add-to-cart"
+	<center><button class="btn btn-success btn-md add-to-cart"
 		data="${movie.title}" movieid="${movie.id}" style="margin: 10px">
 		Add to cart<span class="glyphicon glyphicon-shopping-cart"></span>
-	</button>
+	</button></center>
 	<div id="successMsg" style="font-weight: bold"></div>
 
 
-	<ul class="movie-info">
+	<ul class="movie-info list-inline">
+		<li><center><img class="img-responsive" src="${movie.banner_url}" alt=""
+			width="100" height="100"></center></li>
 		<li>ID: ${movie.id}</li>
-		<li><img class="img-responsive" src="${movie.banner_url}" alt=""></li>
 		<li>Price: $3.0</li>
 		<li>Director:${movie.director}</li>
 		<li>Stars: <c:forEach var="star" items="${listStars}">
@@ -34,9 +35,9 @@
 
 	</ul>
 
-	<a class="btn btn-primary btn-sm" href="${movie.trailer_url}">Watch
+	<center><a class="btn btn-primary btn-sm" href="${movie.trailer_url}">Watch
 		Trailer <span class="glyphicon glyphicon-chevron-right"></span>
-	</a>
+	</a></center>
 
 
 

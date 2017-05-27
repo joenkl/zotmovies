@@ -2,9 +2,6 @@ DROP DATABASE IF EXISTS moviedb;
 CREATE DATABASE moviedb;
 USE moviedb;
 
-[mysqld]
-ft_min_word_len = 3;
-
 CREATE TABLE IF NOT EXISTS user_stopword(
 	value varchar(30)
     )engine = innodb;
