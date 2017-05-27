@@ -17,6 +17,7 @@
 
 	<ul class="movie-info">
 		<li>ID: ${movie.id}</li>
+		<li><img class="img-responsive" src="${movie.banner_url}" alt=""></li>
 		<li>Price: $3.0</li>
 		<li>Director:${movie.director}</li>
 		<li>Stars: <c:forEach var="star" items="${listStars}">

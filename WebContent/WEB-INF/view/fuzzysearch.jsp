@@ -52,7 +52,7 @@
 																							+ "<p>"
 																							+ data[i]['title']
 																							+ "</p>"
-																							+ "</li></a>");
+																							+ "</a></li>");
 																	
 																	$('.movie-item').on("click", function(){
 																		 window.location.assign($(this).attr('href'));

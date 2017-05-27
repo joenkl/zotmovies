@@ -88,11 +88,7 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/tokenSearch")
-	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title,
-			@RequestParam(value = "column", required = false) String column,
-			@RequestParam(value = "sort", required = false) String sort,
-			@RequestParam(value = "page", required = false) String page,
-			@RequestParam(value = "n", required = false) String nPerPage, RedirectAttributes redir) {
+	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title) {
 
 		String[] words = title.split(" ");
 
@@ -105,37 +101,13 @@ public class MovieController {
 
 		stmt += "' IN BOOLEAN MODE)";
 
-		System.out.println(stmt);
-
-		// prepare n per page:
-		int defaultN = 6;
-		nPerPage = prepareNperPage(nPerPage, defaultN);
-		if (nPerPage.equals("invalid"))
-			return new ModelAndView("404-page");
-
-		// prepare sort:
-		sort = prepareSort(sort);
-		if (sort.equals("invalid"))
-			return new ModelAndView("404-page");
-
-		// prepare column
-		column = prepareColumn(column);
-		if (column.equals("invalid"))
-			return new ModelAndView("404-page");
-
-		// prepare page:
-		page = preparePage(page);
-		if (page.equals("invalid"))
-			return new ModelAndView("404-page");
+		
 
 		List<Movie> listMovies = movieDao.fuzzy_search(stmt);
 
-		ModelAndView model = prepareForMovieTableResult(sort, column, page, listMovies, nPerPage);
+		ModelAndView model = new ModelAndView("searchToken");
+		model.addObject("listMovies",listMovies);
 
-		// for showing n per page:
-		model.addObject("minPage", defaultN);
-		model.addObject("n", nPerPage);
-		model.addObject("path", "tokenSearch");
 
 		return model;
 
