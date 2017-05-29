@@ -85,7 +85,7 @@ var hooverMovieDetails = function(){
             if (!$(".popover:hover").length) {
                 $(_this).popover("hide");
             }
-        }, 30);
+        }, 20);
 });
 	
 	function getMovie(){
