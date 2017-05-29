@@ -3,6 +3,7 @@ package com.spring.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,7 +92,9 @@ public class MovieController {
 	public ModelAndView tokenSearch(@RequestParam(value = "title", required = false) String title) {
 		
 		if(title == null || title.isEmpty()){
-			return new ModelAndView("searchToken");
+			ModelAndView model = new ModelAndView("searchToken");
+			model.addObject("listMovies", new ArrayList<Movie>());
+			return model; 
 		}
 
 		String[] words = title.split(" ");
