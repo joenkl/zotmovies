@@ -21,6 +21,7 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -248,9 +249,11 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public List<Movie> fuzzy_search(String query) {
+	public List<Movie> fuzzy_search(String title) {
+		
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = query; 
+		String sql = generateStmt(title); 
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
 
 			@Override
@@ -266,9 +269,11 @@ public class MovieDaoImpl implements MovieDao {
 	}
 	
 	@Override
-	public List<String> api_search(String query){
+	public List<String> api_search(String title){
+	
+		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = query; 
+		String sql = generateStmt(title); 
 		List<String> listMovies = jdbcTemplate.query(sql, new RowMapper<String>() {
 
 			@Override
@@ -323,31 +328,85 @@ public class MovieDaoImpl implements MovieDao {
 		
 	}
 	
-//	@Override
-//	public List<Movie> fuzzy_search_1(List<String> arguments){
-//		
-//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-//		String sql =  "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)";
-//		
-//		List<String> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter(){
-//
-//			@Override
-//			public void setValues(java.sql.PreparedStatement preparedStmt) throws SQLException {
-//				preparedStmt.setArray(1, arguments);
-//				
-//			}
-//			
-//		}, new RowMapper<String>() {
-//
-//			@Override
-//			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-//				String title = resultSet.getString(1);
-//				return title; 
-//			}
-//
-//		});
-//
-//		return listMovies;
-//		
-//	}
+	@Override
+	public List<Movie> fuzzy_search_1(String title){
+		
+		String[] words = title.split(" ");
+		String arguments = "";
+		
+		for (String word : words) {
+			arguments += "+" + word.trim() + "* ";
+		}
+		
+		final String argument = arguments;
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql =  "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)";
+		
+		List<Movie> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter(){
+
+			@Override
+			public void setValues(java.sql.PreparedStatement preparedStmt) throws SQLException {
+				preparedStmt.setString(1, argument);
+				
+			}
+			
+		}, new RowMapper<Movie>() {
+
+			@Override
+			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+				Movie movie = new Movie(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
+						resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+				return movie;
+			}
+
+
+		});
+
+		return listMovies;
+		
+	}
+	
+	public static String generateStmt(String title){
+		
+		String[] words = title.split(" ");
+
+		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
+
+		for (String word : words) {
+			if (word.equals("+") || word.equals("-")
+					|| word.equals("*")
+					|| word.equals("/")
+					|| word.equals("-") 
+					|| word.equals(">")
+					|| word.equals("<")
+					|| word.equals("%")
+					|| word.equals(")")
+					|| word.equals("(")
+					|| word.equals("~")
+					|| word.equals("@")
+					|| word.equals("\"")) break; 
+			if(word.contains("'") 
+					|| word.contains("\b")
+					|| word.contains("\n")
+					|| word.contains("\t")
+					|| word.contains("\\")
+					
+					)
+			{
+				word = word.replace("'", "\\'");
+				stmt += "+" + word + "* ";
+			}
+
+			
+			else
+				stmt += "+" + word + "* ";
+
+		}
+
+		stmt += "' IN BOOLEAN MODE)";
+	
+		return stmt; 
+		
+	}
 }

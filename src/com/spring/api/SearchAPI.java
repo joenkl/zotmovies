@@ -42,41 +42,8 @@ public class SearchAPI {
 			return new ArrayList<Movie>(); 
 		}
 		
-		String[] words = query.split(" ");
-
-		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
-
-		for (String word : words) {
-			if (word.equals("+") || word.equals("-")
-					|| word.equals("*")
-					|| word.equals("/")
-					|| word.equals("-") 
-					|| word.equals(">")
-					|| word.equals("<")
-					|| word.equals("%")
-					|| word.equals(")")
-					|| word.equals("(")
-					|| word.equals("~")
-					|| word.equals("@")
-					|| word.equals("\"")) break; 
-			if(word.equals("'") 
-					|| word.equals("\b")
-					|| word.equals("\n")
-					|| word.equals("\t")
-					|| word.equals("\\")
-					
-					)
-			{
-				stmt += "+\\" + word + "* ";
-			}
-			else
-				stmt += "+" + word + "* ";
-
-		}
-		stmt += "' IN BOOLEAN MODE)";
-
-		System.out.println(stmt);
-		return (movieDao.fuzzy_search(stmt));
+		
+		return (movieDao.fuzzy_search(query));
 	}
 
 	@GetMapping("/api/searchTitle")
@@ -86,40 +53,7 @@ public class SearchAPI {
 			return new ArrayList<String>(); 
 		}
 		
-		String[] words = query.split(" ");
-
-		String stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST('";
-
-		for (String word : words) {
-			if (word.equals("+") || word.equals("-")
-					|| word.equals("*")
-					|| word.equals("/")
-					|| word.equals("-") 
-					|| word.equals(">")
-					|| word.equals("<")
-					|| word.equals("%")
-					|| word.equals(")")
-					|| word.equals("(")
-					|| word.equals("~")
-					|| word.equals("@")
-					|| word.equals("\"")) break; 
-			if(word.equals("'") 
-					|| word.equals("\b")
-					|| word.equals("\n")
-					|| word.equals("\t")
-					|| word.equals("\\")
-					
-					)
-			{
-				stmt += "+\\" + word + "* ";
-			}
-			else
-				stmt += "+" + word + "* ";
-
-		}
-		stmt += "' IN BOOLEAN MODE)";
-
-		System.out.println(stmt);
-		return (movieDao.api_search(stmt));
+	
+		return (movieDao.api_search(query));
 	}
 }

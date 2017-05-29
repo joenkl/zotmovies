@@ -101,7 +101,7 @@ public class ShoppingCartController {
 		for(ShoppingCart cartItem : shoppingCartList){
 			if (id == cartItem.getMovieId())
 			{
-				if(newQ == 0)
+				if(newQ <= 0)
 				{
 					shoppingCartList.remove(cartItem);
 				}

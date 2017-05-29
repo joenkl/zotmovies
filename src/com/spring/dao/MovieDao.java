@@ -32,9 +32,9 @@ public interface MovieDao {
 			String banner_url, String trailer_url, String starFN, String starLN, Date starDob,
 			String starPhotoURL, String genre);
 	
-	public List<Movie> fuzzy_search(String query); 
-	
-	public List<String> api_search(String query); 
+	public List<Movie> fuzzy_search(String title); 
+	public List<Movie> fuzzy_search_1(String title);
+	public List<String> api_search(String title); 
 	
 	public List<Movie> getAllMovie();
 	

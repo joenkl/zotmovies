@@ -96,43 +96,11 @@ public class MovieController {
 			return model; 
 		}
 
-		String[] words = title.split(" ");
-
-		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
-
-		for (String word : words) {
-			if (word.equals("+") || word.equals("-")
-					|| word.equals("*")
-					|| word.equals("/")
-					|| word.equals("-") 
-					|| word.equals(">")
-					|| word.equals("<")
-					|| word.equals("%")
-					|| word.equals(")")
-					|| word.equals("(")
-					|| word.equals("~")
-					|| word.equals("@")
-					|| word.equals("\"")) break; 
-			if(word.equals("'") 
-					|| word.equals("\b")
-					|| word.equals("\n")
-					|| word.equals("\t")
-					|| word.equals("\\")
-					
-					)
-			{
-				stmt += "+\\" + word + "* ";
-			}
-			else
-				stmt += "+" + word + "* ";
-
-		}
-
-		stmt += "' IN BOOLEAN MODE)";
+		
 
 		
 
-		List<Movie> listMovies = movieDao.fuzzy_search(stmt);
+		List<Movie> listMovies = movieDao.fuzzy_search(title);
 
 		ModelAndView model = new ModelAndView("searchToken");
 		model.addObject("listMovies",listMovies);
