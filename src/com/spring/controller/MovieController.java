@@ -88,7 +88,11 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/tokenSearch")
-	public ModelAndView tokenSearch(@RequestParam(value = "title", required = true) String title) {
+	public ModelAndView tokenSearch(@RequestParam(value = "title", required = false) String title) {
+		
+		if(title == null || title.isEmpty()){
+			return new ModelAndView("searchToken");
+		}
 
 		String[] words = title.split(" ");
 

@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.*;
@@ -36,6 +37,11 @@ public class SearchAPI {
 
 	@GetMapping("/api/search")
 	public List<Movie> search(@RequestParam(value = "title", required = false) String query) {
+		if(query == null || query.isEmpty())
+		{
+			return new ArrayList<Movie>(); 
+		}
+		
 		String[] words = query.split(" ");
 
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
@@ -53,6 +59,11 @@ public class SearchAPI {
 
 	@GetMapping("/api/searchTitle")
 	public List<String> searchTitle(@RequestParam(value = "title", required = false) String query) {
+		if(query == null || query.isEmpty())
+		{
+			return new ArrayList<String>(); 
+		}
+		
 		String[] words = query.split(" ");
 
 		String stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST('";
