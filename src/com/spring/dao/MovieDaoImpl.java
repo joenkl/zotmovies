@@ -322,4 +322,32 @@ public class MovieDaoImpl implements MovieDao {
 		
 		
 	}
+	
+//	@Override
+//	public List<Movie> fuzzy_search_1(List<String> arguments){
+//		
+//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//		String sql =  "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)";
+//		
+//		List<String> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter(){
+//
+//			@Override
+//			public void setValues(java.sql.PreparedStatement preparedStmt) throws SQLException {
+//				preparedStmt.setArray(1, arguments);
+//				
+//			}
+//			
+//		}, new RowMapper<String>() {
+//
+//			@Override
+//			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
+//				String title = resultSet.getString(1);
+//				return title; 
+//			}
+//
+//		});
+//
+//		return listMovies;
+//		
+//	}
 }

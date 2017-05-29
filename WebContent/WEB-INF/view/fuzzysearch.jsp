@@ -27,7 +27,7 @@
 						$('#search-bar')
 								.on(
 										'keyup keypress',
-										function() {
+										function(e) {
 											var query = $("input").val();
 											if (query) {
 												$

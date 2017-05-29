@@ -90,7 +90,6 @@ public class MovieController {
 
 	@RequestMapping(value = "/tokenSearch")
 	public ModelAndView tokenSearch(@RequestParam(value = "title", required = false) String title) {
-		
 		if(title == null || title.isEmpty()){
 			ModelAndView model = new ModelAndView("searchToken");
 			model.addObject("listMovies", new ArrayList<Movie>());
@@ -102,7 +101,30 @@ public class MovieController {
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
 
 		for (String word : words) {
-			stmt += "+" + word + "* ";
+			if (word.equals("+") || word.equals("-")
+					|| word.equals("*")
+					|| word.equals("/")
+					|| word.equals("-") 
+					|| word.equals(">")
+					|| word.equals("<")
+					|| word.equals("%")
+					|| word.equals(")")
+					|| word.equals("(")
+					|| word.equals("~")
+					|| word.equals("@")
+					|| word.equals("\"")) break; 
+			if(word.equals("'") 
+					|| word.equals("\b")
+					|| word.equals("\n")
+					|| word.equals("\t")
+					|| word.equals("\\")
+					
+					)
+			{
+				stmt += "+\\" + word + "* ";
+			}
+			else
+				stmt += "+" + word + "* ";
 
 		}
 

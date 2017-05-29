@@ -47,10 +47,32 @@ public class SearchAPI {
 		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
 
 		for (String word : words) {
-			stmt += "+" + word + "* ";
+			if (word.equals("+") || word.equals("-")
+					|| word.equals("*")
+					|| word.equals("/")
+					|| word.equals("-") 
+					|| word.equals(">")
+					|| word.equals("<")
+					|| word.equals("%")
+					|| word.equals(")")
+					|| word.equals("(")
+					|| word.equals("~")
+					|| word.equals("@")
+					|| word.equals("\"")) break; 
+			if(word.equals("'") 
+					|| word.equals("\b")
+					|| word.equals("\n")
+					|| word.equals("\t")
+					|| word.equals("\\")
+					
+					)
+			{
+				stmt += "+\\" + word + "* ";
+			}
+			else
+				stmt += "+" + word + "* ";
 
 		}
-
 		stmt += "' IN BOOLEAN MODE)";
 
 		System.out.println(stmt);
@@ -69,10 +91,32 @@ public class SearchAPI {
 		String stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST('";
 
 		for (String word : words) {
-			stmt += "+" + word + "* ";
+			if (word.equals("+") || word.equals("-")
+					|| word.equals("*")
+					|| word.equals("/")
+					|| word.equals("-") 
+					|| word.equals(">")
+					|| word.equals("<")
+					|| word.equals("%")
+					|| word.equals(")")
+					|| word.equals("(")
+					|| word.equals("~")
+					|| word.equals("@")
+					|| word.equals("\"")) break; 
+			if(word.equals("'") 
+					|| word.equals("\b")
+					|| word.equals("\n")
+					|| word.equals("\t")
+					|| word.equals("\\")
+					
+					)
+			{
+				stmt += "+\\" + word + "* ";
+			}
+			else
+				stmt += "+" + word + "* ";
 
 		}
-
 		stmt += "' IN BOOLEAN MODE)";
 
 		System.out.println(stmt);
