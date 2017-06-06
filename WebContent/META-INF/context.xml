@@ -2,13 +2,13 @@
 <Context>
     <Resource
         name="jdbc/moviedb" auth="Container" type="javax.sql.DataSource"
-        maxActive="100" maxIdle="30" maxWait="10000" 
-        url="jdbc:mysql:///moviedb"
+        maxTotal="100" maxIdle="30" maxWaitMillis="10000" 
+       	url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false"
         driverClassName="com.mysql.jdbc.Driver"
         username="admin" password="cs122b"
-        autoReconnect="true"
-        useSSL="false"
+
     />
+    
     
     <ResourceLink name="jdbc/moviedb"
                 global="jdbc/moviedb"

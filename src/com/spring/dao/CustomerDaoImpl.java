@@ -28,8 +28,8 @@ public class CustomerDaoImpl implements CustomerDao {
 		try
 		{
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			String sql = "SELECT * FROM customers WHERE email = '" + email + "' and password = '" + password + "'";
-			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new CustomerRowMapper());
+			String sql = "SELECT * FROM customers WHERE email = ? and password = ?"; 
+			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new Object[] {email, password}, new CustomerRowMapper());
 			
 			return true; 
 		}
@@ -62,8 +62,8 @@ public class CustomerDaoImpl implements CustomerDao {
 		try
 		{
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			String sql = "SELECT * FROM customers WHERE email = '" + email + "' and password = '" + password + "'";
-			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new CustomerRowMapper());
+			String sql = "SELECT * FROM customers WHERE email = ? and password = ?"; 
+			Customer customer =  (Customer) jdbcTemplate.queryForObject(sql, new Object[] {email, password}, new CustomerRowMapper());
 			
 			return customer; 
 		}

@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,8 +41,18 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	public List<Movie> getMovieList(int page, int n) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies LIMIT " + n + " OFFSET " + ((page - 1) * n);
-		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+		String preparedStmt = "SELECT * FROM movies LIMIT ? OFFSET ?";
+		//String sql = "SELECT * FROM movies LIMIT " + n + " OFFSET " + ((page - 1) * n);
+		List<Movie> listMovies = jdbcTemplate.query(preparedStmt, new PreparedStatementSetter(){
+
+			@Override
+			public void setValues(PreparedStatement stmt) throws SQLException {
+				stmt.setInt(1, n);
+				stmt.setInt(2, (page - 1) * n);
+				
+			}
+			
+		}, new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -58,12 +69,21 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	public List<Movie> getMovieListWhereTitlesStartWith(String StartWith, String orderByColumn, String ascOrDesc,
 			int page, int n) {
-		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
+		String order_style = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'" + "ORDER BY " + orderByColumn
-				+ " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
-		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+//		String sql = "SELECT * FROM movies WHERE movies.title LIKE '" + StartWith + "%'";
+		
+		String preparedStmt =  "SELECT * FROM movies WHERE title LIKE ? " + " ORDER BY " + orderByColumn
+				+ " " + order_style + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
+		List<Movie> listMovies = jdbcTemplate.query(preparedStmt, new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement stmt) throws SQLException {
+				stmt.setString(1, StartWith + "%");
+			}
+			
+		}, new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -92,13 +112,22 @@ public class MovieDaoImpl implements MovieDao {
 	public List<Movie> getMovieListWithSearch(String title, int year, String director, String first_name,
 			String last_name, String orderByColumn, String ascOrDesc, int page, int n) {
 		String sql = "SELECT * FROM movies M ";
+		
+		
+		String title_arg = "";
+		String year_arg = "";
+		String director_arg =""; 
+		String fn_arg = "";
+		String ln_arg = "";
+		
 
 		if (!first_name.isEmpty() || !last_name.isEmpty()) {
 			sql += "JOIN stars_in_movies SM ON M.id = SM.movie_id "
 					+ "  WHERE SM.star_id in (SELECT id FROM stars WHERE ";
 
 			if (!first_name.isEmpty()) {
-				sql += " first_name LIKE \"%" + first_name + "%\" ";
+				sql += " first_name LIKE ?";
+				fn_arg += "%" + first_name + "%";
 
 				if (!last_name.isEmpty()) {
 					sql += "AND ";
@@ -107,7 +136,8 @@ public class MovieDaoImpl implements MovieDao {
 			}
 
 			if (!last_name.isEmpty()) {
-				sql += " last_name LIKE \"%" + last_name + "%\" ";
+				sql += " last_name LIKE ?";
+				ln_arg += "%" + last_name + "%";
 			}
 
 			sql += " ) ";
@@ -120,7 +150,8 @@ public class MovieDaoImpl implements MovieDao {
 			sql += " WHERE ";
 
 		if (!title.isEmpty()) {
-			sql += " title LIKE \"%" + title + "%\" ";
+			sql += " title LIKE ?";
+			title_arg += "%" + title + "%";
 
 			if (year != -1 || !director.isEmpty()) {
 				sql += " AND ";
@@ -129,7 +160,8 @@ public class MovieDaoImpl implements MovieDao {
 		}
 
 		if (year != -1) {
-			sql += "year = " + year + " ";
+			sql += "year = ?"; 
+			year_arg += Integer.toString(year);
 
 			if (!director.isEmpty()) {
 				sql += " AND ";
@@ -138,15 +170,59 @@ public class MovieDaoImpl implements MovieDao {
 		}
 
 		if (!director.isEmpty()) {
-			sql += " director LIKE \"%" + director + "%\" ";
+			sql += " director LIKE ?";
+			director_arg += "%" + director + "%";
 		}
 
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
 
 		sql += "\n ORDER BY " + orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
+		
+		String _fn = fn_arg; 
+		String _ln = ln_arg;
+		String _year = year_arg;
+		String _title = title_arg; 
+		String _director = director_arg; 
+		
+		//System.out.println(_fn + " " + _ln + " " + _year + " " + _title + " " + _director);
+		//System.out.println(sql);
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+		List<Movie> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter(){
+
+			@Override
+			public void setValues(PreparedStatement arg0) throws SQLException {
+				//fn => ln => title => year => director
+				
+				int i = 1;
+		
+				if(!_fn.isEmpty()){
+					arg0.setString(i, _fn);
+					i++;
+				}
+				if(!_ln.isEmpty()){
+					arg0.setString(i, _ln);
+					i++;
+				}
+				if(!_title.isEmpty()){
+					//System.out.println(_title);
+					//System.out.println(i);
+					arg0.setString(i, _title);
+					i++; 
+				}
+				if(!_year.isEmpty()){
+					arg0.setInt(i, year);
+					i++; 
+				}
+				if(!_director.isEmpty()){
+					arg0.setString(i, _director);
+					i++; 
+				}
+				
+					
+				
+			}},
+				new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -165,12 +241,25 @@ public class MovieDaoImpl implements MovieDao {
 	public List<Movie> getMovieListWithGenre(String genre, String orderByColumn, String ascOrDesc, int page, int n) {
 
 		ascOrDesc = (ascOrDesc.equals("a-z") || ascOrDesc.equals("1-9")) ? "ASC" : "DESC";
+		
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = "select * from movies M " + "join genres_in_movies GM on M.id = GM.movie_id "
-				+ "where GM.genre_id in (select id from genres where name='" + genre + "')" + " ORDER BY "
+//		String sql = "select * from movies M " + "join genres_in_movies GM on M.id = GM.movie_id "
+//				+ "where GM.genre_id in (select id from genres where name='" + genre + "')" + " ORDER BY "
+//				+ orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
+		
+		String preparedStmt = "select * from movies M " + "join genres_in_movies GM on M.id = GM.movie_id "
+				+ "where GM.genre_id in (select id from genres where name= ? )" + " ORDER BY "
 				+ orderByColumn + " " + ascOrDesc + " LIMIT " + n + " OFFSET " + ((page - 1) * n);
-		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+		List<Movie> listMovies = jdbcTemplate.query(preparedStmt, new PreparedStatementSetter(){
+
+			@Override
+			public void setValues(PreparedStatement arg0) throws SQLException {
+				arg0.setString(1, genre);
+				
+			}
+			
+		}, new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -250,11 +339,20 @@ public class MovieDaoImpl implements MovieDao {
 
 	@Override
 	public List<Movie> fuzzy_search(String title) {
-		
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = generateStmt(title); 
-		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
+		String prepared_stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE);";
+		String sql = generateStmt(title);
+		List<Movie> listMovies = jdbcTemplate.query(prepared_stmt, new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement preparedstmt) throws SQLException {
+				//System.out.println(sql);
+				preparedstmt.setString(1, sql);
+
+			}
+
+		}, new RowMapper<Movie>() {
 
 			@Override
 			public Movie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -267,14 +365,22 @@ public class MovieDaoImpl implements MovieDao {
 
 		return listMovies;
 	}
-	
+
 	@Override
-	public List<String> api_search(String title){
-	
-		
+	public List<String> api_search(String title) {
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql = generateStmt(title); 
-		List<String> listMovies = jdbcTemplate.query(sql, new RowMapper<String>() {
+		String prepared_stmt = "SELECT title FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE);";
+		String sql = generateStmt(title);
+		List<String> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement preparedstmt) throws SQLException {
+				preparedstmt.setString(1, sql);
+
+			}
+
+		}, new RowMapper<String>() {
 
 			@Override
 			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -285,12 +391,12 @@ public class MovieDaoImpl implements MovieDao {
 		});
 
 		return listMovies;
-		
+
 	}
-	
+
 	@Override
-	public List<Movie> getAllMovie(){
-		
+	public List<Movie> getAllMovie() {
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT * FROM movies";
 		List<Movie> listMovies = jdbcTemplate.query(sql, new RowMapper<Movie>() {
@@ -305,12 +411,11 @@ public class MovieDaoImpl implements MovieDao {
 		});
 
 		return listMovies;
-		
+
 	}
-	
-	
+
 	@Override
-	public List<String> getAllMovieTitle(){
+	public List<String> getAllMovieTitle() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		String sql = "SELECT title FROM movies";
 		List<String> listMovies = jdbcTemplate.query(sql, new RowMapper<String>() {
@@ -318,39 +423,38 @@ public class MovieDaoImpl implements MovieDao {
 			@Override
 			public String mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
 				String title = resultSet.getString(1);
-				return title; 
+				return title;
 			}
 
 		});
 
 		return listMovies;
-		
-		
+
 	}
-	
+
 	@Override
-	public List<Movie> fuzzy_search_1(String title){
-		
+	public List<Movie> fuzzy_search_1(String title) {
+
 		String[] words = title.split(" ");
 		String arguments = "";
-		
+
 		for (String word : words) {
 			arguments += "+" + word.trim() + "* ";
 		}
-		
+
 		final String argument = arguments;
-		
+
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		String sql =  "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)";
-		
-		List<Movie> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter(){
+		String sql = "SELECT * FROM movies WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)";
+
+		List<Movie> listMovies = jdbcTemplate.query(sql, new PreparedStatementSetter() {
 
 			@Override
 			public void setValues(java.sql.PreparedStatement preparedStmt) throws SQLException {
 				preparedStmt.setString(1, argument);
-				
+
 			}
-			
+
 		}, new RowMapper<Movie>() {
 
 			@Override
@@ -360,53 +464,61 @@ public class MovieDaoImpl implements MovieDao {
 				return movie;
 			}
 
-
 		});
 
 		return listMovies;
-		
+
 	}
-	
-	public static String generateStmt(String title){
-		
+
+	public static String generateStmt(String title) {
+
 		String[] words = title.split(" ");
 
-		String stmt = "SELECT * FROM movies WHERE MATCH(title) AGAINST('";
+		String query = "";
 
 		for (String word : words) {
-			if (word.equals("+") || word.equals("-")
-					|| word.equals("*")
-					|| word.equals("/")
-					|| word.equals("-") 
-					|| word.equals(">")
-					|| word.equals("<")
-					|| word.equals("%")
-					|| word.equals(")")
-					|| word.equals("(")
-					|| word.equals("~")
-					|| word.equals("@")
-					|| word.equals("\"")) break; 
-			if(word.contains("'") 
-					|| word.contains("\b")
-					|| word.contains("\n")
-					|| word.contains("\t")
-					|| word.contains("\\")
-					
-					)
-			{
-				word = word.replace("'", "\\'");
-				stmt += "+" + word + "* ";
-			}
 
-			
-			else
-				stmt += "+" + word + "* ";
+			if (word.length() >= 3) {
+				if (word.contains("+") || word.contains("-") || word.contains("*") || word.contains("/")
+						|| word.contains(">") || word.contains("<") || word.contains("%") || word.contains(")")
+						|| word.contains("(") || word.contains("~") || word.contains("@") || word.contains("\"")) {
+
+					word.replace("+", "");
+					word.replace("-", "");
+					word.replace("*", "");
+					word.replace("/", "");
+					word.replace(">", "");
+					word.replace("<", "");
+					word.replace("%", "");
+					word.replace(")", "");
+					word.replace("(", "");
+					word.replace("~", "");
+					word.replace("@", "");
+					word.replace("\"", "");
+
+					query += "+" + word + "* ";
+
+				}
+				if (word.contains("'") || word.contains("\b") || word.contains("\n") || word.contains("\t")
+						|| word.contains("\\")
+
+				) {
+					word = word.replace("'", "\\'");
+					word = word.replace("\b", " ");
+					word = word.replace("\n", " ");
+					word = word.replace("\t", " ");
+					word = word.replace("\\", "\\\\");
+
+					query += "+" + word + "* ";
+				}
+
+				else
+					query += "+" + word + "* ";
+			}
 
 		}
 
-		stmt += "' IN BOOLEAN MODE)";
-	
-		return stmt; 
-		
+		return query;
+
 	}
 }
