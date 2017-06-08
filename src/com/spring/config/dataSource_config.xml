@@ -14,9 +14,5 @@
 		<property name="password" value="cs122b" />
 	</bean>
 	
-	  <!-- Definition for studentJDBCTemplate bean -->
-	  
-	
-	
 	
 </beans>

@@ -72,14 +72,14 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 	@Bean
 	public SaleDao getSaleDao() throws NamingException {
 		JndiTemplate jndiTemplate = new JndiTemplate();
-		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/masterdb");
 		return new SaleDaoImpl(dataSource);
 	}
 	
 	@Bean
 	public AdminDao getAdminDao() throws NamingException {
 		JndiTemplate jndiTemplate = new JndiTemplate();
-		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
+		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/masterdb");
 		return new AdminDaoImpl(dataSource);
 	}
 	
