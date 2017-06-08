@@ -17,7 +17,7 @@ function onSubmit(token) {
 				<div class="login-container">
 					<h3>Login to your account</h3>
 					<p align="center" style="color: red;">${message}</p>
-					<form id="login-form" action="processLoginForm" method="post"
+					<form action="${pageContext.request.contextPath}/processLoginForm" id="login-form"  method="post"
 						role="form">
 						<input type="text" name="email" placeholder="Email" required autofocus>
 						<input type="password" name="password" placeholder="Password"
