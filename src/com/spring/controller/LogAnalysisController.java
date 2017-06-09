@@ -11,14 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LogAnalysisController {
 	@Autowired
 	ServletContext context;
 
-	@RequestMapping("/ts-tj")
+	@RequestMapping(value="/tstj")
 	public ModelAndView showReport() {
 		// get the log location:
 		String path = context.getRealPath("/WEB-INF");

@@ -5,8 +5,8 @@
 <body>
 	<!-- Page Content -->
 	<div class="container">
-		<p>AVERAGE TS = ${avg_ts} </p>
-		<p>AVERAGE TJ = ${avg_tj} </p>
+		<p>AVERAGE TS = ${avg_ts} ns</p>
+		<p>AVERAGE TJ = ${avg_tj} ns</p>
 	</div>
 	<!-- /.container -->
 </body>
