@@ -1,5 +1,8 @@
 package com.spring.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
@@ -40,16 +44,22 @@ public class MovieController {
 
 	@Autowired
 	private StarDao starDao;
+	
+	@Autowired
+	ServletContext context;
+
 
 	@RequestMapping(value = "/searchForm")
 	public String showSearchForm() {
 		return "search";
 	}
 
+
 	@RequestMapping("/index")
 	public ModelAndView home(@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "n", required = false) String nPerPage) throws IOException {
-
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
 		int defaultN = 6;
 
 		nPerPage = prepareNperPage(nPerPage, defaultN);
@@ -85,26 +95,34 @@ public class MovieController {
 		else
 			model.addObject("lastPage", false);
 
+		////////////////////////////////////////////////////////////
+		long endTime = System.nanoTime();
+
+		logRequest(Long.toString(endTime - startTime));
 		return model;
 	}
 
 	@RequestMapping(value = "/tokenSearch")
 	public ModelAndView tokenSearch(@RequestParam(value = "title", required = false) String title) {
-		if(title == null || title.isEmpty()){
+
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
+
+		if (title == null || title.isEmpty()) {
 			ModelAndView model = new ModelAndView("searchToken");
 			model.addObject("listMovies", new ArrayList<Movie>());
-			return model; 
+			return model;
 		}
-
-		
-
-		
 
 		List<Movie> listMovies = movieDao.fuzzy_search(title);
 
 		ModelAndView model = new ModelAndView("searchToken");
-		model.addObject("listMovies",listMovies);
+		model.addObject("listMovies", listMovies);
 
+		////////////////////////////////////////////////////////////
+		long endTime = System.nanoTime();
+
+		logRequest(Long.toString(endTime - startTime));
 
 		return model;
 
@@ -121,6 +139,8 @@ public class MovieController {
 			@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "n", required = false) String nPerPage, RedirectAttributes redir) {
 
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
 		if (title == null)
 			title = "";
 		if (first_name == null)
@@ -136,6 +156,12 @@ public class MovieController {
 
 			ModelAndView model = new ModelAndView("search");
 			model.addObject("message", "Please fill out at least one option!");
+
+			////////////////////////////////////////////////////////////
+			long endTime = System.nanoTime();
+
+			logRequest(Long.toString(endTime - startTime));
+
 			return model;
 
 		}
@@ -179,6 +205,11 @@ public class MovieController {
 			model.addObject("n", nPerPage);
 			model.addObject("path", "search");
 
+			////////////////////////////////////////////////////////////
+			long endTime = System.nanoTime();
+
+			logRequest(Long.toString(endTime - startTime));
+
 			return model;
 		}
 
@@ -186,6 +217,10 @@ public class MovieController {
 
 	@RequestMapping("/movie-id={condition}")
 	public ModelAndView browseMovieByID(@PathVariable("condition") int id) {
+
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
+
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("movie-info");
 
@@ -194,6 +229,11 @@ public class MovieController {
 		List<Genre> listGenres = genreDao.getGenreListByMovieId(movie.getId());
 		model.addObject("listGenres", listGenres);
 		model.addObject("listStars", starDao.getStarsByMovieId(movie.getId()));
+
+		////////////////////////////////////////////////////////////
+		long endTime = System.nanoTime();
+
+		logRequest(Long.toString(endTime - startTime));
 
 		return model;
 	}
@@ -204,6 +244,9 @@ public class MovieController {
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
+
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
 
 		// prepare n per page:
 		int defaultN = 6;
@@ -242,6 +285,12 @@ public class MovieController {
 		model.addObject("minPage", defaultN);
 		model.addObject("n", nPerPage);
 		model.addObject("path", "browseTitle");
+
+		////////////////////////////////////////////////////////////
+		long endTime = System.nanoTime();
+
+		logRequest(Long.toString(endTime - startTime));
+
 		return model;
 	}
 
@@ -251,6 +300,9 @@ public class MovieController {
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "n", required = false) String nPerPage,
 			@RequestParam(value = "page", required = false) String page) {
+
+		long startTime = System.nanoTime();
+		////////////////////////////////////////////////
 
 		// prepare n per page:
 		int defaultN = 6;
@@ -285,6 +337,11 @@ public class MovieController {
 		model.addObject("minPage", defaultN);
 		model.addObject("n", nPerPage);
 		model.addObject("path", "browseGenre");
+
+		////////////////////////////////////////////////////////////
+		long endTime = System.nanoTime();
+
+		logRequest(Long.toString(endTime - startTime));
 
 		return model;
 
@@ -423,6 +480,7 @@ public class MovieController {
 			@RequestParam(value = "photo_url", required = false) String starPhotoURL) {
 		ModelAndView model = new ModelAndView("_movie-confirmation");
 
+	
 		if (banner_url == null)
 			banner_url = "";
 		if (trailer_url == null)
@@ -432,6 +490,8 @@ public class MovieController {
 				starPhotoURL, genre);
 
 		model.addObject("msg", msg);
+
+	
 
 		return model;
 
@@ -444,6 +504,8 @@ public class MovieController {
 
 	@RequestMapping(value = "/tool-movie-id={condition}", method = RequestMethod.GET)
 	public ModelAndView tooltipMovieByID(@PathVariable("condition") int id) {
+
+		
 		Movie movie = movieDao.getMovieListWithID(id);
 		ModelAndView model = new ModelAndView("tool-movie-info");
 
@@ -453,6 +515,54 @@ public class MovieController {
 		model.addObject("listGenres", listGenres);
 		model.addObject("listStars", starDao.getStarsByMovieId(movie.getId()));
 
+	
+
 		return model;
+	}
+
+	public void logRequest(String data) {
+		String path = context.getRealPath("/WEB-INF");
+		
+		
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+
+		try {
+			// String data = "new content";
+
+			File file = new File(path, "TS_TJ_logs.txt");
+			
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			// if file exists already, then append file
+			fw = new FileWriter(file.getAbsolutePath(), true);
+			bw = new BufferedWriter(fw);
+			
+
+			bw.write("TS = " + data + "\n");
+
+			System.out.println("Logged!");
+
+		}
+
+		catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bw != null)
+					bw.close();
+
+				if (fw != null)
+					fw.close();
+
+			}
+
+			catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
 	}
 }

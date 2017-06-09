@@ -1,5 +1,7 @@
 package com.spring.config;
 
+import java.sql.SQLException;
+
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
@@ -35,7 +37,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 	}
 
 	@Bean
-	public MovieDao getMovieDao() throws NamingException {
+	public MovieDao getMovieDao() throws NamingException, SQLException {
 		JndiTemplate jndiTemplate = new JndiTemplate();
 		DataSource dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/moviedb");
 		return new MovieDaoImpl(dataSource);
