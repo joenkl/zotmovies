@@ -57,6 +57,11 @@ public class MetaDataController {
 		model.addObject("metaData", metaData);
 		return model;
 	}
+	
+	@RequestMapping(value="/showAllReports")
+	public ModelAndView showAllReports(){
+		return new ModelAndView("all-reports");
+	}
 
 
 	
